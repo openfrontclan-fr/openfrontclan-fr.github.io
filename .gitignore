@@ -1,0 +1,10 @@
+# Site généré par le workflow
+public/
+
+# Données brutes téléchargées à chaque mise à jour, jamais publiées telles quelles
+data/members.json
+data/profiles.json
+data/snapshot.json
+
+# Anciennes versions, travail local
+archive/

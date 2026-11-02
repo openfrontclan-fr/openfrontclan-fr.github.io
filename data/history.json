@@ -1,0 +1,18 @@
+[
+ {
+  "date": "2026-11-02",
+  "rank": 8,
+  "score": 979.21,
+  "games": 35721,
+  "wins": 8380,
+  "members": 4276,
+  "above": {
+   "tag": "JR",
+   "score": 999.52
+  },
+  "below": {
+   "tag": "LUX",
+   "score": 804.85
+  }
+ }
+]

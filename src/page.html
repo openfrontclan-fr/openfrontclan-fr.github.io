@@ -1,0 +1,974 @@
+<title>Front Français [FR]</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Le clan France [FR] sur OpenFront : classement, effectif, progression et meilleurs créneaux.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Plan : une affiche, pas un tableau de bord. Un drapeau de soie comme seul spectacle, de très grands titres,
+   beaucoup de vide, des filets plutôt que des cadres. La couleur vient du drapeau, le reste est nuit et crème. */
+:root {
+  color-scheme: dark;
+  --night: #070a14;
+  --raise: #101627;
+  --line: #1f2739;
+  --cream: #f5f3eb;
+  --muted: #929bb2;
+  --blue: #7f9dff;
+  --deep: #1c3fb0;
+  --red: #ff3b3b;
+  --display: Anton, Impact, "Arial Narrow", sans-serif;
+  --body: Inter, "Segoe UI", system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 96px; }
+body { background: var(--night); color: var(--cream); font: 400 1.02rem/1.6 var(--body); -webkit-font-smoothing: antialiased; overflow-x: clip; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--night); }
+#grain { position: fixed; inset: 0; z-index: 30; pointer-events: none; opacity: .035; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E"); }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--cream); outline-offset: 3px; }
+.wrap { max-width: 1280px; margin-inline: auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+
+/* Navigation */
+nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; }
+nav .wrap { padding-block: 14px; }
+.bar { position: relative; display: flex; align-items: center; gap: 20px; padding: 8px 8px 8px 18px; background: color-mix(in oklab, var(--night) 72%, transparent); backdrop-filter: blur(18px) saturate(1.3); border: 1px solid color-mix(in oklab, var(--cream) 10%, transparent); border-radius: 16px; }
+.brand { display: flex; align-items: center; gap: 10px; font: 400 1.25rem/1 var(--display); text-decoration: none; letter-spacing: .02em; flex: none; }
+.brand svg { width: 40px; height: 24px; }
+.links { display: flex; align-items: center; gap: 2px; margin-left: auto; min-width: 0; }
+.links a { color: var(--muted); text-decoration: none; font-weight: 500; font-size: .9rem; white-space: nowrap; padding: 7px 12px; border-radius: 9px; transition: color .2s; }
+.links a:hover { color: var(--cream); }
+.links a[aria-current="true"] { color: var(--cream); background: color-mix(in oklab, var(--cream) 10%, transparent); }
+.cta { flex: none; background: var(--cream); color: var(--night); font-weight: 600; font-size: .9rem; text-decoration: none; padding: 9px 18px; border-radius: 10px; transition: transform .2s; }
+.cta:hover { transform: translateY(-1px); }
+.menu { display: none; flex: none; font: 600 .9rem var(--body); color: var(--cream); background: none; border: 1px solid var(--line); border-radius: 10px; padding: 8px 14px; cursor: pointer; }
+
+/* Affiche d'ouverture */
+.hero { position: relative; overflow: clip; margin-top: -76px; padding-top: 76px; }
+.hero::before { content: ""; position: absolute; inset: 0; pointer-events: none; background:
+  radial-gradient(52% 62% at 76% 36%, color-mix(in oklab, var(--deep) 42%, transparent), transparent 72%),
+  radial-gradient(30% 34% at 96% 62%, color-mix(in oklab, var(--red) 16%, transparent), transparent 74%); }
+#flag { position: absolute; top: 124px; right: max(20px, calc((100vw - 1280px) / 2 + 20px)); width: min(47vw, 660px); aspect-ratio: 4401 / 2600; overflow: visible; }
+#flag .sheen { animation: sheen 4s ease-in-out .5s 1 both; }
+@keyframes sheen { from { transform: translateX(0); } 55%, to { transform: translateX(6400px); } }
+.hero-inner { position: relative; padding-block: clamp(64px, 8vw, 104px) clamp(48px, 6vw, 72px); }
+.tag { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; font-size: .78rem; letter-spacing: .13em; text-transform: uppercase; color: var(--muted); margin: 0 0 22px; }
+.tag b { color: var(--cream); background: var(--red); border-radius: 4px; padding: 1px 7px; font-weight: 700; letter-spacing: .05em; }
+h1 { font: 400 clamp(4.6rem, 12.2vw, 11.2rem)/1.03 var(--display); letter-spacing: .005em; text-transform: uppercase; margin: 0 0 .36em; }
+.lede { font-size: 1.14rem; line-height: 1.55; max-width: 25em; margin: 0 0 32px; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn { display: inline-flex; align-items: center; gap: 10px; font: 600 .98rem/1 var(--body); text-decoration: none; padding: 17px 26px; border: 1px solid var(--cream); border-radius: 12px; background: var(--cream); color: var(--night); transition: transform .2s; }
+.btn::after { content: "→"; transition: transform .2s; }
+.btn:hover { transform: translateY(-2px); }
+.btn:hover::after { transform: translateX(4px); }
+.btn.ghost { background: color-mix(in oklab, var(--night) 40%, transparent); border-color: color-mix(in oklab, var(--cream) 30%, transparent); color: var(--cream); backdrop-filter: blur(6px); }
+
+/* Chiffres clés */
+.tally { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; border-top: 1px solid var(--line); }
+.stat { padding: 28px 28px 8px 0; min-width: 0; }
+.stat + .stat { padding-left: 28px; border-left: 1px solid var(--line); }
+.stat dt { color: var(--muted); font-size: .76rem; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; }
+.stat dd { margin: 8px 0 2px; font: 400 clamp(2.5rem, 5vw, 4.4rem)/1.1 var(--display); letter-spacing: .012em; }
+.sub { display: block; color: var(--muted); font-size: .86rem; }
+
+/* Pages */
+.view { position: relative; }
+.view:not([hidden]) { animation: rise .45s cubic-bezier(.2, .7, .2, 1) both; }
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+#view-classement::before, #view-membres::before, #view-jouer::before, #view-joueur::before { content: ""; position: absolute; inset: -76px 0 auto; height: 620px; pointer-events: none; background: radial-gradient(50% 70% at 80% 0, color-mix(in oklab, var(--deep) 34%, transparent), transparent 74%); }
+.view .wrap { position: relative; }
+.view .wrap > section:first-child { padding-top: clamp(40px, 6vw, 88px); }
+
+/* Accès aux pages depuis l'accueil */
+.hub { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: clamp(40px, 6vw, 72px); border-top: 1px solid var(--line); }
+.hub-item { display: block; padding: 28px 28px 8px 0; text-decoration: none; min-width: 0; }
+.hub-item + .hub-item { padding-left: 28px; border-left: 1px solid var(--line); }
+.hub-item .label { display: block; margin: 0; }
+.hub-item strong { display: block; font: 400 clamp(2.2rem, 4vw, 3.3rem)/1.14 var(--display); letter-spacing: .012em; text-transform: uppercase; margin: 12px 0 4px; overflow-wrap: anywhere; transition: color .2s; }
+.hub-item .go { display: inline-flex; align-items: center; gap: 8px; margin-top: 18px; font-weight: 600; font-size: .92rem; }
+.hub-item .go::after { content: "→"; transition: transform .2s; }
+.hub-item:hover strong { color: var(--blue); }
+.hub-item:hover .go::after { transform: translateX(4px); }
+
+/* Sections */
+section { padding-block: clamp(88px, 12vw, 168px) 0; }
+.kicker { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: .76rem; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; margin: 0 0 18px; }
+.kicker::before { content: ""; width: 15px; height: 14px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 32'%3E%3Cpath fill='%23FF3B3B' d='M10 0h6L6 32H0zM27 0h6L23 32h-6z'/%3E%3C/svg%3E") center / contain no-repeat; }
+h2, h1.title { font: 400 clamp(2.8rem, 6.6vw, 5.6rem)/1.2 var(--display); letter-spacing: .008em; text-transform: uppercase; margin: 0 0 22px; text-wrap: balance; }
+.label { color: var(--muted); font-size: .76rem; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; margin: 0 0 14px; }
+.text { color: var(--muted); max-width: 30em; margin: 0; }
+.text strong { color: var(--cream); font-weight: 600; }
+
+/* Classement */
+.race { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(40px, 7vw, 104px); align-items: start; }
+.race-side { min-width: 0; }
+.track { position: relative; height: 128px; margin-bottom: 24px; }
+.track .rail { position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--line); }
+.track .goal { position: absolute; top: 50%; height: 3px; margin-top: -1px; background: linear-gradient(90deg, var(--cream), var(--blue)); border-radius: 2px; }
+.node { position: absolute; top: 50%; width: 0; }
+.node i { position: absolute; left: -5px; top: -5px; width: 11px; height: 11px; border-radius: 50%; background: var(--night); border: 2px solid var(--muted); }
+.node.us i { left: -8px; top: -8px; width: 17px; height: 17px; background: var(--cream); border-color: var(--cream); box-shadow: 0 0 0 5px color-mix(in oklab, var(--blue) 30%, transparent), 0 0 26px color-mix(in oklab, var(--blue) 90%, transparent); }
+.node span { position: absolute; transform: translateX(-50%); white-space: nowrap; text-align: center; font-size: .78rem; color: var(--muted); line-height: 1.3; font-variant-numeric: tabular-nums; }
+.node span b { display: block; color: var(--cream); font-weight: 700; font-size: .92rem; }
+.node:not(.us) span { bottom: 13px; }
+.node.us span { top: 17px; }
+
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+th { text-align: right; font-size: .72rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 0 14px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td { text-align: right; padding: 15px 14px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th:first-child, td:first-child, .left { text-align: left; }
+.ladder td { padding-block: 22px; transition: background .2s; }
+.ladder .rank { font-size: 1.5rem; }
+.ladder .clan { font-size: 2rem; }
+.ladder .pts { font: 400 1.6rem/1 var(--display); letter-spacing: .02em; }
+.ladder.all td { padding-block: 13px; }
+.ladder.all .rank { font-size: 1.2rem; }
+.ladder.all .clan { font-size: 1.4rem; }
+.ladder.all .pts { font-size: 1.2rem; }
+.ladder tbody tr:hover td { background: color-mix(in oklab, var(--cream) 3%, transparent); }
+.rank { font: 400 1.2rem/1 var(--display); color: var(--muted); letter-spacing: .02em; }
+.clan { font: 400 1.5rem/1 var(--display); letter-spacing: .03em; }
+.dim { color: var(--muted); }
+.pill { display: inline-block; margin-left: 10px; vertical-align: 3px; font-size: .64rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--night); background: var(--blue); border-radius: 4px; padding: 2px 6px; }
+tr.us td { background: linear-gradient(90deg, color-mix(in oklab, var(--deep) 50%, transparent), color-mix(in oklab, var(--deep) 14%, transparent)); font-weight: 600; }
+tr.us td:not(:first-child) { background: color-mix(in oklab, var(--deep) 28%, transparent); }
+tr.us td:first-child { position: relative; background: color-mix(in oklab, var(--deep) 28%, transparent); }
+tr.us td:first-child::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: linear-gradient(180deg, var(--blue) 33%, var(--cream) 33% 66%, var(--red) 66%); }
+tr.us .rank { color: var(--cream); }
+.more { margin-top: 18px; font: 600 .92rem var(--body); background: none; border: 0; color: var(--cream); cursor: pointer; padding: 4px 0; border-bottom: 1px solid var(--muted); }
+.more:hover { border-bottom-color: var(--cream); }
+
+/* Effectif */
+.crew { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: clamp(32px, 6vw, 88px); align-items: end; margin-top: 44px; }
+.podium { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; align-items: end; }
+.card { display: block; text-decoration: none; background: var(--raise); border: 1px solid var(--line); border-radius: 16px; padding: 20px; min-width: 0; transition: transform .25s, border-color .25s; }
+.card:hover { transform: translateY(-3px); border-color: color-mix(in oklab, var(--blue) 60%, transparent); }
+.card .n { display: block; font: 400 3.4rem/1.1 var(--display); color: transparent; -webkit-text-stroke: 1.5px var(--muted); }
+.card .who { display: block; font-weight: 700; margin: 8px 0 12px; overflow-wrap: anywhere; line-height: 1.25; }
+.card .wins { display: block; font: 400 2rem/1.15 var(--display); letter-spacing: .02em; }
+.card .sub { margin-top: 2px; }
+.card.first { order: 2; padding-block: 34px 24px; background: linear-gradient(165deg, #142a6b, #3a59c9); border-color: color-mix(in oklab, var(--blue) 70%, transparent); box-shadow: 0 24px 70px -24px color-mix(in oklab, var(--deep) 90%, transparent); }
+.card.first .n { color: var(--cream); -webkit-text-stroke: 0; font-size: 4.6rem; }
+.card.first .sub { color: var(--cream); }
+.card.second { order: 1; }
+.card.third { order: 3; }
+.facts { list-style: none; margin: 0; padding: 0; }
+.facts li { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 13px 0; border-top: 1px solid var(--line); color: var(--muted); }
+.facts li:last-child { border-bottom: 1px solid var(--line); }
+.facts b, .facts a { color: var(--cream); font-weight: 600; text-decoration: none; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; text-align: right; }
+.facts a:hover { color: var(--blue); }
+.roster { margin-top: clamp(48px, 6vw, 72px); }
+.roster-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; margin-bottom: 22px; }
+.search { flex: 1 1 240px; max-width: 360px; }
+.search input { font: 400 1rem var(--body); color: var(--cream); background: var(--raise); border: 1px solid var(--line); border-radius: 10px; padding: 11px 14px; width: 100%; }
+.search input::placeholder { color: var(--muted); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.tabs { display: flex; flex-wrap: wrap; gap: 2px; padding: 3px; background: var(--raise); border: 1px solid var(--line); border-radius: 12px; }
+.tabs button { font: 500 .9rem var(--body); color: var(--muted); background: none; border: 0; border-radius: 9px; padding: 8px 16px; cursor: pointer; transition: color .2s; }
+.tabs button:hover { color: var(--cream); }
+.tabs button[aria-pressed="true"] { background: var(--cream); color: var(--night); font-weight: 600; }
+td a { text-decoration: none; font-weight: 500; }
+td a:hover { color: var(--blue); }
+.anon { color: var(--muted); font-style: italic; }
+.note { color: var(--muted); font-size: .88rem; margin: 14px 0 0; }
+
+/* Modes de jeu */
+.tabs.modes { display: inline-flex; flex-wrap: wrap; margin-top: 12px; max-width: 100%; }
+
+/* Page joueur */
+.back { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: .92rem; font-weight: 500; text-decoration: none; margin-bottom: 36px; transition: color .2s; }
+.back::before { content: "←"; transition: transform .2s; }
+.back:hover { color: var(--cream); }
+.back:hover::before { transform: translateX(-4px); }
+#player h1.title { margin-bottom: 10px; overflow-wrap: anywhere; }
+#player .tally { margin-top: 44px; }
+.player-grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: clamp(32px, 6vw, 88px); margin-top: clamp(48px, 6vw, 72px); align-items: start; }
+.player-grid.solo { grid-template-columns: minmax(0, 1fr); }
+.player-grid > div { min-width: 0; }
+.mode-row { display: grid; grid-template-columns: 124px minmax(0, 1fr) 118px 66px; gap: 16px; align-items: center; padding: 14px 0; border-top: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+.mode-row:last-child { border-bottom: 1px solid var(--line); }
+.mode-row b { font-weight: 600; }
+.mode-track { height: 5px; border-radius: 3px; background: var(--raise); overflow: hidden; }
+.mode-track i { display: block; height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--deep), var(--blue)); }
+.mode-num { text-align: right; color: var(--muted); font-size: .92rem; white-space: nowrap; }
+.mode-num strong { color: var(--cream); font-weight: 600; }
+.mode-rank { text-align: right; font: 400 1.25rem/1 var(--display); letter-spacing: .02em; color: var(--muted); }
+.mode-rank.top { color: var(--cream); }
+.ext { display: inline-flex; gap: 8px; margin-top: 22px; font-weight: 600; font-size: .92rem; text-decoration: none; border-bottom: 1px solid var(--muted); padding-bottom: 2px; }
+.ext:hover { border-bottom-color: var(--cream); }
+
+/* Graphique */
+.motion-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 32px; }
+.readout { min-width: 0; }
+.readout-value { font: 400 clamp(4rem, 11vw, 9rem)/1.02 var(--display); letter-spacing: .008em; margin: 0; font-variant-numeric: tabular-nums; }
+.readout-label { color: var(--muted); margin: 8px 0 0; min-height: 1.6em; }
+.readout-label strong { color: var(--cream); font-weight: 600; }
+.plot { position: relative; margin-top: 28px; }
+.plot svg { display: block; width: 100%; overflow: visible; touch-action: pan-y; }
+.plot .axis { fill: var(--muted); font: 400 12px var(--body); font-variant-numeric: tabular-nums; }
+.plot .grid { stroke: var(--line); stroke-width: 1; }
+.plot .curve { fill: none; stroke: url(#curve-stroke); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.plot .glow { fill: none; stroke: var(--blue); stroke-width: 7; opacity: .34; filter: url(#curve-blur); }
+.plot .cross { stroke: var(--cream); stroke-width: 1; opacity: .55; }
+.plot .dot { fill: var(--cream); stroke: var(--night); stroke-width: 3; }
+.plot .pulse { fill: var(--blue); transform-box: fill-box; transform-origin: center; animation: pulse 2.6s ease-out 3 both; }
+@keyframes pulse { from { transform: scale(.5); opacity: .55; } to { transform: scale(2.6); opacity: 0; } }
+.plot .draw .curve, .plot .draw .glow { stroke-dasharray: 1; animation: draw 1.15s cubic-bezier(.3, .7, .2, 1) both; }
+.plot .draw .fill { animation: fade 1.15s ease both; }
+@keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+details { margin-top: 18px; }
+summary { cursor: pointer; color: var(--muted); font-size: .88rem; }
+.table-scroll { margin-top: 14px; max-height: 280px; overflow-y: auto; }
+
+/* Créneaux */
+.slots-grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(32px, 6vw, 88px); align-items: end; margin-top: 44px; }
+.now-state { font: 400 clamp(3rem, 6vw, 4.6rem)/1.08 var(--display); letter-spacing: .012em; text-transform: uppercase; margin: 0; }
+.now-when { color: var(--muted); margin: 4px 0 16px; }
+.meter { display: flex; gap: 4px; margin-bottom: 30px; }
+.meter i { flex: 1; height: 4px; border-radius: 2px; background: var(--line); }
+.meter i.on { background: var(--blue); box-shadow: 0 0 12px color-mix(in oklab, var(--blue) 70%, transparent); }
+.heat-wrap { overflow-x: auto; min-width: 0; padding-block: 2px; }
+.heat { display: grid; grid-template-columns: 38px repeat(24, minmax(20px, 1fr)); gap: 3px; min-width: 620px; font-size: .74rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.heat .h { text-align: center; padding-bottom: 4px; }
+.heat .d { display: flex; align-items: center; }
+.heat .c { aspect-ratio: .86; border-radius: 3px; background: color-mix(in oklab, var(--blue) calc(var(--v) * var(--v) * 100%), var(--raise)); transition: transform .15s; }
+.heat .c:hover { transform: scale(1.18); }
+.heat .c.hot { box-shadow: 0 0 14px color-mix(in oklab, var(--blue) 55%, transparent); }
+.heat .c.now { outline: 2px solid var(--red); outline-offset: 1px; }
+.scale { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin-top: 16px; font-size: .84rem; color: var(--muted); }
+.scale i { width: 96px; height: 6px; border-radius: 3px; background: linear-gradient(90deg, var(--raise), var(--blue)); }
+.scale u { width: 11px; height: 11px; border-radius: 3px; outline: 2px solid var(--red); outline-offset: -1px; margin-left: 12px; }
+
+/* Outils */
+.tools { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 clamp(32px, 6vw, 88px); list-style: none; margin: 40px 0 0; padding: 0; }
+.tools a { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; text-decoration: none; border-top: 1px solid var(--line); padding: 18px 0; }
+.tools b { font-weight: 600; }
+.tools span { display: block; color: var(--muted); font-size: .92rem; }
+.tools a::after { content: "↗"; color: var(--muted); transition: transform .2s, color .2s; }
+.tools a:hover::after { color: var(--cream); transform: translate(3px, -3px); }
+
+/* Fin de page : le visuel du clan */
+.call { position: relative; margin-top: clamp(88px, 12vw, 168px); padding-block: clamp(110px, 15vw, 210px) clamp(72px, 9vw, 120px); background: url("bg-hero.webp") right bottom / cover no-repeat; }
+.call::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, var(--night), transparent 46%), linear-gradient(90deg, color-mix(in oklab, var(--night) 62%, transparent), transparent 70%); }
+.call .wrap { position: relative; }
+.call h2 { font-size: clamp(3.8rem, 10vw, 9rem); line-height: 1.1; margin-bottom: 30px; }
+.steps { list-style: none; counter-reset: s; margin: 0 0 34px; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 40px; max-width: 900px; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 30px minmax(0, 1fr); align-items: baseline; }
+.steps li::before { content: counter(s); font: 400 1.4rem/1 var(--display); color: var(--blue); }
+.steps a { font-weight: 600; text-underline-offset: 3px; }
+footer { color: var(--muted); font-size: .84rem; }
+footer .wrap { padding-block: 26px 32px; }
+footer p { margin: 0 0 4px; max-width: 70em; }
+
+#tip { position: fixed; z-index: 20; pointer-events: none; background: var(--cream); color: var(--night); border-radius: 8px; padding: 6px 10px; font-size: .84rem; font-weight: 500; max-width: 260px; font-variant-numeric: tabular-nums; }
+
+@media (max-width: 900px) {
+  .menu { display: block; }
+  .bar { gap: 10px; padding-left: 12px; }
+  .cta { margin-left: auto; padding-inline: 14px; }
+  .links { display: none; position: absolute; top: calc(100% + 8px); left: 0; right: 0; flex-direction: column; align-items: stretch; margin: 0; padding: 8px; background: var(--raise); border: 1px solid var(--line); border-radius: 14px; }
+  .links.open { display: flex; }
+  .links a { padding: 11px 12px; font-size: 1rem; }
+  .race, .crew, .slots-grid, .player-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 720px) {
+  html { scroll-padding-top: 84px; }
+  .hero::before { background: radial-gradient(90% 40% at 70% 16%, color-mix(in oklab, var(--deep) 46%, transparent), transparent 74%); }
+  #flag { top: 96px; right: 20px; width: min(58%, 360px); }
+  .hero-inner { padding-block: calc(min(58vw, 360px) * .59 + 44px) 40px; }
+  h1 { font-size: clamp(4.6rem, 24vw, 7rem); }
+  .tally { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stat, .stat + .stat { padding: 20px 14px 18px 0; border-left: 0; }
+  .stat:nth-child(even) { padding-left: 16px; border-left: 1px solid var(--line); }
+  .stat:nth-child(n+3) { border-top: 1px solid var(--line); }
+  .opt { display: none; }
+  .hub { grid-template-columns: minmax(0, 1fr); }
+  .hub-item, .hub-item + .hub-item { padding: 22px 0; border-left: 0; }
+  .hub-item + .hub-item { border-top: 1px solid var(--line); }
+  td, th { padding-inline: 8px; }
+  td.left { white-space: normal; overflow-wrap: anywhere; }
+  .podium { grid-template-columns: minmax(0, 1fr); }
+  .card, .card.first, .card.second, .card.third { order: 0; display: grid; grid-template-columns: 50px minmax(0, 1fr) auto; align-items: center; column-gap: 12px; padding: 14px 16px; }
+  .card .n, .card.first .n { font-size: 2.3rem; }
+  .card .who { margin: 0; }
+  .card .wins { grid-column: 3; grid-row: 1; text-align: right; }
+  .card .sub { grid-column: 2 / 4; }
+  .tools { grid-template-columns: minmax(0, 1fr); }
+  .mode-row { grid-template-columns: minmax(0, 1fr) auto auto; gap: 6px 12px; }
+  .mode-track { grid-column: 1 / -1; grid-row: 2; }
+  .mode-num { font-size: .88rem; }
+  .steps { grid-template-columns: minmax(0, 1fr); }
+  .call::before { background: linear-gradient(180deg, var(--night), transparent 40%), color-mix(in oklab, var(--night) 58%, transparent); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="logo" viewBox="0 0 4401 2600"><path fill="#F5F3EB" d="M0 435.495C0 407.097 23.0211 384.076 51.4191 384.076H2168.82C2191.51 384.076 2213.05 374.087 2227.7 356.768L2506.48 27.308C2521.13 9.9887 2542.67 0 2565.35 0H4349.48C4393.47 0 4417.15 51.6444 4388.44 84.9743L3370.85 1266.51C3354.28 1285.75 3354.23 1314.2 3370.74 1333.49L4065.47 2145.76C4094 2179.12 4070.29 2230.6 4026.39 2230.6H1841.14C1818.67 2230.6 1797.32 2240.4 1782.67 2257.43L1511.23 2573.06C1496.57 2590.1 1475.22 2599.9 1452.75 2599.9H51.4192C23.0212 2599.9 0 2576.88 0 2548.48V435.495Z"/></symbol>
+</svg>
+
+<div id="grain" aria-hidden="true"></div>
+
+<nav aria-label="Navigation principale"><div class="wrap"><div class="bar">
+  <a class="brand" href="#accueil"><svg role="img" aria-label="Logo du clan FR"><use href="#logo"/></svg>[FR]</a>
+  <div class="links" id="nav-links">
+    <a href="#accueil">Accueil</a>
+    <a href="#classement">Classement</a>
+    <a href="#membres">Membres</a>
+    <a href="#jouer">Jouer</a>
+  </div>
+  <a class="cta" href="#rejoindre">Rejoindre</a>
+  <button class="menu" id="menu" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
+</div></div></nav>
+
+<main id="haut">
+  <div class="view" id="view-accueil">
+    <header class="hero">
+    <svg id="flag" viewBox="0 0 4401 2600" role="img" aria-label="Logo du clan FR">
+      <defs>
+        <path id="flag-path" d="M0 435.495C0 407.097 23.0211 384.076 51.4191 384.076H2168.82C2191.51 384.076 2213.05 374.087 2227.7 356.768L2506.48 27.308C2521.13 9.9887 2542.67 0 2565.35 0H4349.48C4393.47 0 4417.15 51.6444 4388.44 84.9743L3370.85 1266.51C3354.28 1285.75 3354.23 1314.2 3370.74 1333.49L4065.47 2145.76C4094 2179.12 4070.29 2230.6 4026.39 2230.6H1841.14C1818.67 2230.6 1797.32 2240.4 1782.67 2257.43L1511.23 2573.06C1496.57 2590.1 1475.22 2599.9 1452.75 2599.9H51.4192C23.0212 2599.9 0 2576.88 0 2548.48V435.495Z"/>
+        <linearGradient id="flag-fill" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0" stop-color="#0f1e5a"/><stop offset=".58" stop-color="#3a5ad0"/><stop offset="1" stop-color="#a9c0ff"/>
+        </linearGradient>
+        <linearGradient id="flag-warm" x1=".5" y1=".35" x2=".88" y2="1">
+          <stop offset="0" stop-color="#ff3b3b" stop-opacity="0"/><stop offset="1" stop-color="#ff5a6e" stop-opacity=".42"/>
+        </linearGradient>
+        <linearGradient id="flag-rim" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0" stop-color="#7f9dff" stop-opacity=".22"/><stop offset="1" stop-color="#f5f3eb" stop-opacity=".85"/>
+        </linearGradient>
+        <linearGradient id="flag-sheen" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".2"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+        </linearGradient>
+        <clipPath id="flag-clip"><use href="#flag-path"/></clipPath>
+      </defs>
+      <use href="#flag-path" fill="url(#flag-fill)"/>
+      <use href="#flag-path" fill="url(#flag-warm)"/>
+      <g clip-path="url(#flag-clip)"><g transform="skewX(-16)"><rect class="sheen" x="-900" y="-100" width="1500" height="2800" fill="url(#flag-sheen)"/></g></g>
+      <use href="#flag-path" fill="none" stroke="url(#flag-rim)" stroke-width="12"/>
+    </svg>
+    <div class="wrap hero-inner">
+      <p class="tag"><b>[FR]</b> Clan officiel sur OpenFront</p>
+      <h1>Le front<br>français</h1>
+      <p class="lede" id="lede"></p>
+      <div class="actions">
+        <a class="btn" href="#rejoindre">Rejoindre le clan</a>
+        <a class="btn ghost" href="https://openfront.io/" target="_blank" rel="noopener">Lancer une partie</a>
+      </div>
+    </div>
+  </header>
+
+    <div class="wrap">
+      <dl class="tally" id="tally"></dl>
+      <div class="hub">
+        <a class="hub-item" href="#classement">
+          <span class="label">Classement</span>
+          <strong id="hub-race"></strong>
+          <span class="sub" id="hub-race-sub"></span>
+          <span class="go">Voir le classement</span>
+        </a>
+        <a class="hub-item" href="#membres">
+          <span class="label">Membres</span>
+          <strong id="hub-crew"></strong>
+          <span class="sub" id="hub-crew-sub"></span>
+          <span class="go">Voir les membres</span>
+        </a>
+        <a class="hub-item" href="#jouer">
+          <span class="label">En ce moment</span>
+          <strong id="hub-now"></strong>
+          <span class="sub" id="hub-now-sub"></span>
+          <span class="go">Voir les créneaux</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="view" id="view-classement" hidden>
+    <div class="wrap">
+      <section class="race">
+      <div class="race-side">
+        <p class="kicker">Classement des clans</p>
+        <h1 class="title" id="race-goal"></h1>
+        <p class="text" id="race-text"></p>
+      </div>
+      <div>
+        <div class="track" id="track"></div>
+        <table class="ladder" id="ladder">
+          <thead><tr><th>Rang</th><th class="left">Clan</th><th>Score</th><th>Écart</th><th class="opt">Parties</th></tr></thead>
+          <tbody id="clans"></tbody>
+        </table>
+        <button class="more" id="more" type="button"></button>
+      </div>
+    </section>
+
+      <section id="activite">
+      <p class="kicker">Le clan en mouvement</p>
+      <div class="motion-head">
+        <div class="readout" aria-live="polite">
+          <p class="readout-value" id="readout-value"></p>
+          <p class="readout-label" id="readout-label"></p>
+        </div>
+        <div class="tabs" id="series-tabs" role="group" aria-label="Choisir la courbe"></div>
+      </div>
+      <div class="plot" id="plot"></div>
+      <details>
+        <summary>Voir les chiffres en tableau</summary>
+        <div class="table-scroll"><table>
+          <thead><tr><th>Jour</th><th id="series-head"></th></tr></thead>
+          <tbody id="series-table"></tbody>
+        </table></div>
+      </details>
+    </section>
+    </div>
+  </div>
+
+  <div class="view" id="view-membres" hidden>
+    <div class="wrap">
+      <section>
+      <p class="kicker">L'effectif</p>
+      <h1 class="title" id="crew-title"></h1>
+      <div class="tabs modes" id="mode-tabs" role="group" aria-label="Choisir le mode de jeu"></div>
+      <div class="crew">
+        <div>
+          <p class="label" id="podium-label"></p>
+          <div class="podium" id="podium"></div>
+        </div>
+        <ul class="facts" id="facts"></ul>
+      </div>
+      <div class="roster">
+        <div class="roster-tools">
+          <div class="search">
+            <label class="sr" for="roster-search">Chercher un pseudo</label>
+            <input id="roster-search" type="search" placeholder="Chercher un pseudo" autocomplete="off">
+          </div>
+          <div class="tabs" role="group" aria-label="Trier les membres">
+            <button id="roster-wins" data-rsort="wins" aria-pressed="true">Victoires</button>
+            <button id="roster-games" data-rsort="games" aria-pressed="false">Parties</button>
+            <button id="roster-new" data-rsort="joined" aria-pressed="false">Nouveaux</button>
+          </div>
+        </div>
+        <table>
+          <thead><tr><th>Rang</th><th class="left">Pseudo</th><th>Victoires</th><th class="opt">Parties</th><th class="opt">Taux</th><th>Arrivée</th></tr></thead>
+          <tbody id="roster"></tbody>
+        </table>
+        <p class="note" id="roster-empty" hidden>Aucun pseudo public ne correspond à cette recherche.</p>
+        <button class="more" id="roster-more" type="button"></button>
+      </div>
+    </section>
+    </div>
+  </div>
+
+  <div class="view" id="view-jouer" hidden>
+    <div class="wrap">
+      <section id="creneaux">
+      <p class="kicker">Quand jouer</p>
+      <h1 class="title">Trouve du monde au bon moment</h1>
+      <p class="text" id="heat-intro"></p>
+      <div class="slots-grid">
+        <div>
+          <p class="label">En ce moment</p>
+          <p class="now-state" id="now-state"></p>
+          <p class="now-when" id="now-when"></p>
+          <div class="meter" id="now-meter" aria-hidden="true"><i></i><i></i><i></i></div>
+          <p class="label">Les pics de la semaine</p>
+          <ul class="facts" id="slots"></ul>
+        </div>
+        <div>
+          <div class="heat-wrap"><div class="heat" id="heat"></div></div>
+          <div class="scale"><span>Peu de parties</span><i></i><span>Beaucoup</span><u></u><span>Maintenant</span></div>
+        </div>
+      </div>
+    </section>
+
+      <section id="outils">
+      <p class="kicker">Boîte à outils</p>
+      <h2>Prépare tes parties</h2>
+      <ul class="tools">
+        <li><a href="https://ofstats.io/maps" target="_blank" rel="noopener"><div><b>ofstats.io, cartes</b><span>Cartes de chaleur des spawns gagnants</span></div></a></li>
+        <li><a href="https://ofstats.io/?mode=Ranked+1v1" target="_blank" rel="noopener"><div><b>ofstats.io, classé</b><span>File classée en direct</span></div></a></li>
+        <li><a href="https://teamstats.pro/" target="_blank" rel="noopener"><div><b>teamstats.pro</b><span>Stats des modes en équipes</span></div></a></li>
+        <li><a href="https://trackerfront.com/" target="_blank" rel="noopener"><div><b>trackerfront</b><span>Classement du mode FFA</span></div></a></li>
+        <li><a href="https://op-leaderboard.netlify.app/" target="_blank" rel="noopener"><div><b>Classement 1v1</b><span>Le classement du 1v1 classé</span></div></a></li>
+        <li><a href="https://openfront-tools.frozenpenguin.media/" target="_blank" rel="noopener"><div><b>Replay Tool</b><span>Les replays des anciennes versions</span></div></a></li>
+      </ul>
+    </section>
+    </div>
+  </div>
+
+  <div class="view" id="view-joueur" hidden>
+    <div class="wrap">
+      <section id="player"></section>
+    </div>
+  </div>
+
+  <section id="rejoindre" class="call">
+    <div class="wrap">
+      <h2>Prends ta place<br>sur le front</h2>
+      <ol class="steps">
+        <li><span>Ouvre <a href="https://openfront.io/" target="_blank" rel="noopener">OpenFront</a>.</span></li>
+        <li><span>Rejoins le clan officiel France [FR] depuis le jeu.</span></li>
+        <li><span>Passe sur le <a href="https://discord.gg/f7xSuReUfe" target="_blank" rel="noopener">Discord du clan</a> pour trouver des coéquipiers.</span></li>
+      </ol>
+      <div class="actions">
+        <a class="btn" href="https://discord.gg/f7xSuReUfe" target="_blank" rel="noopener">Rejoindre le Discord</a>
+        <a class="btn ghost" href="https://openfront.io/" target="_blank" rel="noopener">Lancer une partie</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap">
+  <p id="source"></p>
+  <p>L'effectif vient de la liste officielle du clan, les membres sans pseudo public restent anonymes. Le classement et l'activité sont les chiffres d'OpenFront pour le tag [FR].</p>
+  <p>Site de clan non officiel, sans lien avec les éditeurs d'OpenFront.</p>
+</div></footer>
+
+<div id="tip" hidden></div>
+
+<script>
+const DATA = /*__DATA__*/null;
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const wide = (s) => s.replace(/ /g, " ");
+const int = (n) => wide(new Intl.NumberFormat("fr-FR").format(n));
+const pct = (x) => wide(new Intl.NumberFormat("fr-FR", { style: "percent", minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(x));
+const utcDate = (d) => new Date(d + "T00:00:00Z");
+const fmt = (o) => new Intl.DateTimeFormat("fr-FR", { timeZone: "UTC", ...o });
+const dayFmt = fmt({ day: "numeric", month: "long" });
+
+const us = DATA.clans.find((c) => c.tag === DATA.tag);
+const above = DATA.clans[us.rank - 2];
+const below = DATA.clans[us.rank];
+const R = DATA.roster;
+
+/* Ouverture */
+$("lede").textContent = `Le clan France sur OpenFront. ${int(R.total)} joueurs, un classement à grimper et un Discord pour jouer ensemble.`;
+$("tally").innerHTML = [
+  ["Rang sur 90 jours", `${us.rank}e`, `sur ${DATA.clans.length} clans`],
+  ["Parties", int(us.games), "sur 90 jours"],
+  ["Victoires", int(us.wins), `${pct(us.wins / us.games)} des parties`],
+  ["Membres", int(R.total), `${int(R.active)} ont déjà joué`],
+].map(([k, v, sub]) => `<div class="stat"><dt>${k}</dt><dd>${v}</dd><span class="sub">${sub}</span></div>`).join("");
+
+/* Classement */
+{
+  const gapUp = above ? Math.round(above.score - us.score) : 0;
+  const gapDown = below ? Math.round(us.score - below.score) : 0;
+  $("race-goal").textContent = above ? `À ${int(gapUp)} points de la ${above.rank}e place` : "En tête du classement";
+  $("hub-race").textContent = above ? `À ${int(gapUp)} points` : "En tête";
+  $("hub-race-sub").textContent = above ? `de la ${above.rank}e place, derrière [${above.tag}]` : "du classement des clans";
+  const top5 = DATA.clans[4];
+  $("race-text").innerHTML = above
+    ? `[${esc(above.tag)}] est juste devant.${below ? ` Derrière, [${esc(below.tag)}] pointe à ${int(gapDown)} points.` : ""}${us.rank > 5 ? ` Le top 5 est à ${int(Math.round(top5.score - us.score))} points.` : ""}`
+    : "Personne ne fait mieux sur les 90 derniers jours.";
+  const trio = [below, us, above].filter(Boolean);
+  const lo = trio[0].score, hi = trio[trio.length - 1].score;
+  const pos = (s) => (hi === lo ? 50 : 10 + 80 * ((s - lo) / (hi - lo)));
+  let html = `<div class="rail"></div>`;
+  if (above) html += `<div class="goal" style="left:${pos(us.score)}%;width:${pos(above.score) - pos(us.score)}%"></div>`;
+  html += trio.map((c) => `<div class="node${c === us ? " us" : ""}" style="left:${pos(c.score)}%"><i></i><span><b>[${esc(c.tag)}]</b>${c.rank}e · ${int(Math.round(c.score))}</span></div>`).join("");
+  $("track").innerHTML = html;
+}
+let expanded = false;
+function renderClans() {
+  const shown = expanded ? DATA.clans : [above, us, below].filter(Boolean);
+  $("ladder").classList.toggle("all", expanded);
+  $("clans").innerHTML = shown.map((c) => {
+    const gap = Math.round(c.score - us.score);
+    return `<tr class="${c === us ? "us" : ""}">
+      <td><span class="rank">${c.rank}</span></td>
+      <td class="left"><span class="clan">[${esc(c.tag)}]</span>${c === above ? `<span class="pill">Objectif</span>` : ""}</td>
+      <td><span class="pts">${int(Math.round(c.score))}</span></td>
+      <td class="dim">${c === us ? "–" : gap >= 0 ? `+${int(gap)}` : `−${int(-gap)}`}</td>
+      <td class="dim opt">${int(c.games)}</td>
+    </tr>`;
+  }).join("");
+  $("more").textContent = expanded ? "Réduire" : `Voir les ${DATA.clans.length} clans`;
+}
+$("more").addEventListener("click", () => { expanded = !expanded; renderClans(); });
+renderClans();
+
+/* Effectif */
+const MODE_NAMES = { total: "Général", ffa: "FFA", team: "Équipes", duos: "Duos", trios: "Trios", quads: "Quads", ranked: "Classé", "1v1": "1v1", hvn: "Contre nations" };
+// Même ordre que MODES dans scripts/build.mjs.
+const MODE_KEYS = ["ffa", "team", "duos", "trios", "quads", "hvn", "ranked", "1v1"];
+const MEMBERS = R.rows.map(([name, slug, joined, wins, losses, modes, hidden]) => {
+  const stats = { total: { wins, games: wins + losses } };
+  MODE_KEYS.forEach((k, i) => {
+    const w = modes ? modes[i * 2] : 0, l = modes ? modes[i * 2 + 1] : 0;
+    stats[k] = { wins: w, games: w + l };
+  });
+  return { name, slug, joined, hidden: Boolean(hidden), stats };
+});
+const BY_SLUG = new Map(MEMBERS.filter((m) => m.slug).map((m) => [m.slug, m]));
+const ROLE = { leader: "Chef", officer: "Officier" };
+const ROLES = new Map(R.command.map((c) => [c.slug, c.role]));
+const rankings = {};
+// Classement par victoires parmi les pseudos publics qui ont joué dans ce mode.
+const rankingOf = (mode) => (rankings[mode] ??= MEMBERS
+  .filter((m) => m.name && m.stats[mode].games > 0)
+  .sort((a, b) => b.stats[mode].wins - a.stats[mode].wins || a.stats[mode].games - b.stats[mode].games));
+const rankIn = (m, mode) => rankingOf(mode).indexOf(m) + 1;
+const playerLink = (m) => `#joueur-${m.slug}`;
+const joinedFmt = fmt({ day: "2-digit", month: "2-digit", year: "2-digit" });
+{
+  $("crew-title").textContent = `${int(R.total)} joueurs sous le même drapeau`;
+  $("facts").innerHTML = [
+    ...R.command.map((c) => `<li>${ROLE[c.role]}<a href="#joueur-${c.slug}">${esc(c.name)}</a></li>`),
+    `<li>Ont déjà joué<b>${int(R.active)}</b></li>`,
+    `<li>Pseudos publics<b>${int(R.named)}</b></li>`,
+  ].join("");
+
+  const leader = rankingOf("total")[0];
+  $("hub-crew").textContent = leader.name;
+  $("hub-crew-sub").textContent = `en tête du clan avec ${int(leader.stats.total.wins)} victoires`;
+
+  const STEP = 12;
+  const PLACE = ["first", "second", "third"];
+  let mode = "total", sort = "wins", query = "", shown = STEP;
+  function renderPodium() {
+    $("podium-label").textContent = `Le podium ${mode === "total" ? "général" : `en ${MODE_NAMES[mode]}`}, parmi les pseudos publics`;
+    $("podium").innerHTML = rankingOf(mode).slice(0, 3).map((m, i) => `<a class="card ${PLACE[i]}" href="${playerLink(m)}">
+      <span class="n">${i + 1}</span>
+      <span class="who">${esc(m.name)}</span>
+      <span class="wins">${int(m.stats[mode].wins)}</span>
+      <span class="sub">victoires sur ${int(m.stats[mode].games)} parties</span>
+    </a>`).join("");
+  }
+  function renderRoster() {
+    const q = query.trim().toLowerCase();
+    const base = mode === "total" ? MEMBERS : rankingOf(mode);
+    const list = (q ? base.filter((m) => m.name && !m.hidden && m.name.toLowerCase().includes(q)) : base)
+      .slice().sort((a, b) => sort === "joined" ? b.joined.localeCompare(a.joined) : b.stats[mode][sort] - a.stats[mode][sort]);
+    $("roster").innerHTML = list.slice(0, shown).map((m) => {
+      const st = m.stats[mode];
+      const rank = m.name && st.games > 0 ? rankIn(m, mode) : 0;
+      return `<tr>
+        <td class="dim">${rank || "–"}</td>
+        <td class="left">${m.name ? `<a href="${playerLink(m)}">${esc(m.name)}</a>` : `<span class="anon">Membre anonyme</span>`}</td>
+        <td>${int(st.wins)}</td>
+        <td class="dim opt">${int(st.games)}</td>
+        <td class="dim opt">${st.games ? pct(st.wins / st.games) : "–"}</td>
+        <td class="dim">${joinedFmt.format(utcDate(m.joined))}</td>
+      </tr>`;
+    }).join("");
+    $("roster-empty").hidden = list.length > 0;
+    $("roster-more").hidden = list.length <= shown;
+    $("roster-more").textContent = `Voir ${Math.min(50, list.length - shown)} de plus sur ${int(list.length)}`;
+  }
+  $("mode-tabs").innerHTML = Object.entries(MODE_NAMES).map(([k, label]) => `<button id="mode-${k}" type="button" data-mode="${k}" aria-pressed="${k === mode}">${label}</button>`).join("");
+  $("mode-tabs").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-mode]");
+    if (!b) return;
+    mode = b.dataset.mode;
+    shown = STEP;
+    document.querySelectorAll("[data-mode]").forEach((o) => o.setAttribute("aria-pressed", String(o === b)));
+    renderPodium();
+    renderRoster();
+  });
+  $("roster-search").addEventListener("input", (e) => { query = e.target.value; shown = STEP; renderRoster(); });
+  $("roster-more").addEventListener("click", () => { shown += 50; renderRoster(); });
+  document.querySelectorAll("[data-rsort]").forEach((b) => b.addEventListener("click", () => {
+    sort = b.dataset.rsort;
+    shown = STEP;
+    document.querySelectorAll("[data-rsort]").forEach((o) => o.setAttribute("aria-pressed", String(o === b)));
+    renderRoster();
+  }));
+  renderPodium();
+  renderRoster();
+}
+
+/* Page joueur */
+function renderPlayer(slug) {
+  const m = BY_SLUG.get(slug);
+  const total = m.stats.total;
+  const profile = R.profiles[slug];
+  const longDate = fmt({ day: "numeric", month: "long", year: "numeric" });
+  const since = profile?.since ? ` Sur OpenFront depuis ${fmt({ month: "long", year: "numeric" }).format(utcDate(profile.since + "-01"))}.` : "";
+  const rank = rankIn(m, "total");
+  const tiles = [
+    ["Rang dans le clan", rank ? (rank === 1 ? "1er" : `${rank}e`) : "–", `sur ${int(rankingOf("total").length)} pseudos publics`],
+    ["Victoires", int(total.wins), "avec le clan"],
+    ["Parties", int(total.games), "avec le clan"],
+    ["Taux de victoire", total.games ? pct(total.wins / total.games) : "–", "tous modes confondus"],
+  ];
+  const played = MODE_KEYS.filter((k) => m.stats[k].games > 0).sort((a, b) => m.stats[b].games - m.stats[a].games);
+  const modeRows = played.map((k) => {
+    const st = m.stats[k];
+    const r = rankIn(m, k);
+    return `<div class="mode-row">
+      <b>${MODE_NAMES[k]}</b>
+      <div class="mode-track"><i style="width:${(st.wins / st.games) * 100}%"></i></div>
+      <span class="mode-num"><strong>${int(st.wins)}</strong> sur ${int(st.games)}</span>
+      <span class="mode-rank${r <= 3 ? " top" : ""}" title="Rang dans le clan en ${MODE_NAMES[k]}">${r === 1 ? "1er" : `${r}e`}</span>
+    </div>`;
+  }).join("");
+  const money = (n) => wide(new Intl.NumberFormat("fr-FR", { notation: "compact", maximumFractionDigits: 1 }).format(n));
+  const career = profile?.fun ? [
+    ["Trahisons", int(profile.fun[0])],
+    ["Bombes atomiques", int(profile.fun[1])],
+    ["Bombes H", int(profile.fun[2])],
+    ["MIRV", int(profile.fun[3])],
+    ["Bateaux de transport", int(profile.fun[4])],
+    ["Villes construites", int(profile.fun[5])],
+    ["Or gagné", money(profile.fun[6])],
+  ].map(([k, v]) => `<li>${k}<b>${v}</b></li>`).join("") : "";
+  $("player").innerHTML = `
+    <a class="back" href="#membres">Tous les membres</a>
+    <p class="kicker">${ROLES.has(slug) ? ROLE[ROLES.get(slug)] : "Membre"} du clan [FR]</p>
+    <h1 class="title">${esc(m.name)}</h1>
+    <p class="text">Dans le clan depuis le ${longDate.format(utcDate(m.joined))}.${since}</p>
+    <dl class="tally">${tiles.map(([k, v, sub]) => `<div class="stat"><dt>${k}</dt><dd>${v}</dd><span class="sub">${sub}</span></div>`).join("")}</dl>
+    <div class="player-grid${career ? "" : " solo"}">
+      <div>
+        <p class="label">Mode par mode, avec le clan</p>
+        ${modeRows ? `<div>${modeRows}</div><p class="note">Victoires sur parties, et rang dans le clan pour chaque mode. Duos, trios et quads comptent aussi dans Équipes, le 1v1 compte aussi dans Classé.</p>` : `<p class="text">Pas encore de partie avec le clan.</p>`}
+      </div>
+      ${career ? `<div>
+        <p class="label">Sa carrière en parties publiques</p>
+        <ul class="facts">${career}</ul>
+        <a class="ext" href="https://openfront.io/#modal=profile&publicID=${encodeURIComponent(profile.id)}" target="_blank" rel="noopener">Voir son profil OpenFront ↗</a>
+      </div>` : ""}
+    </div>`;
+}
+
+/* Courbes */
+{
+  const days = DATA.days;
+  const monthLong = fmt({ month: "long" });
+  const last = R.growth[R.growth.length - 1];
+  const cutoff = new Date(utcDate(last[0]));
+  cutoff.setUTCMonth(cutoff.getUTCMonth() - 2, 1);
+  const cutoffKey = cutoff.toISOString().slice(0, 10);
+  const before = R.growth.filter(([d]) => d < cutoffKey).pop();
+  const sum = (key) => days.reduce((s, d) => s + d[key], 0);
+  const SERIES = {
+    members: {
+      label: "Membres",
+      points: R.growth.map(([d, v]) => ({ d, v })),
+      value: last[1],
+      caption: `<strong>+${int(last[1] - (before ? before[1] : 0))} membres</strong> depuis le 1er ${monthLong.format(cutoff)}. Les membres encore dans le clan, par date d'arrivée.`,
+      unit: "membres",
+      monthly: true,
+    },
+    wins: {
+      label: "Victoires",
+      points: days.map((d) => ({ d: d.date, v: d.wins })),
+      value: sum("wins"),
+      caption: `<strong>victoires en ${days.length} jours</strong>, soit ${int(Math.round(sum("wins") / days.length))} par jour en moyenne.`,
+      unit: "victoires",
+    },
+    games: {
+      label: "Parties",
+      points: days.map((d) => ({ d: d.date, v: d.games })),
+      value: sum("games"),
+      caption: `<strong>parties en ${days.length} jours</strong>, soit ${int(Math.round(sum("games") / days.length))} par jour en moyenne.`,
+      unit: "parties",
+    },
+  };
+  let active = "members";
+
+  const niceMax = (v) => {
+    const raw = v / 5;
+    const pow = 10 ** Math.floor(Math.log10(raw));
+    const step = [1, 2, 2.5, 5, 10].map((m) => m * pow).find((s) => s >= raw);
+    return { step, max: Math.ceil(v / step) * step };
+  };
+  // Courbe monotone : elle reste lisse sans jamais dépasser les valeurs réelles.
+  function smooth(pts) {
+    const n = pts.length;
+    const dx = [], m = [], t = [];
+    for (let i = 0; i < n - 1; i++) {
+      dx[i] = pts[i + 1][0] - pts[i][0];
+      m[i] = (pts[i + 1][1] - pts[i][1]) / dx[i];
+    }
+    t[0] = m[0];
+    t[n - 1] = m[n - 2];
+    for (let i = 1; i < n - 1; i++) t[i] = m[i - 1] * m[i] <= 0 ? 0 : (2 * m[i - 1] * m[i]) / (m[i - 1] + m[i]);
+    let path = `M${pts[0][0]} ${pts[0][1]}`;
+    for (let i = 0; i < n - 1; i++) {
+      const h = dx[i] / 3;
+      path += `C${pts[i][0] + h} ${pts[i][1] + t[i] * h} ${pts[i + 1][0] - h} ${pts[i + 1][1] - t[i + 1] * h} ${pts[i + 1][0]} ${pts[i + 1][1]}`;
+    }
+    return path;
+  }
+  const plot = $("plot");
+  const longDay = fmt({ day: "numeric", month: "long", year: "numeric" });
+  function setReadout(id, point) {
+    const s = SERIES[id];
+    $("readout-value").textContent = int(point ? point.v : s.value);
+    $("readout-label").innerHTML = point ? `<strong>${s.unit}</strong> le ${longDay.format(utcDate(point.d))}` : s.caption;
+  }
+  function draw(animate) {
+    const s = SERIES[active];
+    const W = Math.max(280, plot.clientWidth);
+    const H = W < 640 ? 240 : 340;
+    const M = { t: 10, r: 44, b: 28, l: 0 };
+    const { step, max } = niceMax(Math.max(...s.points.map((p) => p.v)));
+    const x = (i) => M.l + (i / (s.points.length - 1)) * (W - M.l - M.r);
+    const y = (v) => M.t + (1 - v / max) * (H - M.t - M.b);
+    const pts = s.points.map((p, i) => [x(i), y(p.v)]);
+    const curve = smooth(pts);
+    let grid = "";
+    for (let v = 0; v <= max + 1e-6; v += step) {
+      grid += `<line class="grid" x1="${M.l}" x2="${W - M.r}" y1="${y(v)}" y2="${y(v)}"/><text class="axis" x="${W}" y="${y(v) + 4}" text-anchor="end">${int(v)}</text>`;
+    }
+    const short = s.monthly ? fmt({ month: "short" }) : fmt({ day: "2-digit", month: "2-digit" });
+    const every = W < 640 ? 4 : 2;
+    const labels = s.points.map((p, i) => {
+      const show = s.monthly ? p.d.endsWith("-01") : i % every === 0;
+      return show ? `<text class="axis" x="${x(i)}" y="${H - 6}" text-anchor="middle">${short.format(utcDate(p.d))}</text>` : "";
+    }).join("");
+    const end = pts[pts.length - 1];
+    plot.innerHTML = `<svg viewBox="0 0 ${W} ${H}" height="${H}" role="img" aria-label="Courbe des ${s.unit}, valeur actuelle ${s.value}" class="${animate ? "draw" : ""}">
+      <defs>
+        <linearGradient id="curve-stroke" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#3f5fcf"/><stop offset=".62" stop-color="#7f9dff"/><stop offset="1" stop-color="#f5f3eb"/></linearGradient>
+        <linearGradient id="curve-area" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#7f9dff" stop-opacity=".36"/><stop offset="1" stop-color="#7f9dff" stop-opacity="0"/></linearGradient>
+        <filter id="curve-blur" x="-10%" y="-30%" width="120%" height="160%"><feGaussianBlur stdDeviation="9"/></filter>
+      </defs>
+      ${grid}
+      ${labels}
+      <path class="fill" d="${curve}L${end[0]} ${y(0)}L${pts[0][0]} ${y(0)}Z" fill="url(#curve-area)"/>
+      <path class="glow" d="${curve}" pathLength="1"/>
+      <path class="curve" d="${curve}" pathLength="1"/>
+      <circle class="pulse" cx="${end[0]}" cy="${end[1]}" r="6"/>
+      <circle class="dot" id="end-dot" cx="${end[0]}" cy="${end[1]}" r="6"/>
+      <line class="cross" id="cross" x1="0" x2="0" y1="${M.t}" y2="${y(0)}" visibility="hidden"/>
+    </svg>`;
+    const svg = plot.firstElementChild;
+    const cross = svg.querySelector("#cross");
+    const dot = svg.querySelector("#end-dot");
+    const leave = () => {
+      cross.setAttribute("visibility", "hidden");
+      dot.setAttribute("cx", end[0]);
+      dot.setAttribute("cy", end[1]);
+      setReadout(active);
+    };
+    svg.addEventListener("pointermove", (e) => {
+      const box = svg.getBoundingClientRect();
+      const i = Math.max(0, Math.min(pts.length - 1, Math.round(((e.clientX - box.left) / (box.width - M.r)) * (pts.length - 1))));
+      cross.setAttribute("x1", pts[i][0]);
+      cross.setAttribute("x2", pts[i][0]);
+      cross.setAttribute("visibility", "visible");
+      dot.setAttribute("cx", pts[i][0]);
+      dot.setAttribute("cy", pts[i][1]);
+      setReadout(active, s.points[i]);
+    });
+    svg.addEventListener("pointerleave", leave);
+  }
+  function select(id, animate) {
+    active = id;
+    const s = SERIES[id];
+    document.querySelectorAll("#series-tabs button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.series === id)));
+    setReadout(id);
+    draw(animate);
+    $("series-head").textContent = s.label;
+    $("series-table").innerHTML = [...s.points].reverse().map((p) => `<tr><td>${dayFmt.format(utcDate(p.d))}</td><td>${int(p.v)}</td></tr>`).join("");
+  }
+  $("series-tabs").innerHTML = Object.entries(SERIES).map(([id, s]) => `<button id="series-${id}" type="button" data-series="${id}" aria-pressed="false">${s.label}</button>`).join("");
+  $("series-tabs").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-series]");
+    if (b) select(b.dataset.series, true);
+  });
+  select("members", false);
+  let width = plot.clientWidth;
+  new ResizeObserver(() => {
+    if (plot.clientWidth !== width) { width = plot.clientWidth; draw(false); }
+  }).observe(plot);
+  new IntersectionObserver(([e], io) => {
+    if (e.isIntersecting) { draw(true); io.disconnect(); }
+  }, { threshold: .35 }).observe(plot);
+}
+
+/* Créneaux */
+{
+  const WEEK = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
+  const heat = DATA.heat;
+  const max = Math.max(...heat.flat());
+  const cells = heat.flatMap((row, d) => row.map((v, h) => ({ d, h, v }))).sort((a, b) => b.v - a.v);
+  const parts = Object.fromEntries(new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Paris", weekday: "short", hour: "2-digit", hourCycle: "h23" }).formatToParts(new Date()).map((p) => [p.type, p.value]));
+  const nowD = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].indexOf(parts.weekday);
+  const nowH = Number(parts.hour);
+  const level = heat[nowD][nowH] / max;
+  const [word, bars] = level >= 2 / 3 ? ["Animé", 3] : level >= 1 / 3 ? ["Moyen", 2] : ["Calme", 1];
+  $("now-state").textContent = word;
+  $("now-when").textContent = `${WEEK[nowD]}, ${nowH} h, d'après la semaine passée`;
+  $("hub-now").textContent = word;
+  $("hub-now-sub").textContent = `${WEEK[nowD]}, ${nowH} h, d'après la semaine passée`;
+  [...$("now-meter").children].forEach((m, i) => m.classList.toggle("on", i < bars));
+  $("slots").innerHTML = cells.slice(0, 3).map((c) => `<li>${WEEK[c.d]}, ${c.h} h<b>${int(c.v)} parties</b></li>`).join("");
+  $("heat-intro").textContent = `D'après les ${int(DATA.sessionCount)} parties jouées avec le tag sur les 7 derniers jours complets, à l'heure de Paris.`;
+  let html = `<span></span>`;
+  for (let h = 0; h < 24; h++) html += `<span class="h">${h % 3 === 0 ? h : ""}</span>`;
+  heat.forEach((row, d) => {
+    html += `<span class="d">${WEEK[d].slice(0, 3)}</span>`;
+    row.forEach((v, h) => {
+      const ratio = v / max;
+      html += `<div class="c${ratio > .78 ? " hot" : ""}${d === nowD && h === nowH ? " now" : ""}" style="--v:${ratio.toFixed(3)}" role="img" aria-label="${WEEK[d]} ${h} h : ${v} parties" data-tip="${WEEK[d]}, ${h} h<br>${int(v)} parties"></div>`;
+    });
+  });
+  $("heat").innerHTML = html;
+}
+
+$("source").textContent = `Données : API publique d'OpenFront, mises à jour le ${new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris" }).format(new Date(DATA.fetchedAt))}.`;
+
+/* Pages */
+{
+  const PAGES = { accueil: "Front Français [FR]", classement: "Classement · Front Français [FR]", membres: "Membres · Front Français [FR]", jouer: "Jouer · Front Français [FR]" };
+  const menu = $("menu");
+  const panel = $("nav-links");
+  const links = [...panel.querySelectorAll("a")];
+  const toggle = (open) => { panel.classList.toggle("open", open); menu.setAttribute("aria-expanded", String(open)); };
+  const isPlayer = (t) => t.startsWith("joueur-") && BY_SLUG.has(t.slice(7));
+  const fromHash = () => { const h = location.hash.slice(1); return PAGES[h] || isPlayer(h) ? h : "accueil"; };
+  function show(id, remember) {
+    const player = isPlayer(id);
+    const view = player ? "joueur" : id;
+    if (player) renderPlayer(id.slice(7));
+    [...Object.keys(PAGES), "joueur"].forEach((p) => { $(`view-${p}`).hidden = p !== view; });
+    links.forEach((a) => {
+      if (a.getAttribute("href") === `#${player ? "membres" : id}`) a.setAttribute("aria-current", "true");
+      else a.removeAttribute("aria-current");
+    });
+    document.title = player ? `${BY_SLUG.get(id.slice(7)).name} · Front Français [FR]` : PAGES[id];
+    window.scrollTo({ top: 0, behavior: "instant" });
+    if (remember) {
+      try { history.pushState(null, "", `#${id}`); } catch { /* le lecteur peut refuser : la page change quand même */ }
+    }
+  }
+  menu.addEventListener("click", () => toggle(!panel.classList.contains("open")));
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    const target = a.getAttribute("href").slice(1);
+    if (PAGES[target] || isPlayer(target)) {
+      e.preventDefault();
+      toggle(false);
+      show(target, true);
+    } else if (target === "rejoindre") {
+      e.preventDefault();
+      toggle(false);
+      $("rejoindre").scrollIntoView({ behavior: "smooth" });
+    }
+  });
+  window.addEventListener("popstate", () => show(fromHash(), false));
+  window.addEventListener("hashchange", () => show(fromHash(), false));
+  show(fromHash(), false);
+  if (location.hash === "#rejoindre") $("rejoindre").scrollIntoView();
+}
+
+/* Infobulle */
+const tip = $("tip");
+document.addEventListener("mousemove", (e) => {
+  const t = e.target.closest?.("[data-tip]");
+  if (!t) { tip.hidden = true; return; }
+  tip.innerHTML = t.dataset.tip;
+  tip.hidden = false;
+  const r = tip.getBoundingClientRect();
+  tip.style.left = Math.max(8, Math.min(e.clientX + 14, innerWidth - r.width - 8)) + "px";
+  tip.style.top = Math.max(8, e.clientY - r.height - 12) + "px";
+});
+</script>
