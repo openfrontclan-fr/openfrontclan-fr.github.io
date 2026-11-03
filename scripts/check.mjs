@@ -9,7 +9,7 @@ import { pathToFileURL } from "node:url";
 const EDGE = "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe";
 const PORT = 9334;
 const OUT = join(tmpdir(), "fr-shot");
-const PAGES = ["accueil", "classement", "membres", "jouer"];
+const PAGES = ["accueil", "classement", "membres", "jouer", "debuter"];
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const edge = spawn(EDGE, [
@@ -152,6 +152,35 @@ await sleep(500);
 report.brandClick = await visible();
 report.overflowDesktop = await js("document.documentElement.scrollWidth - innerWidth");
 
+/* Guide du débutant */
+await click('.hero-inner .ext');
+await sleep(500);
+report.guideFromHome = [await visible(), await js("location.hash")];
+await shot("d-debuter");
+await scrollTo("#bots", -90, 500);
+await shot("d-bots");
+const botValue = `document.getElementById("bot-value").textContent.replace(/\\s/g, "")`;
+report.guideBot = await js(`(() => {
+  const pick = (g, l) => document.querySelector('[data-bot="' + g + '"] [data-level="' + l + '"]').click();
+  const out = [${botValue}];
+  pick("terrain", 2); pick("frontier", 1); pick("size", 1); out.push(${botValue});
+  pick("terrain", 1); pick("frontier", 0); pick("size", 0); out.push(${botValue});
+  pick("terrain", 0);
+  const i = document.getElementById("bot-troops");
+  i.value = "6000"; i.dispatchEvent(new Event("input")); out.push(${botValue});
+  i.value = ""; i.dispatchEvent(new Event("input")); out.push(${botValue});
+  i.value = "10000"; i.dispatchEvent(new Event("input"));
+  return out;
+})()`);
+report.guideTabs = {};
+await scrollTo("#modes", -90, 500);
+for (const m of ["ffa", "equipes", "1v1", "2v2"]) {
+  await click(`#guide-tab-${m}`);
+  await sleep(150);
+  report.guideTabs[m] = await js(`[...document.querySelectorAll(".guide-panel")].filter((p) => !p.hidden).map((p) => p.id).join()`);
+  await shot(`d-guide-${m}`);
+}
+
 /* Liens directs */
 report.directLinks = {};
 for (const p of PAGES) {
@@ -175,6 +204,20 @@ for (const p of PAGES) {
   report.mobile[p] = {
     overflow: await js("document.documentElement.scrollWidth - innerWidth"),
     clipped: await js(`[...document.querySelectorAll("main *, footer *")].filter((e) => e.getClientRects().length && e.getBoundingClientRect().right > innerWidth + 1 && !e.closest(".heat-wrap") && !e.closest("svg")).map((e) => e.tagName + "." + e.className).slice(0, 6)`),
+  };
+}
+await open(390, 844, true, "#debuter");
+await scrollTo("#bots", -90, 500);
+await shot("m-bots");
+report.mobileGuide = {};
+for (const m of ["ffa", "equipes", "1v1", "2v2"]) {
+  await click(`#guide-tab-${m}`);
+  await sleep(150);
+  if (m === "ffa") await scrollTo("#modes", -90, 300);
+  if (m === "equipes") await shot("m-guide-equipes");
+  report.mobileGuide[m] = {
+    overflow: await js("document.documentElement.scrollWidth - innerWidth"),
+    clipped: await js(`[...document.querySelectorAll("main *, footer *")].filter((e) => e.getClientRects().length && e.getBoundingClientRect().right > innerWidth + 1 && !e.closest("svg")).map((e) => e.tagName + "." + e.className).slice(0, 6)`),
   };
 }
 await open(390, 844, true, "#membres");

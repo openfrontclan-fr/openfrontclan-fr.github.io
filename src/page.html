@@ -75,7 +75,7 @@ h1 { font: 400 clamp(4.6rem, 12.2vw, 11.2rem)/1.03 var(--display); letter-spacin
 .view { position: relative; }
 .view:not([hidden]) { animation: rise .45s cubic-bezier(.2, .7, .2, 1) both; }
 @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-#view-classement::before, #view-membres::before, #view-jouer::before, #view-joueur::before { content: ""; position: absolute; inset: -76px 0 auto; height: 620px; pointer-events: none; background: radial-gradient(50% 70% at 80% 0, color-mix(in oklab, var(--deep) 34%, transparent), transparent 74%); }
+#view-classement::before, #view-membres::before, #view-jouer::before, #view-debuter::before, #view-joueur::before { content: ""; position: absolute; inset: -76px 0 auto; height: 620px; pointer-events: none; background: radial-gradient(50% 70% at 80% 0, color-mix(in oklab, var(--deep) 34%, transparent), transparent 74%); }
 .view .wrap { position: relative; }
 .view .wrap > section:first-child { padding-top: clamp(40px, 6vw, 88px); }
 
@@ -160,7 +160,7 @@ tr.us .rank { color: var(--cream); }
 .roster { margin-top: clamp(48px, 6vw, 72px); }
 .roster-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; margin-bottom: 22px; }
 .search { flex: 1 1 240px; max-width: 360px; }
-.search input { font: 400 1rem var(--body); color: var(--cream); background: var(--raise); border: 1px solid var(--line); border-radius: 10px; padding: 11px 14px; width: 100%; }
+.search input, .calc input { font: 400 1rem var(--body); color: var(--cream); background: var(--raise); border: 1px solid var(--line); border-radius: 10px; padding: 11px 14px; width: 100%; }
 .search input::placeholder { color: var(--muted); }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .tabs { display: flex; flex-wrap: wrap; gap: 2px; padding: 3px; background: var(--raise); border: 1px solid var(--line); border-radius: 12px; }
@@ -248,6 +248,37 @@ summary { cursor: pointer; color: var(--muted); font-size: .88rem; }
 .tools a::after { content: "↗"; color: var(--muted); transition: transform .2s, color .2s; }
 .tools a:hover::after { color: var(--cream); transform: translate(3px, -3px); }
 
+/* Guide du débutant */
+.lesson, #modes { padding-top: clamp(72px, 9vw, 128px); }
+.lesson { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 6vw, 88px); align-items: start; }
+.lesson > div { min-width: 0; }
+.lesson h2, .modes-head h2 { font-size: clamp(2.8rem, 5vw, 4.4rem); }
+.lesson-n { display: block; font: 400 clamp(3.4rem, 6vw, 5rem)/1.1 var(--display); color: transparent; -webkit-text-stroke: 1.5px var(--muted); margin-bottom: 10px; }
+.duo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px clamp(32px, 5vw, 64px); }
+.rules { list-style: none; margin: 0; padding: 0; }
+.rules li { border-top: 1px solid var(--line); padding: 16px 0; color: var(--muted); }
+.rules b { display: block; color: var(--cream); font-weight: 600; }
+.rules.wide { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(32px, 6vw, 88px); margin-top: 36px; }
+.calc { display: grid; gap: 28px; }
+.calc-fields { display: flex; flex-wrap: wrap; gap: 20px 28px; }
+.calc-fields .label { display: block; margin-bottom: 10px; }
+.calc input { width: 170px; }
+.calc-out { border-top: 1px solid var(--line); padding-top: 22px; }
+.calc-out .label { margin-bottom: 4px; }
+.modes-head { align-items: flex-end; }
+.modes-head h2 { margin-bottom: 10px; }
+.guide-panel { margin-top: 44px; }
+.build { list-style: none; display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; margin: 0; padding: 0; font: 400 clamp(1.7rem, 3.4vw, 2.6rem)/1.2 var(--display); letter-spacing: .02em; text-transform: uppercase; }
+.build li + li::before { content: "→"; margin-right: 14px; color: var(--muted); font: 400 .6em var(--body); }
+.build .port { color: var(--blue); }
+.build .silo { color: var(--red); }
+.build-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px clamp(32px, 6vw, 88px); }
+.roles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0 0 44px; border-top: 1px solid var(--line); }
+.roles > div { padding: 22px 28px 6px 0; min-width: 0; }
+.roles > div + div { padding-left: 28px; border-left: 1px solid var(--line); }
+.roles dt { font: 400 clamp(1.7rem, 3.4vw, 2.6rem)/1.2 var(--display); letter-spacing: .02em; text-transform: uppercase; }
+.roles dd { margin: 6px 0 0; color: var(--muted); }
+
 /* Fin de page : le visuel du clan */
 .call { position: relative; margin-top: clamp(88px, 12vw, 168px); padding-block: clamp(110px, 15vw, 210px) clamp(72px, 9vw, 120px); background: url("bg-hero.webp") right bottom / cover no-repeat; }
 .call::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, var(--night), transparent 46%), linear-gradient(90deg, color-mix(in oklab, var(--night) 62%, transparent), transparent 70%); }
@@ -270,7 +301,7 @@ footer p { margin: 0 0 4px; max-width: 70em; }
   .links { display: none; position: absolute; top: calc(100% + 8px); left: 0; right: 0; flex-direction: column; align-items: stretch; margin: 0; padding: 8px; background: var(--raise); border: 1px solid var(--line); border-radius: 14px; }
   .links.open { display: flex; }
   .links a { padding: 11px 12px; font-size: 1rem; }
-  .race, .crew, .slots-grid, .player-grid { grid-template-columns: minmax(0, 1fr); }
+  .race, .crew, .slots-grid, .player-grid, .lesson { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 720px) {
   html { scroll-padding-top: 84px; }
@@ -299,6 +330,9 @@ footer p { margin: 0 0 4px; max-width: 70em; }
   .mode-track { grid-column: 1 / -1; grid-row: 2; }
   .mode-num { font-size: .88rem; }
   .steps { grid-template-columns: minmax(0, 1fr); }
+  .duo, .rules.wide, .build-pair, .roles { grid-template-columns: minmax(0, 1fr); }
+  .roles > div, .roles > div + div { padding: 18px 0; border-left: 0; }
+  .roles > div + div { border-top: 1px solid var(--line); }
   .call::before { background: linear-gradient(180deg, var(--night), transparent 40%), color-mix(in oklab, var(--night) 58%, transparent); }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -320,6 +354,7 @@ footer p { margin: 0 0 4px; max-width: 70em; }
     <a href="#classement">Classement</a>
     <a href="#membres">Membres</a>
     <a href="#jouer">Jouer</a>
+    <a href="#debuter">Débuter</a>
   </div>
   <a class="cta" href="#rejoindre">Rejoindre</a>
   <button class="menu" id="menu" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
@@ -358,6 +393,7 @@ footer p { margin: 0 0 4px; max-width: 70em; }
         <a class="btn" href="#rejoindre">Rejoindre le clan</a>
         <a class="btn ghost" href="https://openfront.io/" target="_blank" rel="noopener">Lancer une partie</a>
       </div>
+      <a class="ext" href="#debuter">Nouveau sur le jeu&nbsp;? Lis le guide du débutant</a>
     </div>
   </header>
 
@@ -495,6 +531,160 @@ footer p { margin: 0 0 4px; max-width: 70em; }
         <li><a href="https://openfront-tools.frozenpenguin.media/" target="_blank" rel="noopener"><div><b>Replay Tool</b><span>Les replays des anciennes versions</span></div></a></li>
       </ul>
     </section>
+    </div>
+  </div>
+
+  <div class="view" id="view-debuter" hidden>
+    <div class="wrap">
+      <section>
+        <p class="kicker">Guide du débutant</p>
+        <h1 class="title">Survis à tes premières parties</h1>
+        <p class="text">Où apparaître, combien de troupes envoyer, quoi construire en premier&nbsp;: l'essentiel pour tenir jusqu'au bout.</p>
+      </section>
+
+      <section class="lesson" id="spawn">
+        <div>
+          <span class="lesson-n" aria-hidden="true">1</span>
+          <h2>Choisis ton spawn</h2>
+          <p class="text">Le bon endroit dépend du mode. Avant de cliquer, regarde où apparaissent les gagnants sur cette carte.</p>
+          <a class="ext" href="https://ofstats.io/maps" target="_blank" rel="noopener">Voir les cartes de chaleur ↗</a>
+        </div>
+        <div class="duo">
+          <div>
+            <p class="label">Chacun pour soi (FFA)</p>
+            <ul class="rules">
+              <li><b>De la place</b>Pour t'étendre, de préférence en zone verte.</li>
+              <li><b>La mer à portée</b>Pour pouvoir partir en bateau.</li>
+              <li><b>Une ou deux nations</b>Pas trop loin de toi.</li>
+            </ul>
+          </div>
+          <div>
+            <p class="label">En équipes</p>
+            <ul class="rules">
+              <li><b>Tes coéquipiers</b>Plutôt groupés, de préférence en zone verte.</li>
+              <li><b>La mer à portée</b>Pour commercer&nbsp;: ici, les ports valent mieux que les usines.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="lesson" id="bots">
+        <div>
+          <span class="lesson-n" aria-hidden="true">2</span>
+          <h2>Mange les bots</h2>
+          <p class="text">Envoie entre <strong>1,5 et 2,5 fois</strong> les troupes du bot. Prévois plus large en montagne, contre un gros bot ou sur une frontière étroite, où l'attaque avance lentement et te coûte plus de troupes.</p>
+        </div>
+        <div class="calc">
+          <div class="calc-fields">
+            <div>
+              <label class="label" for="bot-troops">Troupes du bot</label>
+              <input id="bot-troops" type="number" min="0" step="1000" value="10000" inputmode="numeric">
+            </div>
+            <div>
+              <p class="label">Terrain</p>
+              <div class="tabs" role="group" aria-label="Terrain" data-bot="terrain">
+                <button type="button" data-level="0" aria-pressed="true">Plaine</button>
+                <button type="button" data-level="1" aria-pressed="false">Désert</button>
+                <button type="button" data-level="2" aria-pressed="false">Montagne</button>
+              </div>
+            </div>
+            <div>
+              <p class="label">Frontière</p>
+              <div class="tabs" role="group" aria-label="Frontière avec le bot" data-bot="frontier">
+                <button type="button" data-level="0" aria-pressed="true">Large</button>
+                <button type="button" data-level="1" aria-pressed="false">Étroite</button>
+              </div>
+            </div>
+            <div>
+              <p class="label">Taille du bot</p>
+              <div class="tabs" role="group" aria-label="Taille du bot" data-bot="size">
+                <button type="button" data-level="0" aria-pressed="true">Petit</button>
+                <button type="button" data-level="1" aria-pressed="false">Gros</button>
+              </div>
+            </div>
+          </div>
+          <div class="calc-out" aria-live="polite">
+            <p class="label">Envoie environ</p>
+            <p class="readout-value" id="bot-value"></p>
+            <p class="readout-label" id="bot-detail"></p>
+            <p class="note">Un repère pour apprendre&nbsp;: en partie, ajuste à l'œil.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="modes">
+        <span class="lesson-n" aria-hidden="true">3</span>
+        <div class="motion-head modes-head">
+          <h2>Joue ton mode</h2>
+          <div class="tabs" id="guide-tabs" role="group" aria-label="Choisir le mode de jeu">
+            <button id="guide-tab-ffa" type="button" data-guide="ffa" aria-pressed="true">FFA</button>
+            <button id="guide-tab-equipes" type="button" data-guide="equipes" aria-pressed="false">Équipes</button>
+            <button id="guide-tab-1v1" type="button" data-guide="1v1" aria-pressed="false">1v1</button>
+            <button id="guide-tab-2v2" type="button" data-guide="2v2" aria-pressed="false">2v2</button>
+          </div>
+        </div>
+
+        <div class="guide-panel" id="guide-ffa">
+          <p class="label">Quoi construire</p>
+          <ol class="build"><li>Ville</li><li class="port">Port</li><li>Ville</li><li class="port">Port</li><li>Ville</li><li class="port">Port</li></ol>
+          <p class="note">Change l'ordre si la partie l'exige&nbsp;: navires de guerre, usines, postes de défense.</p>
+          <ul class="rules wide">
+            <li><b>Attaque plus fort que ta cible</b>Envoie plus de troupes qu'elle n'en a&nbsp;: tu en perdras moins en route.</li>
+            <li><b>Surveille l'or des autres</b>À 5&nbsp;M d'or, un joueur peut t'envoyer une bombe H.</li>
+            <li><b>Choisis tes alliés</b>Vise des joueurs au moins aussi forts que toi.</li>
+            <li><b>Garde la tête froide</b>Pas de vengeance ni de rancune&nbsp;: chaque coup doit servir ta partie.</li>
+          </ul>
+        </div>
+
+        <div class="guide-panel" id="guide-equipes" hidden>
+          <dl class="roles">
+            <div><dt>Breaker</dt><dd>Attaque et donne les ordres.</dd></div>
+            <div><dt>Support</dt><dd>Envoie ses troupes au breaker.</dd></div>
+            <div><dt>Nuker</dt><dd>Construit le silo et lance les bombes. Le breaker choisit qui s'en charge.</dd></div>
+          </dl>
+          <p class="label">Quoi construire</p>
+          <ol class="build"><li>Ville</li><li class="port">Port</li><li>Ville</li><li class="port">Port</li><li>Ville</li><li class="port">Port</li><li class="silo">Silo</li></ol>
+          <p class="note">Le silo est pour le nuker seulement. Ensuite, le breaker fait des villes ou donne son or pour les bombes H, les supports font des villes, des ports ou gardent leur or pour la bombe H.</p>
+          <ul class="rules wide">
+            <li><b>Coupe le commerce au départ</b>Tout le monde le fait en début de partie&nbsp;: clic droit sur toi, puis i, puis arrêt du commerce avec tous.</li>
+            <li><b>Nourris le breaker</b>Pendant la phase des bots, les supports sans menace proche lui donnent 5 à 15&nbsp;% de leurs troupes.</li>
+            <li><b>Soutiens les grosses attaques</b>Chaque support envoie 60 à 80&nbsp;% de ses troupes, à tour de rôle, pour ne pas dépasser le maximum du breaker.</li>
+            <li><b>Tiens la cadence</b>Si l'attaque dure, envoie environ 35&nbsp;% dès que tu es à 50-60&nbsp;% de tes troupes.</li>
+            <li><b>Économisez ensemble</b>Dès 3 ports par joueur, l'équipe met 5&nbsp;M d'or de côté et les donne au nuker pour la bombe H.</li>
+            <li><b>Écarte tes ports</b>Une bombe A ne doit jamais en toucher deux. Entre joueurs, garde environ 2 cases d'écart (barre d'espace pour voir la grille).</li>
+          </ul>
+        </div>
+
+        <div class="guide-panel" id="guide-1v1" hidden>
+          <div class="build-pair">
+            <div>
+              <p class="label">Grande carte</p>
+              <ol class="build"><li>2-3 villes</li><li class="silo">Silo</li><li class="silo">Bombe H</li></ol>
+            </div>
+            <div>
+              <p class="label">Carte compacte</p>
+              <ol class="build"><li>Que des villes</li></ol>
+              <p class="note">Un silo et un port pour un navire de guerre restent possibles.</p>
+            </div>
+          </div>
+          <ul class="rules wide">
+            <li><b>Reste à 30-40&nbsp;% de tes troupes</b>L'indicateur vert au centre montre ton gain de troupes. Quand il passe au jaune, tu es vers 42&nbsp;%&nbsp;: attaque davantage.</li>
+            <li><b>Frappe à 80-90&nbsp;%</b>Attaque ton adversaire seulement quand 80&nbsp;% de tes troupes dépassent ce qu'il a sur le moment.</li>
+          </ul>
+        </div>
+
+        <div class="guide-panel" id="guide-2v2" hidden>
+          <p class="label">Quoi construire</p>
+          <ol class="build"><li>Ville</li><li>Ville</li><li class="port">Port</li><li>Ville</li><li class="port">Port</li></ol>
+          <p class="note">Selon l'accès à la mer. Pour le reste, pars des règles du 1v1, avec ces changements.</p>
+          <ul class="rules wide">
+            <li><b>Reste à 40-50&nbsp;% de tes troupes</b>Ça te protège d'un envoi total et te laisse le temps de parler à ton coéquipier.</li>
+            <li><b>Pose un poste de défense</b>En général, dès que tu touches un adversaire.</li>
+            <li><b>Un seul silo</b>L'un de vous deux le construit et lance une bombe H à 5&nbsp;M d'or.</li>
+          </ul>
+        </div>
+
+      </section>
     </div>
   </div>
 
@@ -914,11 +1104,42 @@ function renderPlayer(slug) {
   $("heat").innerHTML = html;
 }
 
+/* Guide du débutant */
+{
+  // Le guide donne 150 à 250 % : chaque facteur défavorable ajoute 25 %.
+  const levels = { terrain: 0, frontier: 0, size: 0 };
+  const rounded = (n) => { const step = n < 1000 ? 10 : 100; return int(Math.round(n / step) * step); };
+  function renderBot() {
+    const troops = Number($("bot-troops").value);
+    const ratio = 150 + 25 * (levels.terrain + levels.frontier + levels.size);
+    $("bot-value").textContent = troops > 0 ? rounded(troops * ratio / 100) : "?";
+    $("bot-detail").innerHTML = troops > 0
+      ? `troupes, soit <strong>${ratio} %</strong> du bot. Fourchette : ${rounded(troops * 1.5)} à ${rounded(troops * 2.5)}.`
+      : "Indique les troupes du bot.";
+  }
+  $("bot-troops").addEventListener("input", renderBot);
+  document.querySelectorAll("[data-bot]").forEach((group) => group.addEventListener("click", (e) => {
+    const b = e.target.closest("button");
+    if (!b) return;
+    levels[group.dataset.bot] = Number(b.dataset.level);
+    [...group.children].forEach((o) => o.setAttribute("aria-pressed", String(o === b)));
+    renderBot();
+  }));
+  renderBot();
+
+  $("guide-tabs").addEventListener("click", (e) => {
+    const b = e.target.closest("button");
+    if (!b) return;
+    [...$("guide-tabs").children].forEach((o) => o.setAttribute("aria-pressed", String(o === b)));
+    document.querySelectorAll(".guide-panel").forEach((p) => { p.hidden = p.id !== `guide-${b.dataset.guide}`; });
+  });
+}
+
 $("source").textContent = `Données : API publique d'OpenFront, mises à jour le ${new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris" }).format(new Date(DATA.fetchedAt))}.`;
 
 /* Pages */
 {
-  const PAGES = { accueil: "Front Français [FR]", classement: "Classement · Front Français [FR]", membres: "Membres · Front Français [FR]", jouer: "Jouer · Front Français [FR]" };
+  const PAGES = { accueil: "Front Français [FR]", classement: "Classement · Front Français [FR]", membres: "Membres · Front Français [FR]", jouer: "Jouer · Front Français [FR]", debuter: "Débuter · Front Français [FR]" };
   const menu = $("menu");
   const panel = $("nav-links");
   const links = [...panel.querySelectorAll("a")];
