@@ -20,8 +20,9 @@
   --body: Inter, "Segoe UI", system-ui, sans-serif;
 }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html { scroll-behavior: smooth; scroll-padding-top: 96px; }
-body { background: var(--night); color: var(--cream); font: 400 1.02rem/1.6 var(--body); -webkit-font-smoothing: antialiased; overflow-x: clip; }
+body { margin: 0; background: var(--night); color: var(--cream); font: 400 1.02rem/1.6 var(--body); -webkit-font-smoothing: antialiased; overflow-x: clip; }
 body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--night); }
 #grain { position: fixed; inset: 0; z-index: 30; pointer-events: none; opacity: .035; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E"); }
 a { color: inherit; }
