@@ -62,5 +62,21 @@
    "tag": "JR",
    "score": 937.27
   }
+ },
+ {
+  "date": "2026-11-06",
+  "rank": 7,
+  "score": 1012.17,
+  "games": 36695,
+  "wins": 8639,
+  "members": 4346,
+  "above": {
+   "tag": "EU",
+   "score": 1185.27
+  },
+  "below": {
+   "tag": "JR",
+   "score": 967.92
+  }
  }
 ]
