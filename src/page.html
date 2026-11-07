@@ -160,6 +160,13 @@ tr.us .rank { color: var(--cream); }
 .facts li:last-child { border-bottom: 1px solid var(--line); }
 .facts b, .facts a { color: var(--cream); font-weight: 600; text-decoration: none; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; text-align: right; }
 .facts a:hover { color: var(--blue); }
+.facts .with-ico { display: inline-flex; align-items: center; gap: 10px; }
+.facts .ico { width: 18px; height: 18px; color: var(--cream); }
+.facts .ico.red { color: var(--red); }
+
+/* Icônes du jeu (OpenFront, CC BY-SA 4.0) : les masques sont ajoutés par scripts/build.mjs */
+.ico { display: inline-block; flex: none; width: 1em; height: 1em; background: currentColor; -webkit-mask: var(--ico) center / contain no-repeat; mask: var(--ico) center / contain no-repeat; }
+/*__ICONS__*/
 .roster { margin-top: clamp(48px, 6vw, 72px); }
 .roster-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; margin-bottom: 22px; }
 .search { flex: 1 1 240px; max-width: 360px; }
@@ -295,6 +302,8 @@ summary { cursor: pointer; color: var(--muted); font-size: .88rem; }
 .build li + li::before { content: "→"; margin-right: 14px; color: var(--muted); font: 400 .6em var(--body); }
 .build .port { color: var(--blue); }
 .build .silo { color: var(--red); }
+.build li { display: inline-flex; align-items: center; gap: .28em; }
+.build .ico { width: .8em; height: .8em; }
 .build-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px clamp(32px, 6vw, 88px); }
 .roles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0 0 44px; border-top: 1px solid var(--line); }
 .roles > div { padding: 22px 28px 6px 0; min-width: 0; }
@@ -675,7 +684,7 @@ footer p { margin: 0 0 4px; max-width: 70em; }
 
         <div class="guide-panel" id="guide-ffa">
           <p class="label">Quoi construire</p>
-          <ol class="build"><li>Ville</li><li class="port">Port</li><li>Ville</li><li class="port">Port</li><li>Ville</li><li class="port">Port</li></ol>
+          <ol class="build"><li><i class="ico ico-ville" aria-hidden="true"></i>Ville</li><li class="port"><i class="ico ico-port" aria-hidden="true"></i>Port</li><li><i class="ico ico-ville" aria-hidden="true"></i>Ville</li><li class="port"><i class="ico ico-port" aria-hidden="true"></i>Port</li><li><i class="ico ico-ville" aria-hidden="true"></i>Ville</li><li class="port"><i class="ico ico-port" aria-hidden="true"></i>Port</li></ol>
           <p class="note">Change l'ordre si la partie l'exige&nbsp;: navires de guerre, usines, postes de défense.</p>
           <ul class="rules wide">
             <li><b>Attaque plus fort que ta cible</b>Envoie plus de troupes qu'elle n'en a&nbsp;: tu en perdras moins en route.</li>
@@ -692,7 +701,7 @@ footer p { margin: 0 0 4px; max-width: 70em; }
             <div><dt>Nuker</dt><dd>Construit le silo et lance les bombes. Le breaker choisit qui s'en charge.</dd></div>
           </dl>
           <p class="label">Quoi construire</p>
-          <ol class="build"><li>Ville</li><li class="port">Port</li><li>Ville</li><li class="port">Port</li><li>Ville</li><li class="port">Port</li><li class="silo">Silo</li></ol>
+          <ol class="build"><li><i class="ico ico-ville" aria-hidden="true"></i>Ville</li><li class="port"><i class="ico ico-port" aria-hidden="true"></i>Port</li><li><i class="ico ico-ville" aria-hidden="true"></i>Ville</li><li class="port"><i class="ico ico-port" aria-hidden="true"></i>Port</li><li><i class="ico ico-ville" aria-hidden="true"></i>Ville</li><li class="port"><i class="ico ico-port" aria-hidden="true"></i>Port</li><li class="silo"><i class="ico ico-silo" aria-hidden="true"></i>Silo</li></ol>
           <p class="note">Le silo est pour le nuker seulement. Ensuite, le breaker fait des villes ou donne son or pour les bombes H, les supports font des villes, des ports ou gardent leur or pour la bombe H.</p>
           <ul class="rules wide">
             <li><b>Coupe le commerce au départ</b>Tout le monde le fait en début de partie&nbsp;: clic droit sur toi, puis i, puis arrêt du commerce avec tous.</li>
@@ -708,11 +717,11 @@ footer p { margin: 0 0 4px; max-width: 70em; }
           <div class="build-pair">
             <div>
               <p class="label">Grande carte</p>
-              <ol class="build"><li>2-3 villes</li><li class="silo">Silo</li><li class="silo">Bombe H</li></ol>
+              <ol class="build"><li><i class="ico ico-ville" aria-hidden="true"></i>2-3 villes</li><li class="silo"><i class="ico ico-silo" aria-hidden="true"></i>Silo</li><li class="silo"><i class="ico ico-bombe" aria-hidden="true"></i>Bombe H</li></ol>
             </div>
             <div>
               <p class="label">Carte compacte</p>
-              <ol class="build"><li>Que des villes</li></ol>
+              <ol class="build"><li><i class="ico ico-ville" aria-hidden="true"></i>Que des villes</li></ol>
               <p class="note">Un silo et un port pour un navire de guerre restent possibles.</p>
             </div>
           </div>
@@ -724,7 +733,7 @@ footer p { margin: 0 0 4px; max-width: 70em; }
 
         <div class="guide-panel" id="guide-2v2" hidden>
           <p class="label">Quoi construire</p>
-          <ol class="build"><li>Ville</li><li>Ville</li><li class="port">Port</li><li>Ville</li><li class="port">Port</li></ol>
+          <ol class="build"><li><i class="ico ico-ville" aria-hidden="true"></i>Ville</li><li><i class="ico ico-ville" aria-hidden="true"></i>Ville</li><li class="port"><i class="ico ico-port" aria-hidden="true"></i>Port</li><li><i class="ico ico-ville" aria-hidden="true"></i>Ville</li><li class="port"><i class="ico ico-port" aria-hidden="true"></i>Port</li></ol>
           <p class="note">Selon l'accès à la mer. Pour le reste, pars des règles du 1v1, avec ces changements.</p>
           <ul class="rules wide">
             <li><b>Reste à 40-50&nbsp;% de tes troupes</b>Ça te protège d'un envoi total et te laisse le temps de parler à ton coéquipier.</li>
@@ -762,7 +771,7 @@ footer p { margin: 0 0 4px; max-width: 70em; }
 <footer><div class="wrap">
   <p id="source"></p>
   <p>L'effectif vient de la liste officielle du clan, les membres sans pseudo public restent anonymes. Le classement et l'activité sont les chiffres d'OpenFront pour le tag [FR]. Le bloc vocal vient du widget public du Discord du clan.</p>
-  <p>Site de clan non officiel, sans lien avec les éditeurs d'OpenFront.</p>
+  <p>Site de clan non officiel, sans lien avec les éditeurs d'OpenFront. Icônes du jeu&nbsp;: OpenFront, <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.fr" target="_blank" rel="noopener">CC BY-SA 4.0</a>.</p>
 </div></footer>
 
 <div id="tip" hidden></div>
@@ -967,14 +976,14 @@ function renderPlayer(slug) {
   }).join("");
   const money = (n) => wide(new Intl.NumberFormat("fr-FR", { notation: "compact", maximumFractionDigits: 1 }).format(n));
   const career = profile?.fun ? [
-    ["Trahisons", int(profile.fun[0])],
-    ["Bombes atomiques", int(profile.fun[1])],
-    ["Bombes H", int(profile.fun[2])],
-    ["MIRV", int(profile.fun[3])],
-    ["Bateaux de transport", int(profile.fun[4])],
-    ["Villes construites", int(profile.fun[5])],
-    ["Or gagné", money(profile.fun[6])],
-  ].map(([k, v]) => `<li>${k}<b>${v}</b></li>`).join("") : "";
+    ["Trahisons", int(profile.fun[0]), "trahison"],
+    ["Bombes atomiques", int(profile.fun[1]), "bombe"],
+    ["Bombes H", int(profile.fun[2]), "bombe red"],
+    ["MIRV", int(profile.fun[3]), "mirv"],
+    ["Bateaux de transport", int(profile.fun[4]), "bateau"],
+    ["Villes construites", int(profile.fun[5]), "ville"],
+    ["Or gagné", money(profile.fun[6]), "or"],
+  ].map(([k, v, icon]) => `<li><span class="with-ico"><i class="ico ico-${icon}" aria-hidden="true"></i>${k}</span><b>${v}</b></li>`).join("") : "";
   $("player").innerHTML = `
     <a class="back" href="#membres">Tous les membres</a>
     <p class="kicker">${ROLES.has(slug) ? ROLE[ROLES.get(slug)] : "Membre"} du clan [FR]</p>

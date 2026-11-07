@@ -1,7 +1,7 @@
 // Agrège les données et les injecte dans src/page.html.
 // Produit public/index.html (à héberger) et public/artifact.html (aperçu, sans doctype).
 import { createHash } from "node:crypto";
-import { copyFile, readFile, writeFile, mkdir } from "node:fs/promises";
+import { copyFile, readdir, readFile, writeFile, mkdir } from "node:fs/promises";
 
 const [source = "src/page.html", out = "public"] = process.argv.slice(2);
 const profiles = JSON.parse(await readFile("data/profiles.json", "utf8").catch(() => "{}"));
@@ -124,8 +124,14 @@ const data = {
   heat,
 };
 
+// Icônes du jeu (OpenFront, CC BY-SA 4.0) : chaque fichier de assets/icons devient un masque CSS .ico-<nom>.
+const iconFiles = (await readdir("assets/icons")).filter((f) => f.endsWith(".svg")).sort();
+const icons = (await Promise.all(iconFiles.map(async (f) =>
+  `.ico-${f.slice(0, -4)} { --ico: url("data:image/svg+xml;base64,${(await readFile(`assets/icons/${f}`)).toString("base64")}"); }`,
+))).join("\n");
+
 const json = JSON.stringify(data).replaceAll("<", "\\u003c");
-const body = page.replace("/*__DATA__*/null", () => json);
+const body = page.replace("/*__ICONS__*/", () => icons).replace("/*__DATA__*/null", () => json);
 
 const headEnd = body.indexOf("</style>") + "</style>".length;
 
