@@ -93,6 +93,17 @@ h1 { font: 400 clamp(4.6rem, 12.2vw, 11.2rem)/1.03 var(--display); letter-spacin
 .hub-item:hover strong { color: var(--blue); }
 .hub-item:hover .go::after { transform: translateX(4px); }
 
+/* Prochains événements */
+.events { list-style: none; margin: 32px 0 0; padding: 0; }
+.events li { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 20px; align-items: center; padding: 18px 0; border-top: 1px solid var(--line); }
+.events li:last-child { border-bottom: 1px solid var(--line); }
+.ev-date { text-align: center; color: var(--muted); font-size: .76rem; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; }
+.ev-date b { display: block; font: 400 2.6rem/1.05 var(--display); letter-spacing: .01em; color: var(--cream); }
+.events strong { display: block; font-size: 1.08rem; font-weight: 600; overflow-wrap: anywhere; }
+.events span { display: block; margin-top: 4px; color: var(--muted); }
+.events .live { color: var(--green); font-weight: 600; }
+#evenements .note a { color: var(--cream); font-weight: 600; text-underline-offset: 3px; }
+
 /* Sections */
 section { padding-block: clamp(88px, 12vw, 168px) 0; }
 .kicker { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: .76rem; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; margin: 0 0 18px; }
@@ -453,6 +464,13 @@ footer p { margin: 0 0 4px; max-width: 70em; }
           <span class="go">Voir les créneaux</span>
         </a>
       </div>
+
+      <section id="evenements" hidden>
+      <p class="kicker">Agenda du clan</p>
+      <h2>Prochains événements</h2>
+      <ul class="events" id="events"></ul>
+      <p class="note">Programmés sur le <a href="https://discord.gg/f7xSuReUfe" target="_blank" rel="noopener">Discord du clan</a>.</p>
+    </section>
     </div>
   </div>
 
@@ -584,7 +602,7 @@ footer p { margin: 0 0 4px; max-width: 70em; }
         <li><a href="https://ofstats.io/maps" target="_blank" rel="noopener"><div><b>Spawns gagnants par carte</b><span>ofstats.io</span></div></a></li>
         <li><a href="https://ofstats.io/?mode=Ranked+1v1" target="_blank" rel="noopener"><div><b>File classée en direct</b><span>ofstats.io</span></div></a></li>
         <li><a href="https://teamstats.pro/" target="_blank" rel="noopener"><div><b>Stats des modes en équipes</b><span>teamstats.pro</span></div></a></li>
-        <li><a href="https://ofstats.io/leaderboard" target="_blank" rel="noopener"><div><b>Classement des joueurs</b><span>ofstats.io</span></div></a></li>
+        <li><a href="https://ofstats.io/leaderboard" target="_blank" rel="noopener"><div><b>Classement FFA</b><span>ofstats.io</span></div></a></li>
         <li><a href="https://op-leaderboard.netlify.app/" target="_blank" rel="noopener"><div><b>Classement 1v1</b><span>op-leaderboard</span></div></a></li>
         <li><a href="https://openfront-tools.frozenpenguin.media/" target="_blank" rel="noopener"><div><b>Replays des anciennes versions</b><span>Replay Tool</span></div></a></li>
       </ul>
@@ -928,6 +946,28 @@ const joinedFmt = fmt({ day: "2-digit", month: "2-digit", year: "2-digit" });
   }));
   renderPodium();
   renderRoster();
+}
+
+/* Prochains événements : programmés sur le Discord, envoyés par le bot avec le classement */
+{
+  const now = Date.now();
+  // Un événement sans heure de fin reste affiché 3 heures après son début.
+  const upcoming = (DATA.events ?? []).filter((e) => new Date(e.end ?? Date.parse(e.start) + 3 * 3_600_000) > now);
+  if (upcoming.length) {
+    const paris = (o) => new Intl.DateTimeFormat("fr-FR", { timeZone: "Europe/Paris", ...o });
+    const day = paris({ day: "numeric" }), month = paris({ month: "short" });
+    const full = paris({ weekday: "long", day: "numeric", month: "long" }), hour = paris({ hour: "2-digit", minute: "2-digit" });
+    $("events").innerHTML = upcoming.map((e) => {
+      const start = new Date(e.start), end = e.end ? new Date(e.end) : null;
+      const when = [
+        start <= now ? `<b class="live">En cours</b>` : full.format(start),
+        `${hour.format(start)}${end ? ` – ${hour.format(end)}` : ""}`,
+        e.place ? esc(e.place) : "",
+      ].filter(Boolean).join(" · ");
+      return `<li><time class="ev-date" datetime="${esc(e.start)}"><b>${day.format(start)}</b>${month.format(start)}</time><div><strong>${esc(e.name)}</strong><span>${when}</span></div></li>`;
+    }).join("");
+    $("evenements").hidden = false;
+  }
 }
 
 /* Rangs du Discord : le classement du bot, comptes liés seulement */

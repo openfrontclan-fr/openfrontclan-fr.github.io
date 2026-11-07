@@ -25,10 +25,15 @@ Le bot du Discord envoie son classement par un événement `repository_dispatch`
     "ranked": 14,
     "players": [
       { "publicId": "…", "username": "…", "rank": "Capitaine II", "xp": 268, "games": 47, "position": 1 }
+    ],
+    "events": [
+      { "name": "Guerre de clans", "start": "2026-11-14T20:00:00.000Z", "end": "2026-11-14T22:00:00.000Z", "place": "Vocal 1" }
     ]
   }
 }
 ```
+
+`events` liste au plus 8 événements Discord programmés ou en cours : nom, début, fin (ou `null`) et lieu (ou `null`). L'accueil les affiche dans « Prochains événements » et masque de lui-même ceux qui sont finis, ou commencés depuis plus de 3 heures quand ils n'ont pas de fin.
 
 `players` ne contient que les comptes liés avec `/lier` et non masqués ; `ranked` compte tous les membres classés, et `position` est la place dans ce classement complet. Le site garde le pseudo de l'effectif quand le joueur y est, et un membre anonyme dans l'effectif le reste. Avec `"profils": true` dans `client_payload`, la mise à jour retélécharge aussi les fiches des joueurs.
 

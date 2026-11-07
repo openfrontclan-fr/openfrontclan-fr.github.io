@@ -4,6 +4,9 @@ import { createHash } from "node:crypto";
 import { copyFile, readdir, readFile, writeFile, mkdir } from "node:fs/promises";
 
 const [source = "src/page.html", out = "public"] = process.argv.slice(2);
+// Adresse publique du site, pour les aperçus de liens : à changer si le clan passe sur son propre domaine.
+const SITE_URL = "https://openfrontclan-fr.github.io";
+const DESCRIPTION = "Le clan France sur OpenFront : classement, membres, rangs du Discord et guide du débutant.";
 const profiles = JSON.parse(await readFile("data/profiles.json", "utf8").catch(() => "{}"));
 const snap = JSON.parse(await readFile("data/snapshot.json", "utf8"));
 const page = await readFile(source, "utf8");
@@ -106,10 +109,19 @@ const discord = Array.isArray(sent?.players) && !Number.isNaN(Date.parse(sent.ge
     }
   : null;
 
+// Événements programmés sur le Discord, envoyés avec le classement : nom, dates et lieu seulement.
+const isoDate = (v) => (typeof v === "string" && !Number.isNaN(Date.parse(v)) ? new Date(v).toISOString() : null);
+const events = (Array.isArray(sent?.events) ? sent.events : []).slice(0, 8).flatMap((e) => {
+  const name = text(e?.name, 100);
+  const start = isoDate(e?.start);
+  return name && start ? [{ name, start, end: isoDate(e.end), place: text(e.place, 60) || null }] : [];
+}).sort((a, b) => a.start.localeCompare(b.start));
+
 const data = {
   tag: snap.tag,
   roster,
   discord,
+  events,
   fetchedAt: snap.fetchedAt,
   period: { start: snap.leaderboard.start, end: snap.leaderboard.end },
   clans: snap.leaderboard.clans.map((c, i) => ({
@@ -138,6 +150,8 @@ const headEnd = body.indexOf("</style>") + "</style>".length;
 await mkdir(out, { recursive: true });
 await copyFile("assets/bg-hero.webp", `${out}/bg-hero.webp`);
 await copyFile("assets/logo.svg", `${out}/logo.svg`);
+// Image d'aperçu des liens partagés (Discord, réseaux) ; sa source est assets/og-card.html.
+await copyFile("assets/og-card.png", `${out}/og.png`);
 await writeFile(`${out}/artifact.html`, body);
 await writeFile(
   `${out}/index.html`,
@@ -147,9 +161,17 @@ await writeFile(
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#070a14">
+<meta name="description" content="${DESCRIPTION}">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Front Français [FR]">
-<meta property="og:description" content="Le clan France sur OpenFront : classement, membres, podiums et meilleurs créneaux.">
+<meta property="og:site_name" content="FR - OpenFront">
+<meta property="og:title" content="FR - OpenFront">
+<meta property="og:description" content="${DESCRIPTION}">
+<meta property="og:url" content="${SITE_URL}/">
+<meta property="og:image" content="${SITE_URL}/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Rejoins le front : le clan officiel France [FR] sur OpenFront">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/svg+xml" href="logo.svg">
 ${body.slice(0, headEnd)}
 </head>

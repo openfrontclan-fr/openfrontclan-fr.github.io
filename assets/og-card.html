@@ -1,0 +1,29 @@
+<!doctype html>
+<!-- Source de assets/og-card.png, l'image d'aperçu des liens partagés (1200 × 630). À rendre avec un navigateur à cette taille. -->
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@600;700&display=swap">
+<style>
+  html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; }
+  body { position: relative; background: #070a14; color: #f5f3eb; font-family: Inter, sans-serif; }
+  body::before { content: ""; position: absolute; inset: 0; background: radial-gradient(60% 70% at 78% 30%, rgba(28, 63, 176, .55), transparent 70%), radial-gradient(40% 50% at 95% 100%, rgba(255, 59, 59, .18), transparent 70%); }
+  svg { position: absolute; right: -40px; top: 120px; width: 600px; }
+  .brand { position: absolute; left: 72px; top: 64px; display: flex; align-items: center; gap: 14px; font: 400 34px/1 Anton, sans-serif; letter-spacing: .02em; }
+  .brand svg { position: static; width: 56px; }
+  h1 { position: absolute; left: 72px; top: 170px; margin: 0; font: 400 150px/1.02 Anton, sans-serif; text-transform: uppercase; }
+  .tag { position: absolute; left: 72px; bottom: 64px; margin: 0; display: flex; align-items: center; gap: 14px; font-weight: 600; font-size: 22px; letter-spacing: .13em; text-transform: uppercase; color: #929bb2; }
+  .tag b { color: #f5f3eb; background: #ff3b3b; border-radius: 6px; padding: 3px 10px; letter-spacing: .05em; }
+</style>
+<svg viewBox="0 0 4401 2600" aria-hidden="true">
+  <defs>
+    <path id="p" d="M0 435.495C0 407.097 23.0211 384.076 51.4191 384.076H2168.82C2191.51 384.076 2213.05 374.087 2227.7 356.768L2506.48 27.308C2521.13 9.9887 2542.67 0 2565.35 0H4349.48C4393.47 0 4417.15 51.6444 4388.44 84.9743L3370.85 1266.51C3354.28 1285.75 3354.23 1314.2 3370.74 1333.49L4065.47 2145.76C4094 2179.12 4070.29 2230.6 4026.39 2230.6H1841.14C1818.67 2230.6 1797.32 2240.4 1782.67 2257.43L1511.23 2573.06C1496.57 2590.1 1475.22 2599.9 1452.75 2599.9H51.4192C23.0212 2599.9 0 2576.88 0 2548.48V435.495Z"/>
+    <linearGradient id="f" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#0f1e5a"/><stop offset=".58" stop-color="#3a5ad0"/><stop offset="1" stop-color="#a9c0ff"/></linearGradient>
+    <linearGradient id="w" x1=".5" y1=".35" x2=".88" y2="1"><stop offset="0" stop-color="#ff3b3b" stop-opacity="0"/><stop offset="1" stop-color="#ff5a6e" stop-opacity=".42"/></linearGradient>
+    <linearGradient id="r" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#7f9dff" stop-opacity=".22"/><stop offset="1" stop-color="#f5f3eb" stop-opacity=".85"/></linearGradient>
+  </defs>
+  <use href="#p" fill="url(#f)"/>
+  <use href="#p" fill="url(#w)"/>
+  <use href="#p" fill="none" stroke="url(#r)" stroke-width="12"/>
+</svg>
+<div class="brand"><svg viewBox="0 0 4401 2600" aria-hidden="true"><use href="#p" fill="#f5f3eb"/></svg>[FR]</div>
+<h1>Rejoins<br>le front</h1>
+<p class="tag"><b>FR</b> Clan officiel sur OpenFront</p>
