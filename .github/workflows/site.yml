@@ -2,8 +2,16 @@ name: Site du clan
 
 on:
   schedule:
+    # Complète, fiches des joueurs comprises.
     - cron: "17 4 * * *"
+    # Légère : classement, parties et membres, avec les fiches de la dernière complète.
+    - cron: "17 16 * * *"
   workflow_dispatch:
+    inputs:
+      profils:
+        description: "Retélécharger les fiches des joueurs"
+        type: boolean
+        default: true
   push:
     branches: [main]
 
@@ -27,8 +35,24 @@ jobs:
           node-version: 22
       - name: Membres du clan
         run: node scripts/fetch-members.mjs
+      - name: Fiches de la dernière mise à jour complète
+        id: cache
+        uses: actions/cache/restore@v4
+        with:
+          path: data/profiles.json
+          key: profils-${{ github.run_id }}
+          restore-keys: profils-
+      # Sans fiches en cache, même une mise à jour légère les retélécharge.
       - name: Profils publics
+        id: profils
+        if: github.event.schedule == '17 4 * * *' || inputs.profils || steps.cache.outputs.cache-matched-key == ''
         run: node scripts/fetch-profiles.mjs
+      - name: Garder les fiches pour les mises à jour légères
+        if: steps.profils.outcome == 'success'
+        uses: actions/cache/save@v4
+        with:
+          path: data/profiles.json
+          key: profils-${{ github.run_id }}
       - name: Classement et parties
         run: node scripts/fetch-data.mjs
       - name: Construction du site

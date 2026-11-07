@@ -4,7 +4,7 @@ Site du clan France [FR] sur [OpenFront](https://openfront.io/). Site de clan no
 
 ## Fonctionnement
 
-Le workflow `.github/workflows/site.yml` tourne chaque jour :
+Le workflow `.github/workflows/site.yml` tourne deux fois par jour, à 12 heures d'écart : une mise à jour complète, puis une légère qui saute `fetch-profiles.mjs` et reprend les fiches de la complète, gardées dans le cache d'Actions. Un push lance aussi une mise à jour légère.
 
 1. `scripts/fetch-members.mjs`, `fetch-profiles.mjs` et `fetch-data.mjs` téléchargent les données publiques d'OpenFront.
 2. `scripts/build.mjs` les injecte dans `src/page.html` et produit le site.
