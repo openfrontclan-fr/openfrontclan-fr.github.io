@@ -4,8 +4,8 @@ import { createHash } from "node:crypto";
 import { copyFile, readdir, readFile, writeFile, mkdir } from "node:fs/promises";
 
 const [source = "src/page.html", out = "public"] = process.argv.slice(2);
-// Adresse publique du site, pour les aperçus de liens : à changer si le clan passe sur son propre domaine.
-const SITE_URL = "https://openfrontclan-fr.github.io";
+// Adresse publique du site, pour les aperçus de liens. GitHub Pages redirige openfrontclan-fr.github.io vers ce domaine.
+const SITE_URL = "https://frclan.fr";
 const DESCRIPTION = "Le clan France sur OpenFront : classement, membres, rangs du Discord et guide du débutant.";
 const profiles = JSON.parse(await readFile("data/profiles.json", "utf8").catch(() => "{}"));
 const snap = JSON.parse(await readFile("data/snapshot.json", "utf8"));
