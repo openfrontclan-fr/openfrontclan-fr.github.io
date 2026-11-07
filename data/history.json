@@ -82,17 +82,17 @@
  {
   "date": "2026-11-07",
   "rank": 7,
-  "score": 1012.03,
-  "games": 36903,
-  "wins": 8689,
-  "members": 4368,
+  "score": 1011.2,
+  "games": 36913,
+  "wins": 8690,
+  "members": 4369,
   "above": {
    "tag": "EU",
-   "score": 1191.49
+   "score": 1192.36
   },
   "below": {
    "tag": "JR",
-   "score": 976.25
+   "score": 975.3
   }
  }
 ]
