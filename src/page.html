@@ -1,4 +1,4 @@
-<title>Front Français [FR]</title>
+<title>FR - OpenFront</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Le clan France [FR] sur OpenFront : classement, effectif, progression et meilleurs créneaux.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -387,7 +387,7 @@ footer p { margin: 0 0 4px; max-width: 70em; }
     </svg>
     <div class="wrap hero-inner">
       <p class="tag"><b>[FR]</b> Clan officiel sur OpenFront</p>
-      <h1>Le front<br>français</h1>
+      <h1>Rejoins<br>le front</h1>
       <p class="lede" id="lede"></p>
       <div class="actions">
         <a class="btn" href="#rejoindre">Rejoindre le clan</a>
@@ -1139,7 +1139,7 @@ $("source").textContent = `Données : API publique d'OpenFront, mises à jour le
 
 /* Pages */
 {
-  const PAGES = { accueil: "Front Français [FR]", classement: "Classement · Front Français [FR]", membres: "Membres · Front Français [FR]", jouer: "Jouer · Front Français [FR]", debuter: "Débuter · Front Français [FR]" };
+  const PAGES = { accueil: "FR - OpenFront", classement: "Classement · FR - OpenFront", membres: "Membres · FR - OpenFront", jouer: "Jouer · FR - OpenFront", debuter: "Débuter · FR - OpenFront" };
   const menu = $("menu");
   const panel = $("nav-links");
   const links = [...panel.querySelectorAll("a")];
@@ -1155,7 +1155,7 @@ $("source").textContent = `Données : API publique d'OpenFront, mises à jour le
       if (a.getAttribute("href") === `#${player ? "membres" : id}`) a.setAttribute("aria-current", "true");
       else a.removeAttribute("aria-current");
     });
-    document.title = player ? `${BY_SLUG.get(id.slice(7)).name} · Front Français [FR]` : PAGES[id];
+    document.title = player ? `${BY_SLUG.get(id.slice(7)).name} · FR - OpenFront` : PAGES[id];
     window.scrollTo({ top: 0, behavior: "instant" });
     if (remember) {
       try { history.pushState(null, "", `#${id}`); } catch { /* le lecteur peut refuser : la page change quand même */ }
