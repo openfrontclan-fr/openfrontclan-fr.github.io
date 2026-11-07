@@ -170,7 +170,7 @@ await writeFile(
 <meta property="og:image" content="${SITE_URL}/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Rejoins le front : le clan officiel France [FR] sur OpenFront">
+<meta property="og:image:alt" content="Rejoins le clan : le clan officiel France [FR] sur OpenFront">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/svg+xml" href="logo.svg">
 ${body.slice(0, headEnd)}
