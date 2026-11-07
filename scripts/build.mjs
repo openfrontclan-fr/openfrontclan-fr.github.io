@@ -84,9 +84,32 @@ const roster = {
     ]),
 };
 
+// Classement du bot Discord : seulement les comptes liés et non masqués, envoyés par le bot.
+// Il vient de l'extérieur du site : chaque champ est vérifié avant d'entrer dans la page.
+const sent = JSON.parse(await readFile("data/discord.json", "utf8").catch(() => "null"));
+const byId = new Map(members.map((m) => [m.publicId, m]));
+const text = (v, max) => (typeof v === "string" ? v.trim().slice(0, max) : "");
+const count = (v) => (Number.isFinite(v) && v >= 0 ? Math.round(v) : 0);
+const discord = Array.isArray(sent?.players) && !Number.isNaN(Date.parse(sent.generatedAt))
+  ? {
+      at: new Date(sent.generatedAt).toISOString(),
+      ranked: count(sent.ranked),
+      players: sent.players.slice(0, 500).flatMap((p) => {
+        const rank = text(p.rank, 40);
+        if (typeof p.publicId !== "string" || !rank) return [];
+        const m = byId.get(p.publicId);
+        // Pseudo public de l'effectif d'abord ; un membre anonyme dans l'effectif le reste ici.
+        const name = m ? m.username ?? null : text(p.username, 40) || null;
+        const linked = m?.username && !profileOf(m).hidden ? slug(m) : null;
+        return [[count(p.position) || null, name, linked, rank, count(p.xp), count(p.games)]];
+      }),
+    }
+  : null;
+
 const data = {
   tag: snap.tag,
   roster,
+  discord,
   fetchedAt: snap.fetchedAt,
   period: { start: snap.leaderboard.start, end: snap.leaderboard.end },
   clans: snap.leaderboard.clans.map((c, i) => ({

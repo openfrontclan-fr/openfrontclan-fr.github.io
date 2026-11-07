@@ -12,6 +12,9 @@ on:
         description: "Retélécharger les fiches des joueurs"
         type: boolean
         default: true
+  # Le bot du Discord envoie son classement, comptes liés seulement.
+  repository_dispatch:
+    types: [classement-discord]
   push:
     branches: [main]
 
@@ -45,7 +48,7 @@ jobs:
       # Sans fiches en cache, même une mise à jour légère les retélécharge.
       - name: Profils publics
         id: profils
-        if: github.event.schedule == '17 4 * * *' || inputs.profils || steps.cache.outputs.cache-matched-key == ''
+        if: github.event.schedule == '17 4 * * *' || inputs.profils || github.event.client_payload.profils || steps.cache.outputs.cache-matched-key == ''
         run: node scripts/fetch-profiles.mjs
       - name: Garder les fiches pour les mises à jour légères
         if: steps.profils.outcome == 'success'
@@ -53,6 +56,25 @@ jobs:
         with:
           path: data/profiles.json
           key: profils-${{ github.run_id }}
+      # Le classement du bot n'entre pas dans le dépôt : il est gardé dans le cache, comme les fiches.
+      - name: Classement Discord envoyé par le bot
+        if: github.event_name == 'repository_dispatch'
+        env:
+          CLASSEMENT: ${{ toJSON(github.event.client_payload) }}
+        run: printf '%s' "$CLASSEMENT" > data/discord.json
+      - name: Garder le classement Discord
+        if: github.event_name == 'repository_dispatch'
+        uses: actions/cache/save@v4
+        with:
+          path: data/discord.json
+          key: discord-${{ github.run_id }}
+      - name: Dernier classement Discord
+        if: github.event_name != 'repository_dispatch'
+        uses: actions/cache/restore@v4
+        with:
+          path: data/discord.json
+          key: discord-${{ github.run_id }}
+          restore-keys: discord-
       - name: Classement et parties
         run: node scripts/fetch-data.mjs
       - name: Construction du site

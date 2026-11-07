@@ -13,6 +13,25 @@ Le workflow `.github/workflows/site.yml` tourne deux fois par jour, à 12 heures
 
 Si le téléchargement échoue, le déploiement s'arrête et la dernière version reste en ligne.
 
+## Classement du Discord
+
+Le bot du Discord envoie son classement par un événement `repository_dispatch` de type `classement-discord`, avec un jeton GitHub limité à ce dépôt (permission « Contents » en écriture). Le workflow le garde dans le cache d'Actions, sans le mettre dans le dépôt, et le reprend aux mises à jour suivantes.
+
+```json
+{
+  "event_type": "classement-discord",
+  "client_payload": {
+    "generatedAt": "2026-11-07T08:00:00.000Z",
+    "ranked": 14,
+    "players": [
+      { "publicId": "…", "username": "…", "rank": "Capitaine II", "xp": 268, "games": 47, "position": 1 }
+    ]
+  }
+}
+```
+
+`players` ne contient que les comptes liés avec `/lier` et non masqués ; `ranked` compte tous les membres classés, et `position` est la place dans ce classement complet. Le site garde le pseudo de l'effectif quand le joueur y est, et un membre anonyme dans l'effectif le reste. Avec `"profils": true` dans `client_payload`, la mise à jour retélécharge aussi les fiches des joueurs.
+
 ## Vie privée
 
 Les données brutes ne sont pas conservées dans ce dépôt. Le site ne publie ni pseudo ni identifiant pour les membres sans pseudo public. Pour les profils marqués comme masqués, il ne publie ni l'identifiant ni la carrière.

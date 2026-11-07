@@ -5,6 +5,7 @@ public/
 data/members.json
 data/profiles.json
 data/snapshot.json
+data/discord.json
 
 # Anciennes versions, travail local
 archive/

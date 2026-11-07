@@ -16,6 +16,7 @@
   --blue: #7f9dff;
   --deep: #1c3fb0;
   --red: #ff3b3b;
+  --green: #45d483;
   --display: Anton, Impact, "Arial Narrow", sans-serif;
   --body: Inter, "Segoe UI", system-ui, sans-serif;
 }
@@ -171,6 +172,8 @@ td a { text-decoration: none; font-weight: 500; }
 td a:hover { color: var(--blue); }
 .anon { color: var(--muted); font-style: italic; }
 .note { color: var(--muted); font-size: .88rem; margin: 14px 0 0; }
+.ranks { margin-top: 32px; }
+.grade { font: 400 1.2rem/1 var(--display); letter-spacing: .03em; text-transform: uppercase; white-space: nowrap; }
 
 /* Modes de jeu */
 .tabs.modes { display: inline-flex; flex-wrap: wrap; margin-top: 12px; max-width: 100%; }
@@ -240,6 +243,24 @@ summary { cursor: pointer; color: var(--muted); font-size: .88rem; }
 .scale i { width: 96px; height: 6px; border-radius: 3px; background: linear-gradient(90deg, var(--raise), var(--blue)); }
 .scale u { width: 11px; height: 11px; border-radius: 3px; outline: 2px solid var(--red); outline-offset: -1px; margin-left: 12px; }
 
+/* Discord en direct */
+.voice-grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(32px, 6vw, 88px); align-items: start; margin-top: 44px; }
+.voice-online { display: flex; align-items: center; gap: 16px; font: 400 clamp(3rem, 6vw, 4.6rem)/1.08 var(--display); letter-spacing: .012em; text-transform: uppercase; margin: 0 0 8px; }
+.voice-online i { flex: none; width: 14px; height: 14px; border-radius: 50%; background: var(--green); animation: live 2.4s infinite; }
+@keyframes live { from { box-shadow: 0 0 0 0 color-mix(in oklab, var(--green) 60%, transparent); } 70%, to { box-shadow: 0 0 0 12px transparent; } }
+.voice-grid .text { margin-bottom: 28px; }
+.voice { list-style: none; margin: 0; padding: 0; }
+.voice > li { padding: 16px 0; border-top: 1px solid var(--line); }
+.voice > li:last-child { border-bottom: 1px solid var(--line); }
+.voice-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+.voice-head b { font-weight: 600; overflow-wrap: anywhere; }
+.voice-head span { color: var(--muted); font-size: .88rem; white-space: nowrap; }
+.voice .empty b { color: var(--muted); font-weight: 500; }
+.voice-people { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 0; padding: 0; }
+.voice-people li { display: flex; align-items: center; gap: 8px; min-width: 0; max-width: 100%; padding: 4px 14px 4px 4px; background: var(--raise); border: 1px solid var(--line); border-radius: 999px; font-size: .9rem; font-weight: 500; }
+.voice-people span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.voice-people img { flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--line); }
+
 /* Outils */
 .tools { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 clamp(32px, 6vw, 88px); list-style: none; margin: 40px 0 0; padding: 0; }
 .tools a { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; text-decoration: none; border-top: 1px solid var(--line); padding: 18px 0; }
@@ -301,7 +322,7 @@ footer p { margin: 0 0 4px; max-width: 70em; }
   .links { display: none; position: absolute; top: calc(100% + 8px); left: 0; right: 0; flex-direction: column; align-items: stretch; margin: 0; padding: 8px; background: var(--raise); border: 1px solid var(--line); border-radius: 14px; }
   .links.open { display: flex; }
   .links a { padding: 11px 12px; font-size: 1rem; }
-  .race, .crew, .slots-grid, .player-grid, .lesson { grid-template-columns: minmax(0, 1fr); }
+  .race, .crew, .slots-grid, .voice-grid, .player-grid, .lesson { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 720px) {
   html { scroll-padding-top: 84px; }
@@ -319,6 +340,7 @@ footer p { margin: 0 0 4px; max-width: 70em; }
   .hub-item + .hub-item { border-top: 1px solid var(--line); }
   td, th { padding-inline: 8px; }
   td.left { white-space: normal; overflow-wrap: anywhere; }
+  .grade { font-size: 1rem; }
   .podium { grid-template-columns: minmax(0, 1fr); }
   .card, .card.first, .card.second, .card.third { order: 0; display: grid; grid-template-columns: 50px minmax(0, 1fr) auto; align-items: center; column-gap: 12px; padding: 14px 16px; }
   .card .n, .card.first .n { font-size: 2.3rem; }
@@ -494,6 +516,17 @@ footer p { margin: 0 0 4px; max-width: 70em; }
         <button class="more" id="roster-more" type="button"></button>
       </div>
     </section>
+
+      <section id="rangs" hidden>
+      <p class="kicker">Classement du Discord</p>
+      <h2>Les rangs du clan</h2>
+      <p class="text">Les points des 30 derniers jours, comptés par le bot du Discord&nbsp;: parties publiques [FR], messages et vocal. Seuls les membres qui ont lié leur compte OpenFront avec <strong>/lier</strong> apparaissent ici.</p>
+      <table class="ranks">
+        <thead><tr><th>Place</th><th class="left">Pseudo</th><th class="left">Rang</th><th>Points</th><th class="opt">Parties [FR]</th></tr></thead>
+        <tbody id="rangs-list"></tbody>
+      </table>
+      <p class="note" id="rangs-note"></p>
+    </section>
     </div>
   </div>
 
@@ -516,6 +549,19 @@ footer p { margin: 0 0 4px; max-width: 70em; }
           <div class="heat-wrap"><div class="heat" id="heat"></div></div>
           <div class="scale"><span>Peu de parties</span><i></i><span>Beaucoup</span><u></u><span>Maintenant</span></div>
         </div>
+      </div>
+    </section>
+
+      <section id="vocal" hidden>
+      <p class="kicker">En direct du Discord</p>
+      <h2>Qui est en vocal&nbsp;?</h2>
+      <div class="voice-grid">
+        <div>
+          <p class="voice-online"><i aria-hidden="true"></i><span><span id="voice-online"></span> en ligne</span></p>
+          <p class="text" id="voice-summary" aria-live="polite"></p>
+          <a class="btn" href="https://discord.gg/f7xSuReUfe" target="_blank" rel="noopener">Rejoindre le Discord</a>
+        </div>
+        <ul class="voice" id="voice-channels"></ul>
       </div>
     </section>
 
@@ -712,7 +758,7 @@ footer p { margin: 0 0 4px; max-width: 70em; }
 
 <footer><div class="wrap">
   <p id="source"></p>
-  <p>L'effectif vient de la liste officielle du clan, les membres sans pseudo public restent anonymes. Le classement et l'activité sont les chiffres d'OpenFront pour le tag [FR].</p>
+  <p>L'effectif vient de la liste officielle du clan, les membres sans pseudo public restent anonymes. Le classement et l'activité sont les chiffres d'OpenFront pour le tag [FR]. Le bloc vocal vient du widget public du Discord du clan.</p>
   <p>Site de clan non officiel, sans lien avec les éditeurs d'OpenFront.</p>
 </div></footer>
 
@@ -872,13 +918,32 @@ const joinedFmt = fmt({ day: "2-digit", month: "2-digit", year: "2-digit" });
   renderRoster();
 }
 
+/* Rangs du Discord : le classement du bot, comptes liés seulement */
+const DISCORD_RANKS = new Map((DATA.discord?.players ?? []).filter((p) => p[2]).map(([, , slug, rank, xp]) => [slug, { rank, xp }]));
+if (DATA.discord?.players.length) {
+  const D = DATA.discord;
+  $("rangs-list").innerHTML = D.players.map(([place, name, slug, rank, xp, games]) => `<tr>
+    <td class="dim">${place ?? "–"}</td>
+    <td class="left">${!name ? `<span class="anon">Membre anonyme</span>` : slug ? `<a href="#joueur-${slug}">${esc(name)}</a>` : esc(name)}</td>
+    <td class="left"><span class="grade">${esc(rank)}</span></td>
+    <td>${int(xp)}</td>
+    <td class="dim opt">${int(games)}</td>
+  </tr>`).join("");
+  const others = Math.max(0, D.ranked - D.players.length);
+  const when = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris" }).format(new Date(D.at));
+  $("rangs-note").textContent = `${others ? `${int(others)} autre${others > 1 ? "s" : ""} membre${others > 1 ? "s" : ""} classé${others > 1 ? "s" : ""} sur le Discord n'${others > 1 ? "ont" : "a"} pas encore lié de compte : tape /lier sur le Discord pour apparaître ici. ` : ""}Classement envoyé par le bot le ${when}.`;
+  $("rangs").hidden = false;
+}
+
 /* Page joueur */
 function renderPlayer(slug) {
   const m = BY_SLUG.get(slug);
   const total = m.stats.total;
   const profile = R.profiles[slug];
   const longDate = fmt({ day: "numeric", month: "long", year: "numeric" });
-  const since = profile?.since ? ` Sur OpenFront depuis ${fmt({ month: "long", year: "numeric" }).format(utcDate(profile.since + "-01"))}.` : "";
+  const discordRank = DISCORD_RANKS.get(slug);
+  const since = (profile?.since ? ` Sur OpenFront depuis ${fmt({ month: "long", year: "numeric" }).format(utcDate(profile.since + "-01"))}.` : "")
+    + (discordRank ? ` Rang <strong>${esc(discordRank.rank)}</strong> sur le Discord, avec ${int(discordRank.xp)} points sur 30 jours.` : "");
   const rank = rankIn(m, "total");
   const tiles = [
     ["Rang dans le clan", rank ? (rank === 1 ? "1er" : `${rank}e`) : "–", `sur ${int(rankingOf("total").length)} pseudos publics`],
@@ -1133,6 +1198,42 @@ function renderPlayer(slug) {
     [...$("guide-tabs").children].forEach((o) => o.setAttribute("aria-pressed", String(o === b)));
     document.querySelectorAll(".guide-panel").forEach((p) => { p.hidden = p.id !== `guide-${b.dataset.guide}`; });
   });
+}
+
+/* Discord en direct : le widget public du serveur, lu par le navigateur du visiteur. */
+{
+  const WIDGET = "https://discord.com/api/guilds/1443363496430534807/widget.json";
+  // « [🌍] Vocal 1 » devient « 🌍 Vocal 1 ».
+  const channelName = (n) => n.replace(/^\[([^\]]*)\]\s*/, "$1 ");
+  const avatar = (m) => /^https:\/\/cdn\.discordapp\.com\//.test(m.avatar_url ?? "") ? `<img src="${esc(m.avatar_url)}" alt="" width="26" height="26" loading="lazy">` : "";
+  async function renderVoice() {
+    let w;
+    try {
+      const res = await fetch(WIDGET);
+      if (!res.ok) return;
+      w = await res.json();
+    } catch {
+      return;
+    }
+    const rooms = new Map(w.channels.map((c) => [c.id, []]));
+    for (const m of w.members) rooms.get(m.channel_id)?.push(m);
+    const talking = [...rooms.values()].reduce((n, people) => n + people.length, 0);
+    $("voice-online").textContent = int(w.presence_count);
+    $("voice-summary").textContent = talking
+      ? `${talking} ${talking > 1 ? "membres" : "membre"} en vocal en ce moment.`
+      : "Personne en vocal pour l'instant. Lance le premier salon !";
+    $("voice-channels").innerHTML = w.channels.slice().sort((a, b) => a.position - b.position).map((c) => {
+      const people = rooms.get(c.id);
+      return `<li${people.length ? "" : ' class="empty"'}>
+        <div class="voice-head"><b>${esc(channelName(c.name))}</b><span>${people.length ? `${people.length} en vocal` : "Vide"}</span></div>
+        ${people.length ? `<ul class="voice-people">${people.map((m) => `<li>${avatar(m)}<span>${esc(m.username)}</span></li>`).join("")}</ul>` : ""}
+      </li>`;
+    }).join("");
+    $("vocal").hidden = false;
+  }
+  renderVoice();
+  // Discord garde le widget 5 minutes en cache : inutile de demander plus souvent.
+  setInterval(() => { if (!document.hidden) renderVoice(); }, 5 * 60_000);
 }
 
 $("source").textContent = `Données : API publique d'OpenFront, mises à jour le ${new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris" }).format(new Date(DATA.fetchedAt))}.`;
