@@ -550,7 +550,7 @@ footer p { margin: 0 0 4px; max-width: 70em; }
       <section id="rangs" hidden>
       <p class="kicker">Classement du Discord</p>
       <h2>Les rangs du clan</h2>
-      <p class="text">Les points des 30 derniers jours, comptés par le bot du Discord&nbsp;: parties publiques [FR], messages et vocal. Seuls les membres qui ont lié leur compte OpenFront avec <strong>/lier</strong> apparaissent ici.</p>
+      <p class="text">Le total des points comptés par le bot du Discord&nbsp;: toutes les parties publiques [FR], messages et vocal. Les points ne se perdent pas. Seuls les membres qui ont lié leur compte OpenFront avec <strong>/lier</strong> apparaissent ici.</p>
       <table class="ranks">
         <thead><tr><th>Place</th><th class="left">Pseudo</th><th class="left">Rang</th><th>Points</th><th class="opt">Parties [FR]</th></tr></thead>
         <tbody id="rangs-list"></tbody>
@@ -995,7 +995,7 @@ function renderPlayer(slug) {
   const longDate = fmt({ day: "numeric", month: "long", year: "numeric" });
   const discordRank = DISCORD_RANKS.get(slug);
   const since = (profile?.since ? ` Sur OpenFront depuis ${fmt({ month: "long", year: "numeric" }).format(utcDate(profile.since + "-01"))}.` : "")
-    + (discordRank ? ` Rang <strong>${esc(discordRank.rank)}</strong> sur le Discord, avec ${int(discordRank.xp)} points sur 30 jours.` : "");
+    + (discordRank ? ` Rang <strong>${esc(discordRank.rank)}</strong> sur le Discord, avec ${int(discordRank.xp)} points au total.` : "");
   const rank = rankIn(m, "total");
   const tiles = [
     ["Rang dans le clan", rank ? (rank === 1 ? "1er" : `${rank}e`) : "–", `sur ${int(rankingOf("total").length)} pseudos publics`],
