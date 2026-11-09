@@ -113,18 +113,18 @@
  },
  {
   "date": "2026-11-09",
-  "rank": 7,
-  "score": 1035.11,
-  "games": 37361,
-  "wins": 8811,
-  "members": 4414,
+  "rank": 8,
+  "score": 1035.1,
+  "games": 37485,
+  "wins": 8836,
+  "members": 4421,
   "above": {
-   "tag": "EU",
-   "score": 1247.1
+   "tag": "CYN",
+   "score": 1051.98
   },
   "below": {
-   "tag": "CYN",
-   "score": 1025.26
+   "tag": "LUX",
+   "score": 945.89
   }
  }
 ]
