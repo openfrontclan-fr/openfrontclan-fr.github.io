@@ -130,17 +130,17 @@
  {
   "date": "2026-11-10",
   "rank": 8,
-  "score": 1041.38,
-  "games": 37602,
-  "wins": 8871,
-  "members": 4427,
+  "score": 1035.46,
+  "games": 37611,
+  "wins": 8875,
+  "members": 4439,
   "above": {
    "tag": "CYN",
-   "score": 1080.61
+   "score": 1072.41
   },
   "below": {
    "tag": "JR",
-   "score": 961.87
+   "score": 950.92
   }
  }
 ]
