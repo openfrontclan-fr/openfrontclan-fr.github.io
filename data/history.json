@@ -174,5 +174,21 @@
    "tag": "LUX",
    "score": 979.07
   }
+ },
+ {
+  "date": "2026-11-13",
+  "rank": 8,
+  "score": 1044.37,
+  "games": 38463,
+  "wins": 9077,
+  "members": 4521,
+  "above": {
+   "tag": "CYN",
+   "score": 1148.75
+  },
+  "below": {
+   "tag": "LUX",
+   "score": 979.65
+  }
  }
 ]
