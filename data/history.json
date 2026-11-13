@@ -178,17 +178,17 @@
  {
   "date": "2026-11-13",
   "rank": 8,
-  "score": 1044.23,
-  "games": 38562,
-  "wins": 9115,
-  "members": 4539,
+  "score": 1058.73,
+  "games": 38698,
+  "wins": 9165,
+  "members": 4554,
   "above": {
    "tag": "CYN",
-   "score": 1150.67
+   "score": 1184.15
   },
   "below": {
    "tag": "LUX",
-   "score": 983.29
+   "score": 980.96
   }
  }
 ]
