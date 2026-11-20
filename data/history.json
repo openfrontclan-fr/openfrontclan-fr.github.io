@@ -290,17 +290,17 @@
  {
   "date": "2026-11-20",
   "rank": 6,
-  "score": 1252.97,
-  "games": 40693,
-  "wins": 9732,
-  "members": 4848,
+  "score": 1265.83,
+  "games": 40737,
+  "wins": 9747,
+  "members": 4850,
   "above": {
    "tag": "EU",
-   "score": 1560.71
+   "score": 1573.39
   },
   "below": {
    "tag": "CYN",
-   "score": 1184.18
+   "score": 1185.44
   }
  }
 ]
