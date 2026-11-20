@@ -286,5 +286,21 @@
    "tag": "CYN",
    "score": 1167.67
   }
+ },
+ {
+  "date": "2026-11-20",
+  "rank": 6,
+  "score": 1211.09,
+  "games": 40480,
+  "wins": 9665,
+  "members": 4824,
+  "above": {
+   "tag": "EU",
+   "score": 1521.99
+  },
+  "below": {
+   "tag": "CYN",
+   "score": 1181.74
+  }
  }
 ]
