@@ -74,3 +74,9 @@ node scripts/build.mjs
 ```
 
 Le site est alors dans `public/index.html`.
+
+## Licence
+
+- Le code du site est sous licence [GNU AGPL 3.0](LICENSE).
+- Les icônes du jeu et la carte du monde en points viennent d'OpenFront, sous licence [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) : voir [assets/icons/LICENCE.md](assets/icons/LICENCE.md).
+- Les polices Anton et Inter sont sous licence [SIL OFL 1.1](https://openfontlicense.org/) : voir [assets/fonts/LICENCE.md](assets/fonts/LICENCE.md).
