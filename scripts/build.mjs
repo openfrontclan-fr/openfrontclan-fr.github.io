@@ -211,6 +211,8 @@ await copyFile("assets/bg-hero.webp", `${out}/bg-hero.webp`);
 await copyFile("assets/logo.svg", `${out}/logo.svg`);
 // Image d'aperçu des liens partagés (Discord, réseaux) ; sa source est assets/og-card.html.
 await copyFile("assets/og-card.png", `${out}/og.png`);
+// Carte du monde en points derrière l'accueil, tirée de la carte « World » d'OpenFront (scripts/world-map.mjs).
+await copyFile("assets/world.svg", `${out}/world.svg`);
 await writeFile(`${out}/artifact.html`, body);
 await writeFile(
   `${out}/index.html`,

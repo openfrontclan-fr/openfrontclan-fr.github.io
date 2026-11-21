@@ -30,7 +30,10 @@ Le bot du Discord envoie son classement par un événement `repository_dispatch`
       { "name": "Guerre de clans", "start": "2026-11-14T20:00:00.000Z", "end": "2026-11-14T22:00:00.000Z", "place": "Vocal 1" }
     ],
     "ladder": [["Soldat", 0, 0], ["Caporal", 25, 0], ["Caporal II", 50, 0]],
-    "week": { "start": "2026-11-15T23:00:00.000Z", "wins": 662, "promotions": 9, "newActive": 14 },
+    "week": {
+      "start": "2026-11-15T23:00:00.000Z", "wins": 662, "promotions": 9, "newActive": 14,
+      "top": [{ "publicId": "…", "username": "…", "rank": "Commandant II", "xp": 1842, "wins": 105, "games": 214 }]
+    },
     "promotions": [
       { "publicId": "…", "username": "…", "rank": "Capitaine II", "at": "2026-11-21T19:37:00.000Z" }
     ],
@@ -47,7 +50,7 @@ Le bot du Discord envoie son classement par un événement `repository_dispatch`
 `ladder`, `week`, `promotions` et `gazette` sont facultatifs : sans eux, leurs blocs ne s'affichent pas.
 
 - `ladder` est l'échelle complète des rangs, `[nom, points, parties]` du plus bas au plus haut. La fiche d'un joueur en tire la barre de progression vers le rang suivant.
-- `week` est ce que le bot a compté sur les 7 derniers jours, depuis `start` (minuit à Paris) : victoires [FR], promotions échelons compris, et nouvelles recrues déjà en jeu (`newActive`, ou `null` quand l'API d'OpenFront n'a pas répondu). L'accueil l'affiche dans « La semaine du clan », avec la place gagnée ou perdue depuis `start`, tirée de l'historique du site.
+- `week` est ce que le bot a compté sur les 7 derniers jours, depuis `start` (minuit à Paris) : victoires [FR], promotions échelons compris, et nouvelles recrues déjà en jeu (`newActive`, ou `null` quand l'API d'OpenFront n'a pas répondu). L'accueil l'affiche dans « La semaine du clan », avec la place gagnée ou perdue depuis `start`, tirée de l'historique du site. `week.top` donne les 3 meilleurs de ces 7 jours, par points gagnés (`xp`, `wins` et `games` sur les 7 jours, `rank` actuel) : c'est le podium en haut de l'accueil. Sans lui, le podium montre les 3 premiers du classement Discord au total.
 - `promotions` liste les dernières montées de rang. Le site en garde 8, les plus récentes, et n'affiche pas un membre anonyme dans l'effectif.
 - `gazette` est la dernière gazette du bot : son nom, sa date, au plus 5 lignes de texte brut et le lien de son message sur Discord.
 
