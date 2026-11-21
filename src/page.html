@@ -84,7 +84,8 @@ h1 { font: 400 clamp(2.8rem, 5.4vw, 4.6rem)/1.02 var(--display); letter-spacing:
 .tally { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; border-top: 1px solid var(--line); }
 .stat { padding: 28px 28px 8px 0; min-width: 0; }
 .stat + .stat { padding-left: 28px; border-left: 1px solid var(--line); }
-.stat dt { color: var(--muted); font-size: .76rem; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; }
+.stat dt { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: .76rem; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; }
+.stat-ico { flex: none; width: 26px; height: 26px; color: var(--cream); }
 .stat dd { margin: 6px 0 2px; font: 400 clamp(2rem, 3.4vw, 2.9rem)/1.1 var(--display); letter-spacing: .012em; }
 .sub { display: block; color: var(--muted); font-size: .86rem; }
 
@@ -450,6 +451,13 @@ footer p { margin: 0 0 4px; max-width: 70em; }
     <linearGradient id="ins-gold" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#3a2a08"/><stop offset=".6" stop-color="#7a5a14"/><stop offset="1" stop-color="#b8902e"/></linearGradient>
     <linearGradient id="ins-edge" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#7f9dff" stop-opacity=".35"/><stop offset="1" stop-color="#f5f3eb" stop-opacity=".95"/></linearGradient>
   </defs>
+  <!-- Icônes des chiffres clés : trait crème, un détail rouge ou bleu comme le drapeau. -->
+  <symbol id="i-rank" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M2.5 20.5h19"/><path d="M3.5 20.5v-7h5.5v7M15 20.5v-5h5.5v5"/></g><path d="M9 20.5V7.5h6v13z" fill="#ff3b3b" stroke="#ff3b3b" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 2.2l.9 1.8 2 .3-1.45 1.4.35 2-1.8-.95-1.8.95.35-2L9.1 4.3l2-.3z" fill="currentColor"/></symbol>
+  <symbol id="i-games" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 17.5 3 6V3h3l11.5 11.5"/><path d="M9.5 6.5 13 3h3v3l-3.5 3.5"/></g><g fill="none" stroke="#ff3b3b" stroke-width="1.8" stroke-linecap="round"><path d="m13 19 6-6M16 16l4 4M19 21l2-2"/><path d="m5 13 6 6M8 16l-4 4M3 19l2 2"/></g></symbol>
+  <symbol id="i-wins" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5.5a2.5 2.5 0 0 0 2.6 4M16 6h2.5a2.5 2.5 0 0 1-2.6 4"/><path d="M12 13v4M8.5 20.5h7M9.5 17h5v3.5h-5z"/></g><path d="m12 5.3.75 1.5 1.65.25-1.2 1.15.3 1.65-1.5-.8-1.5.8.3-1.65-1.2-1.15 1.65-.25z" fill="#ff3b3b"/></symbol>
+  <symbol id="i-members" viewBox="0 0 24 24"><g fill="none" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="8" r="3.2" stroke="currentColor"/><path d="M3 20a6 6 0 0 1 12 0" stroke="currentColor"/><circle cx="17" cy="9" r="2.6" stroke="#7f9dff"/><path d="M16 14.1a5 5 0 0 1 5.5 5.4" stroke="#7f9dff"/></g></symbol>
+  <symbol id="i-rate" viewBox="0 0 24 24"><g fill="none" stroke-width="1.8" stroke-linecap="round"><path d="M3.5 18a8.5 8.5 0 1 1 17 0" stroke="currentColor"/><path d="M12 18l4.2-5.8" stroke="#ff3b3b"/></g><circle cx="12" cy="18" r="1.6" fill="currentColor"/></symbol>
+  <symbol id="i-promo" viewBox="0 0 24 24"><g fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5.5 11 6.5-5.5 6.5 5.5" stroke="#ff3b3b"/><path d="m5.5 17 6.5-5.5 6.5 5.5" stroke="currentColor"/></g></symbol>
   <symbol id="logo" viewBox="0 0 4401 2600"><path fill="#F5F3EB" d="M0 435.495C0 407.097 23.0211 384.076 51.4191 384.076H2168.82C2191.51 384.076 2213.05 374.087 2227.7 356.768L2506.48 27.308C2521.13 9.9887 2542.67 0 2565.35 0H4349.48C4393.47 0 4417.15 51.6444 4388.44 84.9743L3370.85 1266.51C3354.28 1285.75 3354.23 1314.2 3370.74 1333.49L4065.47 2145.76C4094 2179.12 4070.29 2230.6 4026.39 2230.6H1841.14C1818.67 2230.6 1797.32 2240.4 1782.67 2257.43L1511.23 2573.06C1496.57 2590.1 1475.22 2599.9 1452.75 2599.9H51.4192C23.0212 2599.9 0 2576.88 0 2548.48V435.495Z"/></symbol>
   <symbol id="discord" viewBox="0 0 24 24"><path fill="currentColor" d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.211.375-.445.865-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></symbol>
 </svg>
@@ -478,7 +486,7 @@ footer p { margin: 0 0 4px; max-width: 70em; }
       <h1>Rejoins le clan</h1>
       <p class="lede" id="lede"></p>
       <div class="actions">
-        <a class="btn discord" href="https://discord.gg/cQdxCSFnNV" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#discord"/></svg>Rejoindre le clan</a>
+        <a class="btn discord" href="https://discord.gg/cQdxCSFnNV" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#discord"/></svg>Rejoindre le Discord</a>
         <a class="btn ghost" href="https://openfront.io/" target="_blank" rel="noopener">Lancer une partie</a>
       </div>
       <a class="ext" href="#debuter">Nouveau sur le jeu&nbsp;? Lis le guide du débutant</a>
@@ -864,6 +872,10 @@ const utcDate = (d) => new Date(d + "T00:00:00Z");
 const fmt = (o) => new Intl.DateTimeFormat("fr-FR", { timeZone: "UTC", ...o });
 const dayFmt = fmt({ day: "numeric", month: "long" });
 const ordinal = (n) => (n === 1 ? "1er" : `${int(n)}e`);
+// Une case de chiffre clé, avec son icône du sprite (i-rank, i-games, i-wins, i-members, i-rate, i-promo).
+const stat = ([k, v, sub, icon, cls = ""]) => `<div class="stat"><dt>${icon ? `<svg class="stat-ico" aria-hidden="true"><use href="#i-${icon}"/></svg>` : ""}${k}</dt><dd>${v}</dd><span class="sub ${cls}">${sub}</span></div>`;
+// Le numéro qu'OpenFront ajoute à certains pseudos (« Mantas le goat.6568 ») ne s'affiche pas à côté des noms du Discord.
+const shortName = (name) => String(name).replace(/\.\d{4}$/, "") || String(name);
 
 const us = DATA.clans.find((c) => c.tag === DATA.tag);
 const above = DATA.clans[us.rank - 2];
@@ -873,11 +885,11 @@ const R = DATA.roster;
 /* Ouverture */
 $("lede").textContent = `Le clan France sur OpenFront. ${int(R.total)} joueurs, un classement à grimper et un Discord pour jouer ensemble.`;
 $("tally").innerHTML = [
-  ["Rang sur 90 jours", `${us.rank}e`, `sur ${DATA.clans.length} clans`],
-  ["Parties", int(us.games), "sur 90 jours"],
-  ["Victoires", int(us.wins), `${pct(us.wins / us.games)} des parties`],
-  ["Membres", int(R.total), `${int(R.active)} ont déjà joué`],
-].map(([k, v, sub]) => `<div class="stat"><dt>${k}</dt><dd>${v}</dd><span class="sub">${sub}</span></div>`).join("");
+  ["Rang sur 90 jours", `${us.rank}e`, `sur ${DATA.clans.length} clans`, "rank"],
+  ["Parties", int(us.games), "sur 90 jours", "games"],
+  ["Victoires", int(us.wins), `${pct(us.wins / us.games)} des parties`, "wins"],
+  ["Membres", int(R.total), `${int(R.active)} ont déjà joué`, "members"],
+].map(stat).join("");
 
 /* Classement */
 {
@@ -943,13 +955,13 @@ const joinedFmt = fmt({ day: "2-digit", month: "2-digit", year: "2-digit" });
 {
   $("crew-title").textContent = `${int(R.total)} joueurs sous le même drapeau`;
   $("facts").innerHTML = [
-    ...R.command.map((c) => `<li>${ROLE[c.role]}<a href="#joueur-${c.slug}">${esc(c.name)}</a></li>`),
+    ...R.command.map((c) => `<li>${ROLE[c.role]}<a href="#joueur-${c.slug}">${esc(shortName(c.name))}</a></li>`),
     `<li>Ont déjà joué<b>${int(R.active)}</b></li>`,
     `<li>Pseudos publics<b>${int(R.named)}</b></li>`,
   ].join("");
 
   const leader = rankingOf("total")[0];
-  $("hub-crew").textContent = leader.name;
+  $("hub-crew").textContent = shortName(leader.name);
   $("hub-crew-sub").textContent = `en tête du clan avec ${int(leader.stats.total.wins)} victoires`;
 
   const STEP = 12;
@@ -959,7 +971,7 @@ const joinedFmt = fmt({ day: "2-digit", month: "2-digit", year: "2-digit" });
     $("podium-label").textContent = `Le podium ${mode === "total" ? "général" : `en ${MODE_NAMES[mode]}`}, parmi les pseudos publics`;
     $("podium").innerHTML = rankingOf(mode).slice(0, 3).map((m, i) => `<a class="card ${PLACE[i]}" href="${playerLink(m)}">
       <span class="n">${i + 1}</span>
-      <span class="who">${esc(m.name)}</span>
+      <span class="who">${esc(shortName(m.name))}</span>
       <span class="wins">${int(m.stats[mode].wins)}</span>
       <span class="sub">victoires sur ${int(m.stats[mode].games)} parties</span>
     </a>`).join("");
@@ -1061,7 +1073,7 @@ if (DATA.discord?.players.length) {
   const D = DATA.discord;
   $("rangs-list").innerHTML = D.players.map(([place, name, slug, rank, xp, games]) => `<tr>
     <td class="dim">${place ?? "–"}</td>
-    <td class="left">${!name ? `<span class="anon">Membre anonyme</span>` : slug ? `<a href="#joueur-${slug}">${esc(name)}</a>` : esc(name)}</td>
+    <td class="left">${!name ? `<span class="anon">Membre anonyme</span>` : slug ? `<a href="#joueur-${slug}">${esc(shortName(name))}</a>` : esc(shortName(name))}</td>
     <td class="left"><span class="grade-cell">${insignia(rank)}<span class="grade">${esc(rank)}</span></span></td>
     <td>${int(xp)}</td>
     <td class="dim opt">${int(games)}</td>
@@ -1093,16 +1105,16 @@ if (DATA.discord?.players.length) {
       const places = (n) => `${int(n)} place${n > 1 ? "s" : ""}`;
       const since = `depuis le ${paris({ day: "numeric", month: "long" }).format(new Date(D.week.start))}`;
       $("week-tally").innerHTML = [
-        ["Victoires [FR]", int(D.week.wins), since, ""],
-        ["Place", ordinal(us.rank), moved > 0 ? `▲ ${places(moved)} en 7 jours` : moved < 0 ? `▼ ${places(-moved)} en 7 jours` : "même place qu'il y a 7 jours", moved > 0 ? "up" : moved < 0 ? "down" : ""],
-        ["Promotions", int(D.week.promotions), "échelons compris", ""],
-        ["Nouvelles recrues", D.week.newActive === null ? "–" : int(D.week.newActive), D.week.newActive === null ? "pas de chiffre cette fois" : "arrivées et déjà en jeu", ""],
-      ].map(([k, v, sub, cls]) => `<div class="stat"><dt>${k}</dt><dd>${v}</dd><span class="sub ${cls}">${sub}</span></div>`).join("");
+        ["Victoires [FR]", int(D.week.wins), since, "wins"],
+        ["Place", ordinal(us.rank), moved > 0 ? `▲ ${places(moved)} en 7 jours` : moved < 0 ? `▼ ${places(-moved)} en 7 jours` : "même place qu'il y a 7 jours", "rank", moved > 0 ? "up" : moved < 0 ? "down" : ""],
+        ["Promotions", int(D.week.promotions), "échelons compris", "promo"],
+        ["Nouvelles recrues", D.week.newActive === null ? "–" : int(D.week.newActive), D.week.newActive === null ? "pas de chiffre cette fois" : "arrivées et déjà en jeu", "members"],
+      ].map(stat).join("");
     }
     $("week-tally").hidden = !D.week;
     const promoHtml = promos.length ? `<div>
       <p class="label">Dernières promotions</p>
-      <ul class="promos">${promos.map(([name, slug, rank, at]) => `<li>${insignia(rank)}<span class="what">${slug ? `<a href="#joueur-${slug}">${esc(name)}</a>` : `<b>${esc(name)}</b>`} passe <span class="grade">${esc(rank)}</span></span><time datetime="${esc(at)}">${relDay(at)}</time></li>`).join("")}</ul>
+      <ul class="promos">${promos.map(([name, slug, rank, at]) => `<li>${insignia(rank)}<span class="what">${slug ? `<a href="#joueur-${slug}">${esc(shortName(name))}</a>` : `<b>${esc(shortName(name))}</b>`} passe <span class="grade">${esc(rank)}</span></span><time datetime="${esc(at)}">${relDay(at)}</time></li>`).join("")}</ul>
     </div>` : "";
     const G = D.gazette;
     const gazetteHtml = G ? `<div>
@@ -1135,7 +1147,7 @@ if (DATA.discord?.players.length) {
       const tag = slug ? "a" : "div";
       return `<${tag} class="card ${PLACES[i]}"${slug ? ` href="#joueur-${slug}"` : ""}>
         <span class="n">${ordinal(i + 1)}</span>
-        <span class="who">${insignia(rank)}<span>${esc(name)}</span></span>
+        <span class="who">${insignia(rank)}<span>${esc(shortName(name))}</span></span>
         <span class="wins">${weekly ? "+" : ""}${int(xp)} pts</span>
         <span class="sub">${esc(rank)}${weekly && wins !== null ? ` · ${int(wins)} victoire${wins > 1 ? "s" : ""}` : ""}</span>
       </${tag}>`;
@@ -1181,7 +1193,7 @@ if (DATA.discord?.players.length) {
     if (joined) lines.push(`Membres du clan : <strong>${joined > 0 ? "+" : "−"}${int(Math.abs(joined))}</strong>, ${int(R.total)} en tout.`);
     const promos = (D?.promotions ?? []).filter(([, , , at]) => at > prev.at);
     if (promos.length) {
-      const named = promos.slice(0, 3).map(([name, , rank]) => `<strong>${esc(name)}</strong> (${esc(rank)})`).join(", ");
+      const named = promos.slice(0, 3).map(([name, , rank]) => `<strong>${esc(shortName(name))}</strong> (${esc(rank)})`).join(", ");
       const more = promos.length - 3;
       lines.push(`Promus : ${named}${more > 0 ? ` et ${more} autre${more > 1 ? "s" : ""}` : ""}.`);
     }
@@ -1237,10 +1249,10 @@ function renderPlayer(slug) {
   const since = profile?.since ? ` Sur OpenFront depuis ${fmt({ month: "long", year: "numeric" }).format(utcDate(profile.since + "-01"))}.` : "";
   const rank = rankIn(m, "total");
   const tiles = [
-    ["Rang dans le clan", rank ? (rank === 1 ? "1er" : `${rank}e`) : "–", `sur ${int(rankingOf("total").length)} pseudos publics`],
-    ["Victoires", int(total.wins), "avec le clan"],
-    ["Parties", int(total.games), "avec le clan"],
-    ["Taux de victoire", total.games ? pct(total.wins / total.games) : "–", "tous modes confondus"],
+    ["Rang dans le clan", rank ? (rank === 1 ? "1er" : `${rank}e`) : "–", `sur ${int(rankingOf("total").length)} pseudos publics`, "rank"],
+    ["Victoires", int(total.wins), "avec le clan", "wins"],
+    ["Parties", int(total.games), "avec le clan", "games"],
+    ["Taux de victoire", total.games ? pct(total.wins / total.games) : "–", "tous modes confondus", "rate"],
   ];
   const played = MODE_KEYS.filter((k) => m.stats[k].games > 0).sort((a, b) => m.stats[b].games - m.stats[a].games);
   const modeRows = played.map((k) => {
@@ -1266,10 +1278,10 @@ function renderPlayer(slug) {
   $("player").innerHTML = `
     <a class="back" href="#membres">Tous les membres</a>
     <p class="kicker">${ROLES.has(slug) ? ROLE[ROLES.get(slug)] : "Membre"} du clan [FR]</p>
-    <h1 class="title">${esc(m.name)}</h1>
-    <p class="text">Dans le clan depuis le ${longDate.format(utcDate(m.joined))}.${since}</p>
+    <h1 class="title">${esc(shortName(m.name))}</h1>
+    <p class="text">${shortName(m.name) !== m.name ? `Pseudo OpenFront : <strong>${esc(m.name)}</strong>. ` : ""}Dans le clan depuis le ${longDate.format(utcDate(m.joined))}.${since}</p>
     ${discordRank ? rankCard(discordRank) : ""}
-    <dl class="tally">${tiles.map(([k, v, sub]) => `<div class="stat"><dt>${k}</dt><dd>${v}</dd><span class="sub">${sub}</span></div>`).join("")}</dl>
+    <dl class="tally">${tiles.map(stat).join("")}</dl>
     <div class="player-grid${career ? "" : " solo"}">
       <div>
         <p class="label">Mode par mode, avec le clan</p>
