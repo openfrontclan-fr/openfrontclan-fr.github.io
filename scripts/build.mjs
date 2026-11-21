@@ -112,7 +112,18 @@ function discordExtras() {
   // Les 7 derniers jours, comptés par le bot depuis week.start. newActive vaut null quand l'API d'OpenFront n'a pas répondu.
   const w = sent.week;
   const week = w && isoDate(w.start)
-    ? { start: isoDate(w.start), wins: count(w.wins), promotions: count(w.promotions), newActive: Number.isFinite(w.newActive) ? count(w.newActive) : null }
+    ? {
+        start: isoDate(w.start),
+        wins: count(w.wins),
+        promotions: count(w.promotions),
+        newActive: Number.isFinite(w.newActive) ? count(w.newActive) : null,
+        // Le podium des 7 jours : [pseudo, lien de la fiche ou null, rang, points, victoires, parties], dans l'ordre du bot.
+        top: (Array.isArray(w.top) ? w.top : []).slice(0, 3).flatMap((p) => {
+          const rank = text(p?.rank, 40);
+          const { name, linked } = publicName(p);
+          return typeof p?.publicId === "string" && rank && name ? [[name, linked, rank, count(p.xp), count(p.wins), count(p.games)]] : [];
+        }),
+      }
     : null;
   // Les dernières promotions : [pseudo, lien de la fiche ou null, rang, date]. Un membre anonyme n'y figure pas.
   const promotions = (Array.isArray(sent.promotions) ? sent.promotions : []).slice(0, 30).flatMap((p) => {

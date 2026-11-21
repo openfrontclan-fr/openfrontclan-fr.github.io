@@ -49,14 +49,28 @@ nav .wrap { padding-block: 14px; }
 .hero::before { content: ""; position: absolute; inset: 0; pointer-events: none; background:
   radial-gradient(52% 62% at 76% 36%, color-mix(in oklab, var(--deep) 42%, transparent), transparent 72%),
   radial-gradient(30% 34% at 96% 62%, color-mix(in oklab, var(--red) 16%, transparent), transparent 74%); }
-#flag { position: absolute; top: 124px; right: max(20px, calc((100vw - 1280px) / 2 + 20px)); width: min(47vw, 660px); aspect-ratio: 4401 / 2600; overflow: visible; }
-#flag .sheen { animation: sheen 4s ease-in-out .5s 1 both; }
-@keyframes sheen { from { transform: translateX(0); } 55%, to { transform: translateX(6400px); } }
-.hero-inner { position: relative; padding-block: clamp(64px, 8vw, 104px) clamp(48px, 6vw, 72px); }
-.tag { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; font-size: .78rem; letter-spacing: .13em; text-transform: uppercase; color: var(--muted); margin: 0 0 22px; }
+/* L'accueil montre d'abord le clan : un titre à sa taille, le podium de la semaine à côté, puis ce qui a changé. */
+.hero-inner { position: relative; display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: clamp(32px, 5vw, 72px); align-items: center; padding-block: clamp(36px, 5vw, 64px) clamp(28px, 4vw, 44px); }
+.hero-text, .hero-top { min-width: 0; }
+.tag { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; font-size: .78rem; letter-spacing: .13em; text-transform: uppercase; color: var(--muted); margin: 0 0 18px; }
 .tag b { color: var(--cream); background: var(--red); border-radius: 4px; padding: 1px 7px; font-weight: 700; letter-spacing: .05em; }
-h1 { font: 400 clamp(4.6rem, 12.2vw, 11.2rem)/1.03 var(--display); letter-spacing: .005em; text-transform: uppercase; margin: 0 0 .36em; }
-.lede { font-size: 1.14rem; line-height: 1.55; max-width: 25em; margin: 0 0 32px; }
+h1 { font: 400 clamp(2.8rem, 5.4vw, 4.6rem)/1.02 var(--display); letter-spacing: .005em; text-transform: uppercase; margin: 0 0 .3em; }
+.lede { font-size: 1.08rem; line-height: 1.55; max-width: 27em; margin: 0 0 26px; }
+.hero-top .label { margin-bottom: 12px; }
+.hero-top .note { margin-top: 12px; }
+.podium .card { position: relative; }
+.podium .card .who { display: flex; align-items: center; gap: 8px; }
+.podium .card .who .insignia { position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; }
+.podium .card .wins { font-size: 1.7rem; }
+.podium .card.first .n { font-size: 3.6rem; }
+.podium .card .n { font-size: 2.8rem; }
+.since { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 40px; margin: 0 0 clamp(32px, 4vw, 48px); padding: 20px 24px; border: 1px solid color-mix(in oklab, var(--blue) 35%, var(--line)); border-radius: 16px; background: linear-gradient(160deg, color-mix(in oklab, var(--deep) 32%, var(--raise)), var(--raise) 70%); }
+.since p { margin: 0; color: var(--muted); }
+.since p strong, .since a { color: var(--cream); font-weight: 600; }
+.since a { text-underline-offset: 3px; }
+.since .since-title { grid-column: 1 / -1; color: var(--cream); font-weight: 700; font-size: 1.1rem; margin-bottom: 6px; }
+.since .up { color: var(--green); }
+.since .down { color: var(--red); }
 .actions { display: flex; flex-wrap: wrap; gap: 12px; }
 .btn { display: inline-flex; align-items: center; gap: 10px; font: 600 .98rem/1 var(--body); text-decoration: none; padding: 17px 26px; border: 1px solid var(--cream); border-radius: 12px; background: var(--cream); color: var(--night); transition: transform .2s; }
 .btn::after { content: "→"; transition: transform .2s; }
@@ -71,7 +85,7 @@ h1 { font: 400 clamp(4.6rem, 12.2vw, 11.2rem)/1.03 var(--display); letter-spacin
 .stat { padding: 28px 28px 8px 0; min-width: 0; }
 .stat + .stat { padding-left: 28px; border-left: 1px solid var(--line); }
 .stat dt { color: var(--muted); font-size: .76rem; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; }
-.stat dd { margin: 8px 0 2px; font: 400 clamp(2.5rem, 5vw, 4.4rem)/1.1 var(--display); letter-spacing: .012em; }
+.stat dd { margin: 6px 0 2px; font: 400 clamp(2rem, 3.4vw, 2.9rem)/1.1 var(--display); letter-spacing: .012em; }
 .sub { display: block; color: var(--muted); font-size: .86rem; }
 
 /* Pages */
@@ -83,11 +97,11 @@ h1 { font: 400 clamp(4.6rem, 12.2vw, 11.2rem)/1.03 var(--display); letter-spacin
 .view .wrap > section:first-child { padding-top: clamp(40px, 6vw, 88px); }
 
 /* Accès aux pages depuis l'accueil */
-.hub { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: clamp(40px, 6vw, 72px); border-top: 1px solid var(--line); }
+.hub { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: clamp(28px, 4vw, 48px); border-top: 1px solid var(--line); }
 .hub-item { display: block; padding: 28px 28px 8px 0; text-decoration: none; min-width: 0; }
 .hub-item + .hub-item { padding-left: 28px; border-left: 1px solid var(--line); }
 .hub-item .label { display: block; margin: 0; }
-.hub-item strong { display: block; font: 400 clamp(2.2rem, 4vw, 3.3rem)/1.14 var(--display); letter-spacing: .012em; text-transform: uppercase; margin: 12px 0 4px; overflow-wrap: anywhere; transition: color .2s; }
+.hub-item strong { display: block; font: 400 clamp(1.6rem, 2.6vw, 2.2rem)/1.14 var(--display); letter-spacing: .012em; text-transform: uppercase; margin: 12px 0 4px; overflow-wrap: anywhere; transition: color .2s; }
 .hub-item .go { display: inline-flex; align-items: center; gap: 8px; margin-top: 18px; font-weight: 600; font-size: .92rem; }
 .hub-item .go::after { content: "→"; transition: transform .2s; }
 .hub-item:hover strong { color: var(--blue); }
@@ -105,10 +119,10 @@ h1 { font: 400 clamp(4.6rem, 12.2vw, 11.2rem)/1.03 var(--display); letter-spacin
 #evenements .note a { color: var(--cream); font-weight: 600; text-underline-offset: 3px; }
 
 /* Sections */
-section { padding-block: clamp(88px, 12vw, 168px) 0; }
+section { padding-block: clamp(56px, 7vw, 96px) 0; }
 .kicker { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: .76rem; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; margin: 0 0 18px; }
 .kicker::before { content: ""; width: 15px; height: 14px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 32'%3E%3Cpath fill='%23FF3B3B' d='M10 0h6L6 32H0zM27 0h6L23 32h-6z'/%3E%3C/svg%3E") center / contain no-repeat; }
-h2, h1.title { font: 400 clamp(2.8rem, 6.6vw, 5.6rem)/1.2 var(--display); letter-spacing: .008em; text-transform: uppercase; margin: 0 0 22px; text-wrap: balance; }
+h2, h1.title { font: 400 clamp(2rem, 3.8vw, 3.1rem)/1.15 var(--display); letter-spacing: .008em; text-transform: uppercase; margin: 0 0 22px; text-wrap: balance; }
 .label { color: var(--muted); font-size: .76rem; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; margin: 0 0 14px; }
 .text { color: var(--muted); max-width: 30em; margin: 0; }
 .text strong { color: var(--cream); font-weight: 600; }
@@ -223,7 +237,7 @@ td a:hover { color: var(--blue); }
 /* Graphique */
 .motion-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 32px; }
 .readout { min-width: 0; }
-.readout-value { font: 400 clamp(4rem, 11vw, 9rem)/1.02 var(--display); letter-spacing: .008em; margin: 0; font-variant-numeric: tabular-nums; }
+.readout-value { font: 400 clamp(2.8rem, 6vw, 4.4rem)/1.02 var(--display); letter-spacing: .008em; margin: 0; font-variant-numeric: tabular-nums; }
 .readout-label { color: var(--muted); margin: 8px 0 0; min-height: 1.6em; }
 .readout-label strong { color: var(--cream); font-weight: 600; }
 .plot { position: relative; margin-top: 28px; }
@@ -290,11 +304,11 @@ summary { cursor: pointer; color: var(--muted); font-size: .88rem; }
 .tools a:hover::after { color: var(--cream); transform: translate(3px, -3px); }
 
 /* Guide du débutant */
-.lesson, #modes { padding-top: clamp(72px, 9vw, 128px); }
+.lesson, #modes { padding-top: clamp(48px, 6vw, 80px); }
 .lesson { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 6vw, 88px); align-items: start; }
 .lesson > div { min-width: 0; }
-.lesson h2, .modes-head h2 { font-size: clamp(2.8rem, 5vw, 4.4rem); }
-.lesson-n { display: block; font: 400 clamp(3.4rem, 6vw, 5rem)/1.1 var(--display); color: transparent; -webkit-text-stroke: 1.5px var(--muted); margin-bottom: 10px; }
+.lesson h2, .modes-head h2 { font-size: clamp(2rem, 3.6vw, 2.9rem); }
+.lesson-n { display: block; font: 400 clamp(2.4rem, 4vw, 3.2rem)/1.1 var(--display); color: transparent; -webkit-text-stroke: 1.5px var(--muted); margin-bottom: 10px; }
 .duo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px clamp(32px, 5vw, 64px); }
 .rules { list-style: none; margin: 0; padding: 0; }
 .rules li { border-top: 1px solid var(--line); padding: 16px 0; color: var(--muted); }
@@ -323,10 +337,10 @@ summary { cursor: pointer; color: var(--muted); font-size: .88rem; }
 .roles dd { margin: 6px 0 0; color: var(--muted); }
 
 /* Fin de page : le visuel du clan */
-.call { position: relative; margin-top: clamp(88px, 12vw, 168px); padding-block: clamp(110px, 15vw, 210px) clamp(72px, 9vw, 120px); background: url("bg-hero.webp") right bottom / cover no-repeat; }
+.call { position: relative; margin-top: clamp(56px, 7vw, 96px); padding-block: clamp(72px, 9vw, 120px) clamp(56px, 7vw, 88px); background: url("bg-hero.webp") right bottom / cover no-repeat; }
 .call::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, var(--night), transparent 46%), linear-gradient(90deg, color-mix(in oklab, var(--night) 62%, transparent), transparent 70%); }
 .call .wrap { position: relative; }
-.call h2 { font-size: clamp(3.8rem, 10vw, 9rem); line-height: 1.1; margin-bottom: 30px; }
+.call h2 { font-size: clamp(2.4rem, 5vw, 4rem); line-height: 1.1; margin-bottom: 26px; }
 .steps { list-style: none; counter-reset: s; margin: 0 0 34px; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 40px; max-width: 900px; }
 .steps li { counter-increment: s; display: grid; grid-template-columns: 30px minmax(0, 1fr); align-items: baseline; }
 .steps li::before { content: counter(s); font: 400 1.4rem/1 var(--display); color: var(--blue); }
@@ -386,14 +400,13 @@ footer p { margin: 0 0 4px; max-width: 70em; }
   .links { display: none; position: absolute; top: calc(100% + 8px); left: 0; right: 0; flex-direction: column; align-items: stretch; margin: 0; padding: 8px; background: var(--raise); border: 1px solid var(--line); border-radius: 14px; }
   .links.open { display: flex; }
   .links a { padding: 11px 12px; font-size: 1rem; }
-  .race, .crew, .slots-grid, .voice-grid, .player-grid, .lesson { grid-template-columns: minmax(0, 1fr); }
+  .race, .crew, .slots-grid, .voice-grid, .player-grid, .lesson, .hero-inner, .since { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 720px) {
   html { scroll-padding-top: 84px; }
   .hero::before { background: radial-gradient(90% 40% at 70% 16%, color-mix(in oklab, var(--deep) 46%, transparent), transparent 74%); }
-  #flag { top: 96px; right: 20px; width: min(58%, 360px); }
-  .hero-inner { padding-block: calc(min(58vw, 360px) * .59 + 44px) 40px; }
-  h1 { font-size: clamp(4.6rem, 24vw, 7rem); }
+  .hero-inner { padding-block: 28px 32px; }
+  h1 { font-size: clamp(2.6rem, 12vw, 3.6rem); }
   .tally { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .stat, .stat + .stat { padding: 20px 14px 18px 0; border-left: 0; }
   .stat:nth-child(even) { padding-left: 16px; border-left: 1px solid var(--line); }
@@ -405,12 +418,13 @@ footer p { margin: 0 0 4px; max-width: 70em; }
   td, th { padding-inline: 8px; }
   td.left { white-space: normal; overflow-wrap: anywhere; }
   .grade { font-size: 1rem; }
-  .podium { grid-template-columns: minmax(0, 1fr); }
-  .card, .card.first, .card.second, .card.third { order: 0; display: grid; grid-template-columns: 50px minmax(0, 1fr) auto; align-items: center; column-gap: 12px; padding: 14px 16px; }
-  .card .n, .card.first .n { font-size: 2.3rem; }
+  .podium { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .card, .card.first, .card.second, .card.third { order: 0; display: grid; grid-template-columns: 48px minmax(0, 1fr) auto; align-items: center; column-gap: 12px; padding: 14px 16px; }
+  .podium .card .n, .podium .card.first .n { font-size: 2.2rem; grid-row: 1 / 3; }
   .card .who { margin: 0; }
-  .card .wins { grid-column: 3; grid-row: 1; text-align: right; }
-  .card .sub { grid-column: 2 / 4; }
+  .podium .card .who .insignia { position: static; width: 26px; height: 26px; }
+  .card .wins, .podium .card .wins { grid-column: 3; grid-row: 1 / 3; text-align: right; font-size: 1.4rem; }
+  .card .sub { grid-column: 2; }
   .tools { grid-template-columns: minmax(0, 1fr); }
   .mode-row { grid-template-columns: minmax(0, 1fr) auto auto; gap: 6px 12px; }
   .mode-track { grid-column: 1 / -1; grid-row: 2; }
@@ -456,38 +470,24 @@ footer p { margin: 0 0 4px; max-width: 70em; }
 <main id="haut">
   <div class="view" id="view-accueil">
     <header class="hero">
-    <svg id="flag" viewBox="0 0 4401 2600" role="img" aria-label="Logo du clan FR">
-      <defs>
-        <path id="flag-path" d="M0 435.495C0 407.097 23.0211 384.076 51.4191 384.076H2168.82C2191.51 384.076 2213.05 374.087 2227.7 356.768L2506.48 27.308C2521.13 9.9887 2542.67 0 2565.35 0H4349.48C4393.47 0 4417.15 51.6444 4388.44 84.9743L3370.85 1266.51C3354.28 1285.75 3354.23 1314.2 3370.74 1333.49L4065.47 2145.76C4094 2179.12 4070.29 2230.6 4026.39 2230.6H1841.14C1818.67 2230.6 1797.32 2240.4 1782.67 2257.43L1511.23 2573.06C1496.57 2590.1 1475.22 2599.9 1452.75 2599.9H51.4192C23.0212 2599.9 0 2576.88 0 2548.48V435.495Z"/>
-        <linearGradient id="flag-fill" x1="0" y1="1" x2="1" y2="0">
-          <stop offset="0" stop-color="#0f1e5a"/><stop offset=".58" stop-color="#3a5ad0"/><stop offset="1" stop-color="#a9c0ff"/>
-        </linearGradient>
-        <linearGradient id="flag-warm" x1=".5" y1=".35" x2=".88" y2="1">
-          <stop offset="0" stop-color="#ff3b3b" stop-opacity="0"/><stop offset="1" stop-color="#ff5a6e" stop-opacity=".42"/>
-        </linearGradient>
-        <linearGradient id="flag-rim" x1="0" y1="1" x2="1" y2="0">
-          <stop offset="0" stop-color="#7f9dff" stop-opacity=".22"/><stop offset="1" stop-color="#f5f3eb" stop-opacity=".85"/>
-        </linearGradient>
-        <linearGradient id="flag-sheen" x1="0" x2="1" y1="0" y2="0">
-          <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".2"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
-        </linearGradient>
-        <clipPath id="flag-clip"><use href="#flag-path"/></clipPath>
-      </defs>
-      <use href="#flag-path" fill="url(#flag-fill)"/>
-      <use href="#flag-path" fill="url(#flag-warm)"/>
-      <g clip-path="url(#flag-clip)"><g transform="skewX(-16)"><rect class="sheen" x="-900" y="-100" width="1500" height="2800" fill="url(#flag-sheen)"/></g></g>
-      <use href="#flag-path" fill="none" stroke="url(#flag-rim)" stroke-width="12"/>
-    </svg>
     <div class="wrap hero-inner">
+      <div class="hero-text">
       <p class="tag"><b>[FR]</b> Clan officiel sur OpenFront</p>
-      <h1>Rejoins<br>le clan</h1>
+      <h1>Rejoins le clan</h1>
       <p class="lede" id="lede"></p>
       <div class="actions">
         <a class="btn discord" href="https://discord.gg/cQdxCSFnNV" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#discord"/></svg>Rejoindre le clan</a>
         <a class="btn ghost" href="https://openfront.io/" target="_blank" rel="noopener">Lancer une partie</a>
       </div>
       <a class="ext" href="#debuter">Nouveau sur le jeu&nbsp;? Lis le guide du débutant</a>
+      </div>
+      <div class="hero-top" id="hero-top" hidden>
+        <p class="label" id="top-label"></p>
+        <div class="podium" id="top-list"></div>
+        <p class="note" id="top-note"></p>
+      </div>
     </div>
+    <div class="wrap"><div class="since" id="since" hidden></div></div>
   </header>
 
     <div class="wrap">
@@ -1117,6 +1117,78 @@ if (DATA.discord?.players.length) {
     $("week-split").hidden = !(promoHtml || gazetteHtml);
     $("week-note").textContent = `Compté par le bot du Discord, comptes liés seulement. Mis à jour le ${paris({ day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }).format(new Date(D.at))}.`;
     $("semaine").hidden = false;
+  }
+}
+
+/* Le podium de l'accueil : les 3 meilleurs des 7 derniers jours selon le bot, sinon les 3 premiers du classement du Discord */
+{
+  const D = DATA.discord;
+  const weekly = D?.week?.top?.length > 0;
+  const top = weekly
+    ? D.week.top
+    : (D?.players ?? []).filter((p) => p[1]).slice(0, 3).map(([, name, slug, rank, xp, games]) => [name, slug, rank, xp, null, games]);
+  if (top.length) {
+    const PLACES = ["first", "second", "third"];
+    $("top-list").innerHTML = top.map(([name, slug, rank, xp, wins], i) => {
+      const tag = slug ? "a" : "div";
+      return `<${tag} class="card ${PLACES[i]}"${slug ? ` href="#joueur-${slug}"` : ""}>
+        <span class="n">${ordinal(i + 1)}</span>
+        <span class="who">${insignia(rank)}<span>${esc(name)}</span></span>
+        <span class="wins">${weekly ? "+" : ""}${int(xp)} pts</span>
+        <span class="sub">${esc(rank)}${weekly && wins !== null ? ` · ${int(wins)} victoire${wins > 1 ? "s" : ""}` : ""}</span>
+      </${tag}>`;
+    }).join("");
+    const since = weekly ? new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", timeZone: "Europe/Paris" }).format(new Date(D.week.start)) : "";
+    $("top-label").textContent = weekly ? "Le podium des 7 derniers jours" : "Le podium du Discord";
+    $("top-note").textContent = weekly ? `Points gagnés depuis le ${since}, comptes liés du Discord.` : "Points au total, comptes liés du Discord.";
+    $("hero-top").hidden = false;
+  }
+}
+
+/* Depuis ta dernière visite : la visite d'avant est gardée dans ce navigateur seulement, jamais envoyée.
+   Une visite dure 6 heures : recharger la page ne fait pas disparaître l'encart. */
+{
+  const KEY = "frclan-visite";
+  const HOURS = 6 * 3600e3;
+  const now = { at: new Date().toISOString(), rank: us.rank, members: R.total };
+  const valid = (v) => v && typeof v.at === "string" && !Number.isNaN(Date.parse(v.at)) && Number.isInteger(v.rank) && Number.isInteger(v.members);
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(KEY)); } catch { /* stockage refusé ou illisible : pas d'encart */ }
+  let prev = null, cur = now;
+  if (valid(saved?.cur)) {
+    const same = Date.now() - Date.parse(saved.cur.at) < HOURS;
+    prev = same ? (valid(saved.prev) ? saved.prev : null) : saved.cur;
+    cur = same ? saved.cur : now;
+  }
+  try { localStorage.setItem(KEY, JSON.stringify({ prev, cur })); } catch { /* sans stockage, l'encart ne s'affiche jamais */ }
+  if (prev) {
+    const D = DATA.discord;
+    const paris = (o) => new Intl.DateTimeFormat("fr-FR", { timeZone: "Europe/Paris", ...o });
+    const lines = [];
+    // Victoires des jours complets depuis la visite d'avant (le site garde les 14 derniers jours).
+    const after = DATA.days.filter((d) => d.date > prev.at.slice(0, 10));
+    if (after.length) {
+      const wins = after.reduce((s, d) => s + d.wins, 0);
+      const span = after.length > 1 ? `du ${dayFmt.format(utcDate(after[0].date))} au ${dayFmt.format(utcDate(after[after.length - 1].date))}` : `le ${dayFmt.format(utcDate(after[0].date))}`;
+      lines.push(`<strong>${int(wins)} victoires [FR]</strong> ${span}.`);
+    }
+    const moved = prev.rank - us.rank;
+    const places = (n) => `${int(n)} place${n > 1 ? "s" : ""}`;
+    lines.push(`Classement : <strong>${ordinal(us.rank)}</strong>, ${moved > 0 ? `<span class="up">▲ ${places(moved)}</span>` : moved < 0 ? `<span class="down">▼ ${places(-moved)}</span>` : "comme à ta dernière visite"}.`);
+    const joined = R.total - prev.members;
+    if (joined) lines.push(`Membres du clan : <strong>${joined > 0 ? "+" : "−"}${int(Math.abs(joined))}</strong>, ${int(R.total)} en tout.`);
+    const promos = (D?.promotions ?? []).filter(([, , , at]) => at > prev.at);
+    if (promos.length) {
+      const named = promos.slice(0, 3).map(([name, , rank]) => `<strong>${esc(name)}</strong> (${esc(rank)})`).join(", ");
+      const more = promos.length - 3;
+      lines.push(`Promus : ${named}${more > 0 ? ` et ${more} autre${more > 1 ? "s" : ""}` : ""}.`);
+    }
+    const G = D?.gazette;
+    if (G && G.at > prev.at) {
+      lines.push(G.url ? `<a href="${esc(G.url)}" target="_blank" rel="noopener">Un nouveau ${esc(G.name)} est paru ↗</a>` : `Un nouveau ${esc(G.name)} est paru.`);
+    }
+    $("since").innerHTML = `<p class="since-title">Depuis ta dernière visite, le ${paris({ day: "numeric", month: "long" }).format(new Date(prev.at))}</p>${lines.map((l) => `<p>${l}</p>`).join("")}`;
+    $("since").hidden = false;
   }
 }
 
