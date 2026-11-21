@@ -128,9 +128,11 @@ h2, h1.title { font: 400 clamp(2rem, 3.8vw, 3.1rem)/1.15 var(--display); letter-
 .text strong { color: var(--cream); font-weight: 600; }
 
 /* Classement */
-.race { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(40px, 7vw, 104px); align-items: start; }
+/* Le classement : l'objectif et la course côte à côte, puis le tableau sur toute la largeur */
+.race { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 20px clamp(40px, 7vw, 104px); align-items: center; }
 .race-side { min-width: 0; }
-.track { position: relative; height: 128px; margin-bottom: 24px; }
+.race-table { grid-column: 1 / -1; min-width: 0; }
+.track { position: relative; height: 128px; }
 .track .rail { position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--line); }
 .track .goal { position: absolute; top: 50%; height: 3px; margin-top: -1px; background: linear-gradient(90deg, var(--cream), var(--blue)); border-radius: 2px; }
 .node { position: absolute; top: 50%; width: 0; }
@@ -145,10 +147,10 @@ table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nu
 th { text-align: right; font-size: .72rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 0 14px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
 td { text-align: right; padding: 15px 14px; border-bottom: 1px solid var(--line); white-space: nowrap; }
 th:first-child, td:first-child, .left { text-align: left; }
-.ladder td { padding-block: 22px; transition: background .2s; }
-.ladder .rank { font-size: 1.5rem; }
-.ladder .clan { font-size: 2rem; }
-.ladder .pts { font: 400 1.6rem/1 var(--display); letter-spacing: .02em; }
+.ladder td { padding-block: 15px; transition: background .2s; }
+.ladder .rank { font-size: 1.25rem; }
+.ladder .clan { font-size: 1.45rem; }
+.ladder .pts { font: 400 1.3rem/1 var(--display); letter-spacing: .02em; }
 .ladder.all td { padding-block: 13px; }
 .ladder.all .rank { font-size: 1.2rem; }
 .ladder.all .clan { font-size: 1.4rem; }
@@ -237,7 +239,7 @@ td a:hover { color: var(--blue); }
 /* Graphique */
 .motion-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 32px; }
 .readout { min-width: 0; }
-.readout-value { font: 400 clamp(2.8rem, 6vw, 4.4rem)/1.02 var(--display); letter-spacing: .008em; margin: 0; font-variant-numeric: tabular-nums; }
+.readout-value { font: 400 clamp(2.4rem, 4.4vw, 3.2rem)/1.02 var(--display); letter-spacing: .008em; margin: 0; font-variant-numeric: tabular-nums; }
 .readout-label { color: var(--muted); margin: 8px 0 0; min-height: 1.6em; }
 .readout-label strong { color: var(--cream); font-weight: 600; }
 .plot { position: relative; margin-top: 28px; }
@@ -538,8 +540,8 @@ footer p { margin: 0 0 4px; max-width: 70em; }
         <h1 class="title" id="race-goal"></h1>
         <p class="text" id="race-text"></p>
       </div>
-      <div>
-        <div class="track" id="track"></div>
+      <div class="track" id="track"></div>
+      <div class="race-table">
         <table class="ladder" id="ladder">
           <thead><tr><th>Rang</th><th class="left">Clan</th><th>Score</th><th>Écart</th><th class="opt">Parties</th></tr></thead>
           <tbody id="clans"></tbody>
