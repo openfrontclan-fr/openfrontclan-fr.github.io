@@ -411,6 +411,14 @@ footer { color: var(--muted); font-size: .84rem; }
 footer .wrap { padding-block: 26px 32px; }
 footer p { margin: 0 0 4px; max-width: 70em; }
 
+/* Mentions légales : trois blocs courts sous un filet, du texte et rien d'autre. */
+.legal { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(24px, 4vw, 56px); border-top: 1px solid var(--line); padding-top: 28px; }
+.legal > div { min-width: 0; }
+.legal h2 { font: 600 .76rem/1.4 var(--body); letter-spacing: .13em; color: var(--muted); margin: 0 0 14px; }
+.legal p { margin: 0 0 10px; max-width: 34em; overflow-wrap: break-word; }
+.legal a { color: var(--blue); }
+@media (max-width: 900px) { .legal { grid-template-columns: minmax(0, 1fr); } }
+
 #tip { position: fixed; z-index: 20; pointer-events: none; background: var(--cream); color: var(--night); border-radius: 8px; padding: 6px 10px; font-size: .84rem; font-weight: 500; max-width: 260px; font-variant-numeric: tabular-nums; }
 
 /* Insignes de rang du Discord : le dessin des images du bot */
@@ -907,6 +915,31 @@ footer p { margin: 0 0 4px; max-width: 70em; }
     </div>
   </div>
 
+  <div class="view" id="view-mentions" hidden>
+    <div class="wrap">
+      <section>
+      <h1 class="title">Mentions légales</h1>
+      <div class="legal">
+        <div>
+          <h2>Éditeur</h2>
+          <p>Ce site est édité à titre non professionnel par des membres du clan [FR] du jeu OpenFront.</p>
+          <p>Contact&nbsp;: sur le <a href="https://discord.gg/cQdxCSFnNV" target="_blank" rel="noopener">Discord du clan</a>.</p>
+        </div>
+        <div>
+          <h2>Hébergeur</h2>
+          <p>GitHub, Inc. (service GitHub Pages)<br>88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis<br><a href="https://github.com/" target="_blank" rel="noopener">github.com</a></p>
+        </div>
+        <div>
+          <h2>Confidentialité</h2>
+          <p>Le site ne dépose aucun cookie et ne mesure pas son audience.</p>
+          <p>Il affiche les pseudos publics et les statistiques des membres du clan, tels que les publie l'API d'OpenFront. Les membres sans pseudo public restent anonymes.</p>
+          <p>Pour faire retirer ton pseudo, demande-le sur le <a href="https://discord.gg/cQdxCSFnNV" target="_blank" rel="noopener">Discord du clan</a>.</p>
+        </div>
+      </div>
+    </section>
+    </div>
+  </div>
+
   <section id="rejoindre" class="call">
     <div class="wrap">
       <h2>Prends ta place <br>sur le front</h2>
@@ -927,6 +960,7 @@ footer p { margin: 0 0 4px; max-width: 70em; }
   <p id="source"></p>
   <p>L'effectif vient de la liste officielle du clan, les membres sans pseudo public restent anonymes. Le classement et l'activité sont les chiffres d'OpenFront pour le tag [FR]. Le bloc vocal vient du widget public du Discord du clan.</p>
   <p>Site de clan non officiel, sans lien avec les éditeurs d'OpenFront. Icônes du jeu et carte du monde en points&nbsp;: OpenFront, <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.fr" target="_blank" rel="noopener">CC BY-SA 4.0</a>.</p>
+  <p><a href="#mentions">Mentions légales</a></p>
 </div></footer>
 
 <div id="tip" hidden></div>
@@ -1699,7 +1733,7 @@ $("source").textContent = `Données : API publique d'OpenFront, mises à jour le
 
 /* Pages */
 {
-  const PAGES = { accueil: "FR - OpenFront", classement: "Classement · FR - OpenFront", membres: "Membres · FR - OpenFront", jouer: "Créneaux · FR - OpenFront", debuter: "Guide · FR - OpenFront" };
+  const PAGES = { accueil: "FR - OpenFront", classement: "Classement · FR - OpenFront", membres: "Membres · FR - OpenFront", jouer: "Créneaux · FR - OpenFront", debuter: "Guide · FR - OpenFront", mentions: "Mentions légales · FR - OpenFront" };
   const menu = $("menu");
   const panel = $("nav-links");
   const links = [...panel.querySelectorAll("a")];
