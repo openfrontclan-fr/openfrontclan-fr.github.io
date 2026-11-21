@@ -515,7 +515,7 @@ footer p { margin: 0 0 4px; max-width: 70em; }
 
       <section id="semaine" hidden>
       <p class="kicker">La semaine du clan</p>
-      <h2>Cette semaine</h2>
+      <h2>Les 7 derniers jours</h2>
       <dl class="tally" id="week-tally"></dl>
       <div class="week-split" id="week-split"></div>
       <p class="note" id="week-note"></p>
@@ -1084,15 +1084,17 @@ if (DATA.discord?.players.length) {
       return ago < 7 ? paris({ weekday: "long" }).format(new Date(iso)) : paris({ day: "numeric", month: "short" }).format(new Date(iso));
     };
     if (D.week) {
-      // Place au début de la semaine : le dernier relevé du site d'avant ce jour.
+      // Le bot compte les 7 derniers jours. La place de départ est le relevé du site de la veille de week.start
+      // (minuit à Paris tombe la veille en UTC, d'où la date UTC de start).
       const before = (DATA.places ?? []).filter(([d]) => d <= D.week.start.slice(0, 10)).pop();
       const moved = before ? before[1] - us.rank : 0;
       const places = (n) => `${int(n)} place${n > 1 ? "s" : ""}`;
+      const since = `depuis le ${paris({ day: "numeric", month: "long" }).format(new Date(D.week.start))}`;
       $("week-tally").innerHTML = [
-        ["Victoires", int(D.week.wins), `depuis ${paris({ weekday: "long", day: "numeric", month: "long" }).format(new Date(D.week.start))}`, ""],
-        ["Place", ordinal(us.rank), moved > 0 ? `▲ ${places(moved)}` : moved < 0 ? `▼ ${places(-moved)}` : "comme en début de semaine", moved > 0 ? "up" : moved < 0 ? "down" : ""],
-        ["Promotions", int(D.week.promotions), "sur le Discord", ""],
-        ["Nouveaux actifs", int(D.week.newActive), "arrivés et déjà en jeu", ""],
+        ["Victoires [FR]", int(D.week.wins), since, ""],
+        ["Place", ordinal(us.rank), moved > 0 ? `▲ ${places(moved)} en 7 jours` : moved < 0 ? `▼ ${places(-moved)} en 7 jours` : "même place qu'il y a 7 jours", moved > 0 ? "up" : moved < 0 ? "down" : ""],
+        ["Promotions", int(D.week.promotions), "échelons compris", ""],
+        ["Nouvelles recrues", D.week.newActive === null ? "–" : int(D.week.newActive), D.week.newActive === null ? "pas de chiffre cette fois" : "arrivées et déjà en jeu", ""],
       ].map(([k, v, sub, cls]) => `<div class="stat"><dt>${k}</dt><dd>${v}</dd><span class="sub ${cls}">${sub}</span></div>`).join("");
     }
     $("week-tally").hidden = !D.week;

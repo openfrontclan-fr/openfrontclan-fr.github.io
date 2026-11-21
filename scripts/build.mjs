@@ -109,10 +109,10 @@ function discordExtras() {
   const ladder = (Array.isArray(sent.ladder) ? sent.ladder : []).slice(0, 60).flatMap((r) =>
     Array.isArray(r) && text(r[0], 40) ? [[text(r[0], 40), count(r[1]), count(r[2])]] : [],
   ).sort((a, b) => a[1] - b[1]);
-  // La semaine du clan, comptée par le bot depuis week.start.
+  // Les 7 derniers jours, comptés par le bot depuis week.start. newActive vaut null quand l'API d'OpenFront n'a pas répondu.
   const w = sent.week;
   const week = w && isoDate(w.start)
-    ? { start: isoDate(w.start), wins: count(w.wins), promotions: count(w.promotions), newActive: count(w.newActive) }
+    ? { start: isoDate(w.start), wins: count(w.wins), promotions: count(w.promotions), newActive: Number.isFinite(w.newActive) ? count(w.newActive) : null }
     : null;
   // Les dernières promotions : [pseudo, lien de la fiche ou null, rang, date]. Un membre anonyme n'y figure pas.
   const promotions = (Array.isArray(sent.promotions) ? sent.promotions : []).slice(0, 30).flatMap((p) => {

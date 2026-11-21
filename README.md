@@ -47,7 +47,7 @@ Le bot du Discord envoie son classement par un événement `repository_dispatch`
 `ladder`, `week`, `promotions` et `gazette` sont facultatifs : sans eux, leurs blocs ne s'affichent pas.
 
 - `ladder` est l'échelle complète des rangs, `[nom, points, parties]` du plus bas au plus haut. La fiche d'un joueur en tire la barre de progression vers le rang suivant.
-- `week` est ce que le bot a compté depuis `start`, le début de la semaine : victoires [FR], promotions et nouveaux membres déjà en jeu. L'accueil l'affiche dans « La semaine du clan », avec la place gagnée ou perdue depuis `start`, tirée de l'historique du site.
+- `week` est ce que le bot a compté sur les 7 derniers jours, depuis `start` (minuit à Paris) : victoires [FR], promotions échelons compris, et nouvelles recrues déjà en jeu (`newActive`, ou `null` quand l'API d'OpenFront n'a pas répondu). L'accueil l'affiche dans « La semaine du clan », avec la place gagnée ou perdue depuis `start`, tirée de l'historique du site.
 - `promotions` liste les dernières montées de rang. Le site en garde 8, les plus récentes, et n'affiche pas un membre anonyme dans l'effectif.
 - `gazette` est la dernière gazette du bot : son nom, sa date, au plus 5 lignes de texte brut et le lien de son message sur Discord.
 
