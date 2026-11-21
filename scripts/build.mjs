@@ -93,6 +93,47 @@ const sent = JSON.parse(await readFile("data/discord.json", "utf8").catch(() => 
 const byId = new Map(members.map((m) => [m.publicId, m]));
 const text = (v, max) => (typeof v === "string" ? v.trim().slice(0, max) : "");
 const count = (v) => (Number.isFinite(v) && v >= 0 ? Math.round(v) : 0);
+const isoDate = (v) => (typeof v === "string" && !Number.isNaN(Date.parse(v)) ? new Date(v).toISOString() : null);
+// Un membre de l'effectif garde son pseudo public, un membre anonyme le reste ; hors de l'effectif, le pseudo envoyé.
+const publicName = (p) => {
+  const m = byId.get(p?.publicId);
+  return {
+    name: m ? m.username ?? null : text(p?.username, 40) || null,
+    linked: m?.username && !profileOf(m).hidden ? slug(m) : null,
+  };
+};
+
+// Ce que le bot envoie en plus du classement, chaque partie facultative.
+function discordExtras() {
+  // L'échelle des rangs : [nom, points, parties], du plus bas au plus haut. Sert à la progression des fiches.
+  const ladder = (Array.isArray(sent.ladder) ? sent.ladder : []).slice(0, 60).flatMap((r) =>
+    Array.isArray(r) && text(r[0], 40) ? [[text(r[0], 40), count(r[1]), count(r[2])]] : [],
+  ).sort((a, b) => a[1] - b[1]);
+  // La semaine du clan, comptée par le bot depuis week.start.
+  const w = sent.week;
+  const week = w && isoDate(w.start)
+    ? { start: isoDate(w.start), wins: count(w.wins), promotions: count(w.promotions), newActive: count(w.newActive) }
+    : null;
+  // Les dernières promotions : [pseudo, lien de la fiche ou null, rang, date]. Un membre anonyme n'y figure pas.
+  const promotions = (Array.isArray(sent.promotions) ? sent.promotions : []).slice(0, 30).flatMap((p) => {
+    const rank = text(p?.rank, 40);
+    const at = isoDate(p?.at);
+    const { name, linked } = publicName(p);
+    return typeof p?.publicId === "string" && rank && at && name ? [[name, linked, rank, at]] : [];
+  }).sort((a, b) => b[3].localeCompare(a[3])).slice(0, 8);
+  // La dernière gazette : son nom, sa date, quelques lignes de texte brut et le lien du message sur Discord.
+  const g = sent.gazette;
+  const gazette = g && text(g.name, 40) && isoDate(g.at)
+    ? {
+        name: text(g.name, 40),
+        at: isoDate(g.at),
+        lines: (Array.isArray(g.lines) ? g.lines : []).slice(0, 5).map((l) => text(l, 160)).filter(Boolean),
+        url: typeof g.url === "string" && /^https:\/\/discord\.com\/channels\/\d+\/\d+(\/\d+)?$/.test(g.url) ? g.url : null,
+      }
+    : null;
+  return { ladder, week, promotions, gazette };
+}
+
 const discord = Array.isArray(sent?.players) && !Number.isNaN(Date.parse(sent.generatedAt))
   ? {
       at: new Date(sent.generatedAt).toISOString(),
@@ -100,28 +141,35 @@ const discord = Array.isArray(sent?.players) && !Number.isNaN(Date.parse(sent.ge
       players: sent.players.slice(0, 500).flatMap((p) => {
         const rank = text(p.rank, 40);
         if (typeof p.publicId !== "string" || !rank) return [];
-        const m = byId.get(p.publicId);
-        // Pseudo public de l'effectif d'abord ; un membre anonyme dans l'effectif le reste ici.
-        const name = m ? m.username ?? null : text(p.username, 40) || null;
-        const linked = m?.username && !profileOf(m).hidden ? slug(m) : null;
+        const { name, linked } = publicName(p);
         return [[count(p.position) || null, name, linked, rank, count(p.xp), count(p.games)]];
       }),
+      ...discordExtras(),
     }
   : null;
 
 // Événements programmés sur le Discord, envoyés avec le classement : nom, dates et lieu seulement.
-const isoDate = (v) => (typeof v === "string" && !Number.isNaN(Date.parse(v)) ? new Date(v).toISOString() : null);
 const events = (Array.isArray(sent?.events) ? sent.events : []).slice(0, 8).flatMap((e) => {
   const name = text(e?.name, 100);
   const start = isoDate(e?.start);
   return name && start ? [{ name, start, end: isoDate(e.end), place: text(e.place, 60) || null }] : [];
 }).sort((a, b) => a.start.localeCompare(b.start));
 
+// Place du clan jour par jour : l'historique du dépôt, plus le point du jour, que le workflow n'y ajoute qu'après la construction.
+const history = JSON.parse(await readFile("data/history.json", "utf8").catch(() => "[]"));
+const todayPoint = { date: snap.fetchedAt.slice(0, 10), rank: snap.leaderboard.clans.findIndex((c) => c.clanTag === snap.tag) + 1 };
+const places = [...history.filter((p) => p.date !== todayPoint.date), todayPoint]
+  .filter((p) => /^\d{4}-\d{2}-\d{2}$/.test(p.date) && Number.isInteger(p.rank) && p.rank > 0)
+  .sort((a, b) => a.date.localeCompare(b.date))
+  .slice(-180)
+  .map((p) => [p.date, p.rank]);
+
 const data = {
   tag: snap.tag,
   roster,
   discord,
   events,
+  places,
   fetchedAt: snap.fetchedAt,
   period: { start: snap.leaderboard.start, end: snap.leaderboard.end },
   clans: snap.leaderboard.clans.map((c, i) => ({

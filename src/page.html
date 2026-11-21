@@ -337,7 +337,48 @@ footer p { margin: 0 0 4px; max-width: 70em; }
 
 #tip { position: fixed; z-index: 20; pointer-events: none; background: var(--cream); color: var(--night); border-radius: 8px; padding: 6px 10px; font-size: .84rem; font-weight: 500; max-width: 260px; font-variant-numeric: tabular-nums; }
 
+/* Insignes de rang du Discord : le dessin des images du bot */
+.insignia { display: block; flex: none; width: 64px; height: 64px; }
+.grade-cell { display: inline-flex; align-items: center; gap: 10px; }
+.grade-cell .insignia { width: 28px; height: 28px; }
+.rank-card { display: flex; flex-wrap: wrap; align-items: center; gap: 20px 36px; margin: 28px 0 36px; padding: 22px 26px; max-width: 820px; border: 1px solid var(--line); border-radius: 18px; background: var(--raise); }
+.rank-card .who { display: flex; align-items: center; gap: 18px; min-width: 0; }
+.rank-card .insignia { width: 76px; height: 76px; }
+.rank-card .label { margin: 0; }
+.rank-card .grade { display: block; font-size: clamp(1.8rem, 4vw, 2.5rem); margin-top: 4px; white-space: normal; }
+.rank-card .pts { color: var(--muted); font-size: .9rem; margin: 6px 0 0; }
+.rank-card .pts b { color: var(--cream); font-weight: 600; }
+.rank-card .next { flex: 1 1 260px; min-width: 0; }
+.rank-card .next-row { display: flex; justify-content: space-between; gap: 12px; font-size: .86rem; color: var(--muted); margin-bottom: 8px; }
+.rank-card .next-row b { color: var(--cream); font-weight: 600; text-align: right; }
+.rank-bar { height: 10px; border-radius: 5px; background: color-mix(in oklab, var(--cream) 10%, transparent); overflow: hidden; }
+.rank-bar i { display: block; height: 100%; border-radius: 5px; background: linear-gradient(90deg, var(--deep), var(--blue) 65%, var(--red)); }
+.rank-card .left { margin: 10px 0 0; font-size: .88rem; color: var(--muted); }
+.rank-card .left strong { color: var(--cream); font-weight: 600; }
+
+/* La semaine du clan, sur l'accueil */
+.stat .sub.up { color: var(--green); }
+.stat .sub.down { color: var(--red); }
+.week-split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(32px, 5vw, 64px); margin-top: clamp(40px, 5vw, 56px); align-items: start; }
+.week-split.solo { grid-template-columns: minmax(0, 1fr); max-width: 760px; }
+.week-split > div { min-width: 0; }
+.promos { list-style: none; margin: 0; padding: 0; }
+.promos li { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-top: 1px solid var(--line); }
+.promos li:last-child { border-bottom: 1px solid var(--line); }
+.promos .insignia { width: 34px; height: 34px; }
+.promos .what { min-width: 0; overflow-wrap: anywhere; color: var(--muted); }
+.promos .what a, .promos .what b { color: var(--cream); font-weight: 600; text-decoration: none; }
+.promos .what a:hover { color: var(--blue); }
+.promos .grade { color: var(--cream); font-size: 1.05rem; white-space: normal; }
+.promos time { margin-left: auto; flex: none; color: var(--muted); font-size: .84rem; }
+.gazette { position: relative; overflow: hidden; padding: 26px 26px 24px; border: 1px solid var(--line); border-radius: 18px; background: linear-gradient(160deg, color-mix(in oklab, var(--deep) 30%, var(--raise)), var(--raise) 60%); }
+.gazette .label { margin-bottom: 6px; }
+.gazette h3 { font: 400 clamp(2rem, 4vw, 2.6rem)/1.1 var(--display); letter-spacing: .01em; text-transform: uppercase; margin: 0 0 14px; overflow-wrap: anywhere; }
+.gazette ul { margin: 0 0 18px; padding-left: 18px; color: var(--muted); }
+.gazette li + li { margin-top: 4px; }
+
 @media (max-width: 900px) {
+  .week-split { grid-template-columns: minmax(0, 1fr); }
   .menu { display: block; }
   .bar { gap: 10px; padding-left: 12px; }
   .cta { margin-left: auto; padding-inline: 14px; }
@@ -386,6 +427,12 @@ footer p { margin: 0 0 4px; max-width: 70em; }
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- Couleurs des insignes de rang, les mêmes que sur les images du bot. -->
+    <linearGradient id="ins-blue" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#0f1e5a"/><stop offset=".6" stop-color="#2a45b0"/><stop offset="1" stop-color="#5f7fe8"/></linearGradient>
+    <linearGradient id="ins-gold" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#3a2a08"/><stop offset=".6" stop-color="#7a5a14"/><stop offset="1" stop-color="#b8902e"/></linearGradient>
+    <linearGradient id="ins-edge" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#7f9dff" stop-opacity=".35"/><stop offset="1" stop-color="#f5f3eb" stop-opacity=".95"/></linearGradient>
+  </defs>
   <symbol id="logo" viewBox="0 0 4401 2600"><path fill="#F5F3EB" d="M0 435.495C0 407.097 23.0211 384.076 51.4191 384.076H2168.82C2191.51 384.076 2213.05 374.087 2227.7 356.768L2506.48 27.308C2521.13 9.9887 2542.67 0 2565.35 0H4349.48C4393.47 0 4417.15 51.6444 4388.44 84.9743L3370.85 1266.51C3354.28 1285.75 3354.23 1314.2 3370.74 1333.49L4065.47 2145.76C4094 2179.12 4070.29 2230.6 4026.39 2230.6H1841.14C1818.67 2230.6 1797.32 2240.4 1782.67 2257.43L1511.23 2573.06C1496.57 2590.1 1475.22 2599.9 1452.75 2599.9H51.4192C23.0212 2599.9 0 2576.88 0 2548.48V435.495Z"/></symbol>
   <symbol id="discord" viewBox="0 0 24 24"><path fill="currentColor" d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.211.375-.445.865-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></symbol>
 </svg>
@@ -464,6 +511,14 @@ footer p { margin: 0 0 4px; max-width: 70em; }
           <span class="go">Voir les créneaux</span>
         </a>
       </div>
+
+      <section id="semaine" hidden>
+      <p class="kicker">La semaine du clan</p>
+      <h2>Cette semaine</h2>
+      <dl class="tally" id="week-tally"></dl>
+      <div class="week-split" id="week-split"></div>
+      <p class="note" id="week-note"></p>
+    </section>
 
       <section id="evenements" hidden>
       <p class="kicker">Agenda du clan</p>
@@ -805,6 +860,7 @@ const pct = (x) => wide(new Intl.NumberFormat("fr-FR", { style: "percent", minim
 const utcDate = (d) => new Date(d + "T00:00:00Z");
 const fmt = (o) => new Intl.DateTimeFormat("fr-FR", { timeZone: "UTC", ...o });
 const dayFmt = fmt({ day: "numeric", month: "long" });
+const ordinal = (n) => (n === 1 ? "1er" : `${int(n)}e`);
 
 const us = DATA.clans.find((c) => c.tag === DATA.tag);
 const above = DATA.clans[us.rank - 2];
@@ -970,14 +1026,40 @@ const joinedFmt = fmt({ day: "2-digit", month: "2-digit", year: "2-digit" });
   }
 }
 
+/* Insignes des rangs : le même dessin que les images du bot. Chevrons pour la troupe, galons pour les officiers,
+   étoiles sur fond or pour les généraux ; Soldat n'a que le bouclier. Les échelons II et III gardent l'insigne du grade. */
+const GRADE_MARKS = {
+  Caporal: ["chevrons", 1], Sergent: ["chevrons", 2], Major: ["chevrons", 3],
+  Lieutenant: ["bars", 1], Capitaine: ["bars", 2], Commandant: ["bars", 3], Colonel: ["bars", 4],
+  "Général": ["stars", 3], "Maréchal": ["stars", 5],
+};
+function insignia(rank) {
+  const [kind, n] = GRADE_MARKS[String(rank).replace(/ I+$/, "")] ?? [];
+  const spread = (center, gap) => Array.from({ length: n }, (_, i) => center + (i - (n - 1) / 2) * gap);
+  const star = (cx, cy, r) => `<polygon points="${Array.from({ length: 10 }, (_, i) => {
+    const a = -Math.PI / 2 + (i * Math.PI) / 5, rr = i % 2 ? r * 0.42 : r;
+    return `${(cx + rr * Math.cos(a)).toFixed(1)},${(cy + rr * Math.sin(a)).toFixed(1)}`;
+  }).join(" ")}" fill="#f0cf7a" stroke="#fff3cf" stroke-width="1.5"/>`;
+  let marks = "";
+  if (kind === "chevrons") {
+    marks = spread(92, 26).map((y) => `<path d="M50 ${y + 14} L90 ${y - 12} L130 ${y + 14}" fill="none" stroke="#ff3b3b" stroke-width="15" stroke-linejoin="miter" stroke-linecap="square"/><path d="M50 ${y + 14} L90 ${y - 12} L130 ${y + 14}" fill="none" stroke="#ffd2d2" stroke-width="3" stroke-linejoin="miter" opacity=".55"/>`).join("");
+  } else if (kind === "bars") {
+    marks = spread(90, 22).map((y) => `<rect x="48" y="${y - 6}" width="84" height="12" rx="2" fill="#f5f3eb"/>`).join("");
+  } else if (kind === "stars") {
+    const spots = n === 3 ? [[90, 60], [62, 104], [118, 104]] : [[90, 52], [56, 82], [124, 82], [70, 124], [110, 124]];
+    marks = spots.map(([x, y]) => star(x, y, n === 3 ? 22 : 18)).join("");
+  }
+  return `<svg class="insignia" viewBox="0 0 180 180" aria-hidden="true"><path d="M90 6 L166 30 V92 C166 134 132 162 90 176 C48 162 14 134 14 92 V30 Z" fill="url(#${kind === "stars" ? "ins-gold" : "ins-blue"})" stroke="url(#ins-edge)" stroke-width="5"/>${marks}</svg>`;
+}
+
 /* Rangs du Discord : le classement du bot, comptes liés seulement */
-const DISCORD_RANKS = new Map((DATA.discord?.players ?? []).filter((p) => p[2]).map(([, , slug, rank, xp]) => [slug, { rank, xp }]));
+const DISCORD_RANKS = new Map((DATA.discord?.players ?? []).filter((p) => p[2]).map(([, , slug, rank, xp, games]) => [slug, { rank, xp, games }]));
 if (DATA.discord?.players.length) {
   const D = DATA.discord;
   $("rangs-list").innerHTML = D.players.map(([place, name, slug, rank, xp, games]) => `<tr>
     <td class="dim">${place ?? "–"}</td>
     <td class="left">${!name ? `<span class="anon">Membre anonyme</span>` : slug ? `<a href="#joueur-${slug}">${esc(name)}</a>` : esc(name)}</td>
-    <td class="left"><span class="grade">${esc(rank)}</span></td>
+    <td class="left"><span class="grade-cell">${insignia(rank)}<span class="grade">${esc(rank)}</span></span></td>
     <td>${int(xp)}</td>
     <td class="dim opt">${int(games)}</td>
   </tr>`).join("");
@@ -987,6 +1069,87 @@ if (DATA.discord?.players.length) {
   $("rangs").hidden = false;
 }
 
+/* La semaine du clan, sur l'accueil : ce que le bot compte, ses dernières promotions et sa gazette */
+{
+  const D = DATA.discord;
+  const promos = D?.promotions ?? [];
+  if (D && (D.week || promos.length || D.gazette)) {
+    const paris = (o) => new Intl.DateTimeFormat("fr-FR", { timeZone: "Europe/Paris", ...o });
+    const dayKey = (d) => new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris" }).format(d);
+    const relDay = (iso) => {
+      const ago = Math.round((Date.parse(dayKey(new Date())) - Date.parse(dayKey(new Date(iso)))) / 864e5);
+      if (ago <= 0) return "aujourd'hui";
+      if (ago === 1) return "hier";
+      return ago < 7 ? paris({ weekday: "long" }).format(new Date(iso)) : paris({ day: "numeric", month: "short" }).format(new Date(iso));
+    };
+    if (D.week) {
+      // Place au début de la semaine : le dernier relevé du site d'avant ce jour.
+      const before = (DATA.places ?? []).filter(([d]) => d <= D.week.start.slice(0, 10)).pop();
+      const moved = before ? before[1] - us.rank : 0;
+      const places = (n) => `${int(n)} place${n > 1 ? "s" : ""}`;
+      $("week-tally").innerHTML = [
+        ["Victoires", int(D.week.wins), `depuis ${paris({ weekday: "long", day: "numeric", month: "long" }).format(new Date(D.week.start))}`, ""],
+        ["Place", ordinal(us.rank), moved > 0 ? `▲ ${places(moved)}` : moved < 0 ? `▼ ${places(-moved)}` : "comme en début de semaine", moved > 0 ? "up" : moved < 0 ? "down" : ""],
+        ["Promotions", int(D.week.promotions), "sur le Discord", ""],
+        ["Nouveaux actifs", int(D.week.newActive), "arrivés et déjà en jeu", ""],
+      ].map(([k, v, sub, cls]) => `<div class="stat"><dt>${k}</dt><dd>${v}</dd><span class="sub ${cls}">${sub}</span></div>`).join("");
+    }
+    $("week-tally").hidden = !D.week;
+    const promoHtml = promos.length ? `<div>
+      <p class="label">Dernières promotions</p>
+      <ul class="promos">${promos.map(([name, slug, rank, at]) => `<li>${insignia(rank)}<span class="what">${slug ? `<a href="#joueur-${slug}">${esc(name)}</a>` : `<b>${esc(name)}</b>`} passe <span class="grade">${esc(rank)}</span></span><time datetime="${esc(at)}">${relDay(at)}</time></li>`).join("")}</ul>
+    </div>` : "";
+    const G = D.gazette;
+    const gazetteHtml = G ? `<div>
+      <p class="label">La gazette du clan</p>
+      <div class="gazette">
+        <p class="label">Édition du ${paris({ weekday: "long", day: "numeric", month: "long" }).format(new Date(G.at))}</p>
+        <h3>${esc(G.name)}</h3>
+        ${G.lines.length ? `<ul>${G.lines.map((l) => `<li>${esc(l)}</li>`).join("")}</ul>` : ""}
+        ${G.url ? `<a class="ext" href="${esc(G.url)}" target="_blank" rel="noopener">Lire sur le Discord ↗</a>` : ""}
+      </div>
+    </div>` : "";
+    $("week-split").innerHTML = promoHtml + gazetteHtml;
+    $("week-split").classList.toggle("solo", !(promoHtml && gazetteHtml));
+    $("week-split").hidden = !(promoHtml || gazetteHtml);
+    $("week-note").textContent = `Compté par le bot du Discord, comptes liés seulement. Mis à jour le ${paris({ day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }).format(new Date(D.at))}.`;
+    $("semaine").hidden = false;
+  }
+}
+
+/* Carte du rang Discord sur la fiche : l'insigne, les points et ce qu'il manque pour le rang suivant */
+function rankCard({ rank, xp, games }) {
+  const ladder = DATA.discord?.ladder ?? [];
+  const at = ladder.findIndex(([name]) => name === rank);
+  const next = at >= 0 ? ladder[at + 1] : null;
+  let progress = "";
+  if (next) {
+    const from = ladder[at][1];
+    const share = Math.min(1, Math.max(0, (xp - from) / Math.max(1, next[1] - from)));
+    const needXp = Math.max(0, next[1] - xp);
+    const needGames = Math.max(0, next[2] - games);
+    const missing = [
+      needXp ? `<strong>${int(needXp)} point${needXp > 1 ? "s" : ""}</strong>` : "",
+      needGames ? `<strong>${int(needGames)} partie${needGames > 1 ? "s" : ""}</strong>` : "",
+    ].filter(Boolean).join(" et ");
+    progress = `<div class="next">
+      <div class="next-row"><span>${esc(rank)}</span><b>${esc(next[0])} · ${int(next[1])} points</b></div>
+      <div class="rank-bar"><i style="width:${(share * 100).toFixed(1)}%"></i></div>
+      <p class="left">${missing ? `Encore ${missing} pour passer ${esc(next[0])}.` : `Passe ${esc(next[0])} au prochain passage du bot.`}</p>
+    </div>`;
+  } else if (at >= 0) {
+    progress = `<div class="next"><p class="left">Le plus haut rang du clan.</p></div>`;
+  }
+  return `<div class="rank-card">
+    <div class="who">${insignia(rank)}<div>
+      <p class="label">Rang du Discord</p>
+      <span class="grade">${esc(rank)}</span>
+      <p class="pts"><b>${int(xp)}</b> points au total · ${int(games)} parties [FR]</p>
+    </div></div>
+    ${progress}
+  </div>`;
+}
+
 /* Page joueur */
 function renderPlayer(slug) {
   const m = BY_SLUG.get(slug);
@@ -994,8 +1157,7 @@ function renderPlayer(slug) {
   const profile = R.profiles[slug];
   const longDate = fmt({ day: "numeric", month: "long", year: "numeric" });
   const discordRank = DISCORD_RANKS.get(slug);
-  const since = (profile?.since ? ` Sur OpenFront depuis ${fmt({ month: "long", year: "numeric" }).format(utcDate(profile.since + "-01"))}.` : "")
-    + (discordRank ? ` Rang <strong>${esc(discordRank.rank)}</strong> sur le Discord, avec ${int(discordRank.xp)} points au total.` : "");
+  const since = profile?.since ? ` Sur OpenFront depuis ${fmt({ month: "long", year: "numeric" }).format(utcDate(profile.since + "-01"))}.` : "";
   const rank = rankIn(m, "total");
   const tiles = [
     ["Rang dans le clan", rank ? (rank === 1 ? "1er" : `${rank}e`) : "–", `sur ${int(rankingOf("total").length)} pseudos publics`],
@@ -1029,6 +1191,7 @@ function renderPlayer(slug) {
     <p class="kicker">${ROLES.has(slug) ? ROLE[ROLES.get(slug)] : "Membre"} du clan [FR]</p>
     <h1 class="title">${esc(m.name)}</h1>
     <p class="text">Dans le clan depuis le ${longDate.format(utcDate(m.joined))}.${since}</p>
+    ${discordRank ? rankCard(discordRank) : ""}
     <dl class="tally">${tiles.map(([k, v, sub]) => `<div class="stat"><dt>${k}</dt><dd>${v}</dd><span class="sub">${sub}</span></div>`).join("")}</dl>
     <div class="player-grid${career ? "" : " solo"}">
       <div>
@@ -1053,7 +1216,29 @@ function renderPlayer(slug) {
   const cutoffKey = cutoff.toISOString().slice(0, 10);
   const before = R.growth.filter(([d]) => d < cutoffKey).pop();
   const sum = (key) => days.reduce((s, d) => s + d[key], 0);
+  // La place du clan, relevée chaque jour par le site : depuis quand il la tient, et ce qu'il a gagné depuis le premier relevé.
+  const places = DATA.places ?? [];
+  const placeSeries = () => {
+    const first = places[0];
+    const now = places[places.length - 1];
+    let held = places.length - 1;
+    while (held > 0 && places[held - 1][1] === now[1]) held--;
+    const gained = first[1] - now[1];
+    const n = Math.abs(gained);
+    const moved = gained ? `${n} place${n > 1 ? "s" : ""} ${gained > 0 ? "gagnée" : "perdue"}${n > 1 ? "s" : ""}` : "Même place";
+    return {
+      label: "Place",
+      points: places.map(([d, v]) => ({ d, v })),
+      value: now[1],
+      caption: `<strong>au classement des clans</strong>${held > 0 ? ` depuis le ${dayFmt.format(utcDate(places[held][0]))}` : ""}. ${moved} depuis le ${dayFmt.format(utcDate(first[0]))}, premier relevé du site.`,
+      unit: "place",
+      aria: "Place du clan au classement, jour par jour",
+      rank: true,
+      format: ordinal,
+    };
+  };
   const SERIES = {
+    ...(places.length >= 2 ? { place: placeSeries() } : {}),
     members: {
       label: "Membres",
       points: R.growth.map(([d, v]) => ({ d, v })),
@@ -1077,7 +1262,7 @@ function renderPlayer(slug) {
       unit: "parties",
     },
   };
-  let active = "members";
+  let active = Object.keys(SERIES)[0];
 
   const niceMax = (v) => {
     const raw = v / 5;
@@ -1107,7 +1292,7 @@ function renderPlayer(slug) {
   const longDay = fmt({ day: "numeric", month: "long", year: "numeric" });
   function setReadout(id, point) {
     const s = SERIES[id];
-    $("readout-value").textContent = int(point ? point.v : s.value);
+    $("readout-value").textContent = (s.format ?? int)(point ? point.v : s.value);
     $("readout-label").innerHTML = point ? `<strong>${s.unit}</strong> le ${longDay.format(utcDate(point.d))}` : s.caption;
   }
   function draw(animate) {
@@ -1115,15 +1300,25 @@ function renderPlayer(slug) {
     const W = Math.max(280, plot.clientWidth);
     const H = W < 640 ? 240 : 340;
     const M = { t: 10, r: 44, b: 28, l: 0 };
-    const { step, max } = niceMax(Math.max(...s.points.map((p) => p.v)));
     const x = (i) => M.l + (i / (s.points.length - 1)) * (W - M.l - M.r);
-    const y = (v) => M.t + (1 - v / max) * (H - M.t - M.b);
-    const pts = s.points.map((p, i) => [x(i), y(p.v)]);
-    const curve = smooth(pts);
-    let grid = "";
-    for (let v = 0; v <= max + 1e-6; v += step) {
-      grid += `<line class="grid" x1="${M.l}" x2="${W - M.r}" y1="${y(v)}" y2="${y(v)}"/><text class="axis" x="${W}" y="${y(v) + 4}" text-anchor="end">${int(v)}</text>`;
+    const base = H - M.b;
+    const label = s.format ?? int;
+    let y, ticks;
+    if (s.rank) {
+      // Une place : la meilleure en haut, en marches d'un relevé à l'autre.
+      const vals = s.points.map((p) => p.v);
+      const lo = Math.min(...vals), hi = Math.max(...vals), span = Math.max(1, hi - lo);
+      const every = Math.ceil(span / 5);
+      y = (v) => M.t + 16 + ((v - lo) / span) * (base - M.t - 32);
+      ticks = Array.from({ length: hi - lo + 1 }, (_, i) => lo + i).filter((v) => (v - lo) % every === 0);
+    } else {
+      const { step, max } = niceMax(Math.max(...s.points.map((p) => p.v)));
+      y = (v) => M.t + (1 - v / max) * (base - M.t);
+      ticks = Array.from({ length: Math.round(max / step) + 1 }, (_, i) => i * step);
     }
+    const pts = s.points.map((p, i) => [x(i), y(p.v)]);
+    const curve = s.rank ? pts.reduce((d, [px, py], i) => (i ? `${d}H${px}V${py}` : `M${px} ${py}`), "") : smooth(pts);
+    const grid = ticks.map((v) => `<line class="grid" x1="${M.l}" x2="${W - M.r}" y1="${y(v)}" y2="${y(v)}"/><text class="axis" x="${W}" y="${y(v) + 4}" text-anchor="end">${label(v)}</text>`).join("");
     const short = s.monthly ? fmt({ month: "short" }) : fmt({ day: "2-digit", month: "2-digit" });
     const every = W < 640 ? 4 : 2;
     const labels = s.points.map((p, i) => {
@@ -1131,7 +1326,7 @@ function renderPlayer(slug) {
       return show ? `<text class="axis" x="${x(i)}" y="${H - 6}" text-anchor="middle">${short.format(utcDate(p.d))}</text>` : "";
     }).join("");
     const end = pts[pts.length - 1];
-    plot.innerHTML = `<svg viewBox="0 0 ${W} ${H}" height="${H}" role="img" aria-label="Courbe des ${s.unit}, valeur actuelle ${s.value}" class="${animate ? "draw" : ""}">
+    plot.innerHTML = `<svg viewBox="0 0 ${W} ${H}" height="${H}" role="img" aria-label="${s.aria ?? `Courbe des ${s.unit}`}, valeur actuelle ${label(s.value)}" class="${animate ? "draw" : ""}">
       <defs>
         <linearGradient id="curve-stroke" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#3f5fcf"/><stop offset=".62" stop-color="#7f9dff"/><stop offset="1" stop-color="#f5f3eb"/></linearGradient>
         <linearGradient id="curve-area" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#7f9dff" stop-opacity=".36"/><stop offset="1" stop-color="#7f9dff" stop-opacity="0"/></linearGradient>
@@ -1139,12 +1334,12 @@ function renderPlayer(slug) {
       </defs>
       ${grid}
       ${labels}
-      <path class="fill" d="${curve}L${end[0]} ${y(0)}L${pts[0][0]} ${y(0)}Z" fill="url(#curve-area)"/>
+      <path class="fill" d="${curve}L${end[0]} ${base}L${pts[0][0]} ${base}Z" fill="url(#curve-area)"/>
       <path class="glow" d="${curve}" pathLength="1"/>
       <path class="curve" d="${curve}" pathLength="1"/>
       <circle class="pulse" cx="${end[0]}" cy="${end[1]}" r="6"/>
       <circle class="dot" id="end-dot" cx="${end[0]}" cy="${end[1]}" r="6"/>
-      <line class="cross" id="cross" x1="0" x2="0" y1="${M.t}" y2="${y(0)}" visibility="hidden"/>
+      <line class="cross" id="cross" x1="0" x2="0" y1="${M.t}" y2="${base}" visibility="hidden"/>
     </svg>`;
     const svg = plot.firstElementChild;
     const cross = svg.querySelector("#cross");
@@ -1174,14 +1369,14 @@ function renderPlayer(slug) {
     setReadout(id);
     draw(animate);
     $("series-head").textContent = s.label;
-    $("series-table").innerHTML = [...s.points].reverse().map((p) => `<tr><td>${dayFmt.format(utcDate(p.d))}</td><td>${int(p.v)}</td></tr>`).join("");
+    $("series-table").innerHTML = [...s.points].reverse().map((p) => `<tr><td>${dayFmt.format(utcDate(p.d))}</td><td>${(s.format ?? int)(p.v)}</td></tr>`).join("");
   }
   $("series-tabs").innerHTML = Object.entries(SERIES).map(([id, s]) => `<button id="series-${id}" type="button" data-series="${id}" aria-pressed="false">${s.label}</button>`).join("");
   $("series-tabs").addEventListener("click", (e) => {
     const b = e.target.closest("[data-series]");
     if (b) select(b.dataset.series, true);
   });
-  select("members", false);
+  select(active, false);
   let width = plot.clientWidth;
   new ResizeObserver(() => {
     if (plot.clientWidth !== width) { width = plot.clientWidth; draw(false); }

@@ -28,10 +28,30 @@ Le bot du Discord envoie son classement par un événement `repository_dispatch`
     ],
     "events": [
       { "name": "Guerre de clans", "start": "2026-11-14T20:00:00.000Z", "end": "2026-11-14T22:00:00.000Z", "place": "Vocal 1" }
-    ]
+    ],
+    "ladder": [["Soldat", 0, 0], ["Caporal", 25, 0], ["Caporal II", 50, 0]],
+    "week": { "start": "2026-11-15T23:00:00.000Z", "wins": 662, "promotions": 9, "newActive": 14 },
+    "promotions": [
+      { "publicId": "…", "username": "…", "rank": "Capitaine II", "at": "2026-11-21T19:37:00.000Z" }
+    ],
+    "gazette": {
+      "name": "…",
+      "at": "2026-11-21T16:00:00.000Z",
+      "lines": ["6e au classement des clans, devant CYN", "814 victoires [FR] dans la semaine"],
+      "url": "https://discord.com/channels/<serveur>/<salon>/<message>"
+    }
   }
 }
 ```
+
+`ladder`, `week`, `promotions` et `gazette` sont facultatifs : sans eux, leurs blocs ne s'affichent pas.
+
+- `ladder` est l'échelle complète des rangs, `[nom, points, parties]` du plus bas au plus haut. La fiche d'un joueur en tire la barre de progression vers le rang suivant.
+- `week` est ce que le bot a compté depuis `start`, le début de la semaine : victoires [FR], promotions et nouveaux membres déjà en jeu. L'accueil l'affiche dans « La semaine du clan », avec la place gagnée ou perdue depuis `start`, tirée de l'historique du site.
+- `promotions` liste les dernières montées de rang. Le site en garde 8, les plus récentes, et n'affiche pas un membre anonyme dans l'effectif.
+- `gazette` est la dernière gazette du bot : son nom, sa date, au plus 5 lignes de texte brut et le lien de son message sur Discord.
+
+Les insignes des rangs sont dessinés comme les images du bot : chevrons pour la troupe, galons pour les officiers, étoiles sur fond or pour les généraux. Les noms des grades doivent donc rester ceux de l'échelle : Soldat, Caporal, Sergent, Major, Lieutenant, Capitaine, Commandant, Colonel, Général, Maréchal, suivis de II ou III.
 
 `events` liste au plus 8 événements Discord programmés ou en cours : nom, début, fin (ou `null`) et lieu (ou `null`). L'accueil les affiche dans « Prochains événements » et masque de lui-même ceux qui sont finis, ou commencés depuis plus de 3 heures quand ils n'ont pas de fin.
 
