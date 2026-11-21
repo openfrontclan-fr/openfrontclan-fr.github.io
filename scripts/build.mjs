@@ -213,6 +213,10 @@ await copyFile("assets/logo.svg", `${out}/logo.svg`);
 await copyFile("assets/og-card.png", `${out}/og.png`);
 // Carte du monde en points derrière l'accueil, tirée de la carte « World » d'OpenFront (scripts/world-map.mjs).
 await copyFile("assets/world.svg", `${out}/world.svg`);
+// Polices hébergées avec le site, pour que la page ne demande rien à Google Fonts (assets/fonts/LICENCE.md).
+await mkdir(`${out}/fonts`, { recursive: true });
+await copyFile("assets/fonts/anton.woff2", `${out}/fonts/anton.woff2`);
+await copyFile("assets/fonts/inter.woff2", `${out}/fonts/inter.woff2`);
 await writeFile(`${out}/artifact.html`, body);
 await writeFile(
   `${out}/index.html`,

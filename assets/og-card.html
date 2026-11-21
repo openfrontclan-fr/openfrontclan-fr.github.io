@@ -1,8 +1,11 @@
 <!doctype html>
 <!-- Source de assets/og-card.png, l'image d'aperçu des liens partagés (1200 × 630). À rendre avec un navigateur à cette taille. -->
 <meta charset="utf-8">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@600;700&display=swap">
+<link rel="preload" href="fonts/anton.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+  /* Les polices du site, hébergées dans assets/fonts : rien n'est demandé à Google Fonts. */
+  @font-face { font-family: Anton; font-style: normal; font-weight: 400; font-display: swap; src: url("fonts/anton.woff2") format("woff2"); }
+  @font-face { font-family: Inter; font-style: normal; font-weight: 100 900; font-display: swap; src: url("fonts/inter.woff2") format("woff2"); }
   html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; }
   body { position: relative; background: #070a14; color: #f5f3eb; font-family: Inter, sans-serif; }
   body::before { content: ""; position: absolute; inset: 0; background: radial-gradient(60% 70% at 78% 30%, rgba(28, 63, 176, .55), transparent 70%), radial-gradient(40% 50% at 95% 100%, rgba(255, 59, 59, .18), transparent 70%); }
