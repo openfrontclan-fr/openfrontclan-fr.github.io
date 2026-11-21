@@ -342,6 +342,7 @@ footer p { margin: 0 0 4px; max-width: 70em; }
 .grade-cell { display: inline-flex; align-items: center; gap: 10px; }
 .grade-cell .insignia { width: 28px; height: 28px; }
 .rank-card { display: flex; flex-wrap: wrap; align-items: center; gap: 20px 36px; margin: 28px 0 36px; padding: 22px 26px; max-width: 820px; border: 1px solid var(--line); border-radius: 18px; background: var(--raise); }
+.rank-card.solo { width: fit-content; max-width: 100%; padding-right: 40px; }
 .rank-card .who { display: flex; align-items: center; gap: 18px; min-width: 0; }
 .rank-card .insignia { width: 76px; height: 76px; }
 .rank-card .label { margin: 0; }
@@ -1140,7 +1141,7 @@ function rankCard({ rank, xp, games }) {
   } else if (at >= 0) {
     progress = `<div class="next"><p class="left">Le plus haut rang du clan.</p></div>`;
   }
-  return `<div class="rank-card">
+  return `<div class="rank-card${progress ? "" : " solo"}">
     <div class="who">${insignia(rank)}<div>
       <p class="label">Rang du Discord</p>
       <span class="grade">${esc(rank)}</span>
