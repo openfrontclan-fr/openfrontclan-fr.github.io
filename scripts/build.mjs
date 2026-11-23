@@ -166,6 +166,79 @@ const events = (Array.isArray(sent?.events) ? sent.events : []).slice(0, 8).flat
   return name && start ? [{ name, start, end: isoDate(e.end), place: text(e.place, 60) || null }] : [];
 }).sort((a, b) => a.start.localeCompare(b.start));
 
+// Speedruns du clan (scripts/fetch-speedruns.mjs) : la victoire la plus rapide par carte, taille et format.
+// Chaque ligne : [carte, compacte (1/0), format, secondes, date, partie, joueurs FR, taille de l'équipe, joueurs de la partie,
+// [[pseudo, lien de la fiche ou null]], FR anonymes, chrono battu ou null, record du monde (1/0), record du monde d'un autre
+// clan à battre ou null]. Les identifiants des joueurs ne sortent pas d'ici : un membre de l'effectif garde son pseudo
+// public, un membre anonyme ou parti du clan est seulement compté.
+const runs = JSON.parse(await readFile("data/speedruns.json", "utf8").catch(() => "null"));
+const validGame = (g) => typeof g === "string" && /^[A-Za-z0-9]{4,16}$/.test(g);
+const teamOf = (ids, fr) => {
+  const names = [];
+  for (const id of Array.isArray(ids) ? ids : []) {
+    const { name, linked } = publicName({ publicId: id });
+    if (name && byId.has(id)) names.push([name, linked]);
+  }
+  return [names, Math.max(0, count(fr) - names.length)];
+};
+// Records de TeamStats (teamstats.pro, site partenaire) détenus par [FR]. Ils viennent de l'extérieur : chaque champ est
+// vérifié. Chaque ligne : [carte, compacte (1/0), format OpenFront, format TeamStats, dixièmes de seconde, date, partie,
+// joueurs FR, joueurs de la partie, [[pseudo, lien]], FR anonymes].
+const TS_FORMATS = ["trio", "quads", "team"];
+const ts = runs?.teamstats;
+const tsRecords = (Array.isArray(ts?.records) ? ts.records : []).filter((r) =>
+  validGame(r?.g) && typeof r.key === "string" && TS_FORMATS.includes(r.format) && r.t > 0 && isoDate(r.at));
+const tsKeys = new Set(tsRecords.map((r) => r.key));
+// Le record du monde d'un autre clan dans la catégorie, quand il est plus rapide que le nôtre : [secondes (durée de la
+// partie, comme nos chronos), clan, partie].
+const toBeat = (key, r) => {
+  const o = ts?.others?.[key];
+  return !tsKeys.has(key) && o && validGame(o.g) && o.t > 0 && o.t < r.t && /^[A-Za-z0-9]{1,8}$/.test(o.clan)
+    ? [count(o.t), o.clan.toUpperCase(), o.g]
+    : null;
+};
+const mapName = (map) => text(runs.mapNames?.[map], 60) || text(map, 60);
+// Vignettes des cartes (OpenFront, CC BY-SA 4.0), téléchargées par le relevé dans data/maps : nom affiché → fichier.
+const thumbFiles = new Set((await readdir("data/maps").catch(() => [])).filter((f) => /^[a-z0-9]+\.webp$/.test(f)));
+const thumbOf = (map) => {
+  const file = `${map.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase().replace(/[^a-z0-9]/g, "")}.webp`;
+  return thumbFiles.has(file) ? file : null;
+};
+const thumbs = {};
+for (const map of new Set([...Object.keys(runs?.records ?? {}), ...tsRecords.map((r) => r.key)].map((k) => k.split("|")[0]))) {
+  if (thumbOf(map)) thumbs[mapName(map)] = thumbOf(map);
+}
+const teamstats = tsRecords.length || count(ts?.total)
+  ? {
+      at: isoDate(ts.at),
+      season: text(ts.season, 30).replace(/^season\b/i, "saison"),
+      since: isoDate(ts.since),
+      total: count(ts.total),
+      page: typeof ts.page === "string" && /^https:\/\/teamstats\.pro\/[\w./-]*$/.test(ts.page) ? ts.page : "https://teamstats.pro/",
+      rows: tsRecords.map((r) => {
+        const [map, size, teams] = r.key.split("|");
+        return [mapName(map), size === "Compact" ? 1 : 0, text(teams, 12), r.format, Math.round(r.t * 10), isoDate(r.at), r.g,
+          count(r.fr), count(r.n), ...teamOf(r.ids, r.fr)];
+      }),
+    }
+  : null;
+const speedruns = runs && runs.records && isoDate(runs.cursor)
+  ? {
+      until: isoDate(runs.cursor),
+      teamstats,
+      thumbs,
+      rows: Object.entries(runs.records).flatMap(([key, r]) => {
+        const [map, size, teams] = key.split("|");
+        if (!map || !teams || !validGame(r?.g) || !(r.t > 0) || !isoDate(r.at)) return [];
+        return [[
+          mapName(map), size === "Compact" ? 1 : 0, text(teams, 12), count(r.t), isoDate(r.at),
+          r.g, count(r.fr), count(r.team), count(r.n), ...teamOf(r.ids, r.fr), r.prev > r.t ? count(r.prev) : null,
+          tsKeys.has(key) ? 1 : 0, toBeat(key, r),
+        ]];
+      }),
+    }
+  : null;
+
 // Place du clan jour par jour : l'historique du dépôt, plus le point du jour, que le workflow n'y ajoute qu'après la construction.
 const history = JSON.parse(await readFile("data/history.json", "utf8").catch(() => "[]"));
 const todayPoint = { date: snap.fetchedAt.slice(0, 10), rank: snap.leaderboard.clans.findIndex((c) => c.clanTag === snap.tag) + 1 };
@@ -181,6 +254,7 @@ const data = {
   discord,
   events,
   places,
+  speedruns,
   fetchedAt: snap.fetchedAt,
   period: { start: snap.leaderboard.start, end: snap.leaderboard.end },
   clans: snap.leaderboard.clans.map((c, i) => ({
@@ -209,6 +283,11 @@ const headEnd = body.indexOf("</style>") + "</style>".length;
 await mkdir(out, { recursive: true });
 await copyFile("assets/bg-hero.webp", `${out}/bg-hero.webp`);
 await copyFile("assets/logo.svg", `${out}/logo.svg`);
+// Logo de TeamStats, site partenaire, fourni par son auteur pour ce site.
+await copyFile("assets/partners/teamstats.png", `${out}/teamstats.png`);
+// Vignettes des cartes des speedruns, chargées seulement quand leur ligne s'affiche.
+await mkdir(`${out}/maps`, { recursive: true });
+for (const file of Object.values(thumbs)) await copyFile(`data/maps/${file}`, `${out}/maps/${file}`);
 // Image d'aperçu des liens partagés (Discord, réseaux) ; sa source est assets/og-card.html.
 await copyFile("assets/og-card.png", `${out}/og.png`);
 // Carte du monde en points derrière l'accueil, tirée de la carte « World » d'OpenFront (scripts/world-map.mjs).

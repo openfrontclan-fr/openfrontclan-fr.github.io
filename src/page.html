@@ -163,6 +163,20 @@ h1 { font: 400 clamp(2.8rem, 5.4vw, 4.6rem)/1.02 var(--display); letter-spacing:
 .events .live { color: var(--green); font-weight: 600; }
 #evenements .note a { color: var(--cream); font-weight: 600; text-underline-offset: 3px; }
 
+/* Partenaire : TeamStats, son logo et ses couleurs */
+.partner { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 22px; max-width: 760px; margin-top: 28px; padding: 22px 24px; text-decoration: none; border: 1px solid color-mix(in oklab, #b38bff 30%, var(--line)); border-radius: 18px; background: linear-gradient(165deg, #171a33, #0d1324 75%); transition: transform .25s, border-color .25s; }
+.partner:hover { transform: translateY(-3px); border-color: color-mix(in oklab, #b38bff 65%, transparent); }
+.partner img { width: 72px; height: 72px; border-radius: 16px; }
+.partner strong { display: block; font: 400 1.6rem/1.1 var(--display); letter-spacing: .02em; color: var(--cream); }
+.partner small { display: block; margin-top: 6px; color: var(--muted); font-size: .92rem; line-height: 1.5; }
+.partner .go { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; font-weight: 600; font-size: .92rem; color: var(--cream); border: 1px solid color-mix(in oklab, var(--cream) 28%, transparent); border-radius: 10px; white-space: nowrap; }
+.partner .go::after { content: "→"; transition: transform .2s; }
+.partner:hover .go::after { transform: translateX(4px); }
+.sr-credit { display: inline-flex; align-items: center; gap: 10px; margin-top: 16px; color: var(--muted); font-size: .9rem; text-decoration: none; }
+.sr-credit img { width: 28px; height: 28px; border-radius: 7px; }
+.sr-credit b { color: var(--cream); font-weight: 600; }
+.sr-credit:hover b { color: #c7a8ff; }
+
 /* Sections */
 section { padding-block: clamp(56px, 7vw, 96px) 0; }
 .kicker { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: .76rem; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; margin: 0 0 18px; }
@@ -227,6 +241,36 @@ tr.us td:first-child::before { content: ""; position: absolute; left: 0; top: 0;
 tr.us .rank { color: var(--cream); }
 .more { margin-top: 18px; font: 600 .92rem var(--body); background: none; border: 0; color: var(--cream); cursor: pointer; padding: 4px 0; border-bottom: 1px solid var(--muted); }
 .more:hover { border-bottom-color: var(--cream); }
+
+/* Speedruns : un chrono par carte, le format en onglets */
+/* Le choix du format : une liste déroulante, avec le nombre de records de chaque format. */
+.sr-pick { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin: 26px 0 20px; color: var(--muted); font-size: .76rem; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; }
+.sr-pick select { appearance: none; -webkit-appearance: none; max-width: 100%; min-width: 0; padding: 11px 44px 11px 16px; font: 600 .95rem var(--body); letter-spacing: 0; text-transform: none; color: var(--cream); background: var(--raise) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23f5f3eb' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 16px center / 12px 8px; border: 1px solid var(--line); border-radius: 12px; cursor: pointer; transition: border-color .2s; }
+.sr-pick select:hover, .sr-pick select:focus-visible { border-color: color-mix(in oklab, var(--blue) 60%, transparent); outline: none; }
+.sr-pick option { background: var(--raise); color: var(--cream); }
+.runs td { padding-block: 13px; }
+.runs .map b { font-weight: 600; }
+/* La vignette de la carte : les terres d'OpenFront sur une mer sombre. */
+.runs .spot { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.runs .where { min-width: 0; }
+.runs .thumb { flex: none; display: block; width: 66px; height: 44px; padding: 3px; box-sizing: border-box; object-fit: contain; border: 1px solid var(--line); border-radius: 7px; background: radial-gradient(120% 120% at 30% 20%, #1d3b6c, #0d1830); }
+.runs .size { display: inline-block; margin-left: 8px; font-size: .66rem; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; white-space: nowrap; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 1px 5px; vertical-align: 2px; }
+.runs .time { font: 400 1.3rem/1 var(--display); letter-spacing: .03em; color: var(--cream); text-decoration: none; }
+.runs a.time:hover { color: var(--blue); }
+.runs .gain { display: block; margin-top: 5px; font-size: .74rem; color: var(--green); }
+/* Le record du monde d'un autre clan, à battre : discret sous notre chrono, l'écart en rouge. */
+.runs .target { display: block; margin-top: 6px; font-size: .74rem; color: var(--muted); text-decoration: none; white-space: nowrap; }
+.runs .target b { font-weight: 600; color: var(--cream); }
+.runs .target i { font-style: normal; color: #ff8a8a; }
+.runs a.target:hover b { color: var(--blue); }
+/* Les pastilles sous le chrono, pour que tous les chronos restent alignés. */
+.runs .marks { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; margin-top: 7px; }
+.runs .pill { margin: 0; vertical-align: 0; }
+.runs .pill.ts { background: linear-gradient(110deg, #6fdcff, #b99bff 55%, #ff8fc2); }
+.runs .team { white-space: normal; }
+.runs .team .dim { margin-right: 6px; font-variant-numeric: tabular-nums; }
+.runs .replay { color: var(--muted); font-size: .86rem; }
+.runs .replay:hover { color: var(--cream); }
 
 /* Effectif */
 .crew { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: clamp(32px, 6vw, 88px); align-items: end; margin-top: 44px; }
@@ -488,8 +532,26 @@ footer p { margin: 0 0 4px; max-width: 70em; }
   .hub { grid-template-columns: minmax(0, 1fr); }
   .hub-item, .hub-item + .hub-item { padding: 22px 0; border-left: 0; }
   .hub-item + .hub-item { border-top: 1px solid var(--line); }
+  .partner { grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: 16px 18px; padding: 18px; }
+  .partner img { width: 56px; height: 56px; border-radius: 13px; }
+  .partner .go { grid-column: 1 / -1; justify-self: start; }
   td, th { padding-inline: 8px; }
   td.left { white-space: normal; overflow-wrap: anywhere; }
+  /* Speedruns : chaque record sur deux lignes, la carte et le chrono, puis l'équipe ; les onglets défilent. */
+  .sr-pick select { width: 100%; }
+  .runs thead { display: none; }
+  .runs tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 14px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .runs td { display: block; padding: 0; border: 0; }
+  .runs td.opt { display: none; }
+  .runs td.map { overflow-wrap: break-word; }
+  .runs .where b { display: block; }
+  /* La colonne du chrono reste étroite : pastilles empilées, record à battre sur deux lignes. */
+  .runs .marks { flex-direction: column; align-items: flex-end; }
+  .runs .target { max-width: 8.6em; margin-left: auto; white-space: normal; line-height: 1.45; }
+  .runs .map .size { margin: 5px 6px 0 0; }
+  .runs .spot { gap: 12px; }
+  .runs .thumb { width: 52px; height: 36px; padding: 2px; border-radius: 6px; }
+  .runs td.team { grid-column: 1 / -1; font-size: .92rem; }
   .grade { font-size: 1rem; }
   .podium { grid-template-columns: minmax(0, 1fr); gap: 10px; }
   .card, .card.first, .card.second, .card.third { order: 0; display: grid; grid-template-columns: 48px minmax(0, 1fr) auto; align-items: center; column-gap: 12px; padding: 14px 16px; }
@@ -611,6 +673,16 @@ footer p { margin: 0 0 4px; max-width: 70em; }
       <ul class="events" id="events"></ul>
       <p class="note">Programmés sur le <a href="https://discord.gg/cQdxCSFnNV" target="_blank" rel="noopener">Discord du clan</a>.</p>
     </section>
+
+      <section id="partenaires">
+      <p class="kicker">Partenaire du clan</p>
+      <h2>Les stats de tous les clans</h2>
+      <a class="partner" href="https://teamstats.pro/" target="_blank" rel="noopener">
+        <img src="teamstats.png" alt="" width="72" height="72">
+        <span><strong>TeamStats.pro</strong><small>ELO des clans et des équipes, records de speedrun sur chaque carte&nbsp;: le site de référence des clans d'OpenFront. C'est lui qui fournit les records du monde de notre page Classement.</small></span>
+        <span class="go">Voir le site</span>
+      </a>
+    </section>
     </div>
   </div>
 
@@ -649,6 +721,20 @@ footer p { margin: 0 0 4px; max-width: 70em; }
           <tbody id="series-table"></tbody>
         </table></div>
       </details>
+    </section>
+
+      <section id="speedruns" hidden>
+      <p class="kicker">Speedruns du clan</p>
+      <h2>Les victoires les plus rapides</h2>
+      <p class="text" id="sr-intro"></p>
+      <a class="sr-credit" id="sr-credit" href="https://teamstats.pro/" target="_blank" rel="noopener" hidden><img src="teamstats.png" alt="" width="28" height="28"><span>Records du monde de tous les clans sur <b>TeamStats.pro</b></span></a>
+      <label class="sr-pick">Afficher<select id="sr-format"></select></label>
+      <table class="runs">
+        <thead><tr><th class="left">Carte</th><th>Chrono</th><th class="left">Équipe [FR]</th><th class="opt">Partie</th><th class="opt">Date</th><th class="opt"><span class="sr">Replay</span></th></tr></thead>
+        <tbody id="sr-list"></tbody>
+      </table>
+      <button class="more" id="sr-more" type="button" hidden></button>
+      <p class="note" id="sr-note"></p>
     </section>
     </div>
   </div>
@@ -959,8 +1045,8 @@ footer p { margin: 0 0 4px; max-width: 70em; }
 <footer><div class="wrap">
   <p id="source"></p>
   <p>L'effectif vient de la liste officielle du clan, les membres sans pseudo public restent anonymes. Le classement et l'activité sont les chiffres d'OpenFront pour le tag [FR]. Le bloc vocal vient du widget public du Discord du clan.</p>
-  <p>Site de clan non officiel, sans lien avec les éditeurs d'OpenFront. Icônes du jeu et carte du monde en points&nbsp;: OpenFront, <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.fr" target="_blank" rel="noopener">CC BY-SA 4.0</a>.</p>
-  <p><a href="#mentions">Mentions légales</a></p>
+  <p>Site de clan non officiel, sans lien avec les éditeurs d'OpenFront. Icônes du jeu, vignettes des cartes et carte du monde en points&nbsp;: OpenFront, <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.fr" target="_blank" rel="noopener">CC BY-SA 4.0</a>.</p>
+  <p>Partenaire&nbsp;: <a href="https://teamstats.pro/" target="_blank" rel="noopener">TeamStats.pro</a> · <a href="#mentions">Mentions légales</a></p>
 </div></footer>
 
 <div id="tip" hidden></div>
@@ -1730,6 +1816,97 @@ function renderPlayer(slug) {
 }
 
 $("source").textContent = `Données : API publique d'OpenFront, mises à jour le ${new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris" }).format(new Date(DATA.fetchedAt))}.`;
+
+/* Speedruns du clan : un chrono par carte, taille et format (scripts/fetch-speedruns.mjs) */
+{
+  const S = DATA.speedruns;
+  if (S && S.rows.length) {
+    // Un onglet par format ; les parties à 8 équipes ou plus, rares, en partagent un.
+    const ORDER = ["2", "3", "4", "5", "6", "7", "8+", "Duos", "Trios", "Quads"];
+    const tabOf = (f) => (/^\d+$/.test(f) && Number(f) >= 8 ? "8+" : f);
+    const place = (f) => (ORDER.includes(f) ? ORDER.indexOf(f) : ORDER.length);
+    // Les records du monde détenus par [FR], selon TeamStats, tous formats confondus : leur onglet est en tête, ouvert par défaut.
+    const T = S.teamstats;
+    const tsRows = T ? T.rows : [];
+    const formats = [...(tsRows.length ? ["ts"] : []), ...[...new Set(S.rows.map((r) => tabOf(r[2])))].sort((a, b) => place(a) - place(b) || a.localeCompare(b))];
+    const teamsName = (f) => (/^\d+$/.test(f) ? `${f} équipes` : f);
+    const formatName = (f) => (f === "ts" ? "Records du monde détenus par [FR]" : f === "8+" ? "8+ équipes" : teamsName(f));
+    // Les formats de TeamStats : trio ou quads complet d'un même clan, ou équipe de 5 joueurs et plus.
+    const TS_FORMATS = { trio: "Trio", quads: "Quads", team: "Équipes" };
+    const clock = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+    // Les chronos TeamStats sont au dixième de seconde, comme sur leur site.
+    const tenths = (d) => `${clock(Math.floor(d / 10))}.${d % 10}`;
+    const isNew = (iso) => Date.now() - Date.parse(iso) < 7 * 864e5;
+    const paris = (o) => new Intl.DateTimeFormat("fr-FR", { timeZone: "Europe/Paris", ...o });
+    const dayKey = (d) => new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris" }).format(d);
+    const when = (iso) => {
+      const ago = Math.round((Date.parse(dayKey(new Date())) - Date.parse(dayKey(new Date(iso)))) / 864e5);
+      if (ago <= 0) return "aujourd'hui";
+      if (ago === 1) return "hier";
+      return ago < 7 ? paris({ weekday: "long" }).format(new Date(iso)) : paris({ day: "numeric", month: "short" }).format(new Date(iso));
+    };
+    // Les pseudos publics de l'équipe, trois au plus ; les autres, anonymes compris, sont seulement comptés.
+    const team = (fr, names, anon) => {
+      const shown = names.slice(0, 3).map(([n, slug]) => (slug ? `<a href="#joueur-${slug}">${esc(shortName(n))}</a>` : esc(shortName(n))));
+      const rest = names.length - shown.length + anon;
+      return shown.length ? `${shown.join(", ")}${rest ? ` <span class="dim">et ${rest} autre${rest > 1 ? "s" : ""}</span>` : ""}` : `<span class="dim">${fr} joueurs</span>`;
+    };
+    const day = (iso) => paris({ day: "numeric", month: "long" }).format(new Date(iso)).replace(/^1 /, "1er ");
+    // Le chrono mène au replay ; la colonne Replay ne reste que sur grand écran.
+    // La vignette de la carte, chargée seulement quand sa ligne s'affiche ; une case vide quand OpenFront n'en a pas.
+    const thumb = (map) => (S.thumbs?.[map] ? `<img class="thumb" src="maps/${esc(S.thumbs[map])}" alt="" width="66" height="44" loading="lazy">` : '<span class="thumb"></span>');
+    const cells = (map, tags, time, team, players, at, game) => {
+      const replay = `https://openfront.io/game/${encodeURIComponent(game)}`;
+      return `<tr>
+        <td class="left map"><span class="spot">${thumb(map)}<span class="where"><b>${esc(map)}</b>${tags.map((t) => `<span class="size">${esc(t)}</span>`).join("")}</span></span></td>
+        <td><a class="time" href="${replay}" target="_blank" rel="noopener" title="Voir le replay">${time[0]}</a>${time[1]}</td>
+        <td class="left team">${team}</td>
+        <td class="opt dim">${int(players)} joueurs</td>
+        <td class="opt dim"><time datetime="${esc(at)}">${when(at)}</time></td>
+        <td class="opt"><a class="replay" href="${replay}" target="_blank" rel="noopener">Replay</a></td>
+      </tr>`;
+    };
+    const gap = (s) => (s < 60 ? `${s} s` : clock(s));
+    // Le record du monde d'un autre clan, quand il est plus rapide : son chrono, son clan et l'écart, vers son replay.
+    const beat = ([best, clan, g], t) => `<a class="target" href="https://openfront.io/game/${encodeURIComponent(g)}" target="_blank" rel="noopener" title="Record du monde à battre, selon TeamStats : voir le replay">Record&nbsp;: <b>${clock(best)}</b> [${esc(clan)}] <i>+${gap(t - best)}</i></a>`;
+    const row = ([map, compact, f, t, at, game, fr, , players, names, anon, prev, ts, target]) => {
+      const fresh = isNew(at);
+      const tags = [...(compact ? ["compacte"] : []), ...(tabOf(f) === "8+" ? [teamsName(f)] : [])];
+      const pills = `${ts ? '<span class="pill ts" title="Selon TeamStats, [FR] a la victoire la plus rapide de tous les clans sur cette carte, dans ce format">Record du monde</span>' : ""}${fresh ? '<span class="pill">Nouveau</span>' : ""}`;
+      const badges = `${pills ? `<span class="marks">${pills}</span>` : ""}${fresh && prev ? `<span class="gain" title="Ancien record : ${clock(prev)}">−${gap(prev - t)}</span>` : ""}${target ? beat(target, t) : ""}`;
+      return cells(map, tags, [clock(t), badges], team(fr, names, anon), players, at, game);
+    };
+    const tsRow = ([map, compact, , f, d, at, game, fr, players, names, anon]) =>
+      cells(map, [...(compact ? ["compacte"] : []), TS_FORMATS[f] ?? f], [tenths(d), isNew(at) ? '<span class="marks"><span class="pill">Nouveau</span></span>' : ""], team(fr, names, anon), players, at, game);
+    const LIMIT = 12;
+    let format = formats[0] === "ts" ? "ts" : formats.includes("2") ? "2" : formats[0];
+    let all = false;
+    const byMap = (a, b) => a[0].localeCompare(b[0], "fr") || a[1] - b[1];
+    const render = () => {
+      const list = format === "ts"
+        ? [...tsRows].sort((a, b) => byMap(a, b) || Object.keys(TS_FORMATS).indexOf(a[3]) - Object.keys(TS_FORMATS).indexOf(b[3]))
+        : S.rows.filter((r) => tabOf(r[2]) === format).sort(byMap);
+      $("sr-list").innerHTML = (all ? list : list.slice(0, LIMIT)).map(format === "ts" ? tsRow : row).join("");
+      $("sr-more").hidden = list.length <= LIMIT;
+      $("sr-more").textContent = all ? "Voir moins" : `Voir les ${int(list.length)} records`;
+      $("sr-format").value = format;
+    };
+    // Une entrée par format, avec son nombre de records.
+    const countOf = (f) => (f === "ts" ? tsRows.length : S.rows.filter((r) => tabOf(r[2]) === f).length);
+    $("sr-format").innerHTML = formats.map((f) => `<option value="${esc(f)}">${esc(formatName(f))} (${int(countOf(f))})</option>`).join("");
+    $("sr-format").addEventListener("change", (e) => { format = e.target.value; all = false; render(); });
+    $("sr-more").addEventListener("click", () => { all = !all; render(); });
+    const fresh = S.rows.filter((r) => isNew(r[4])).length;
+    $("sr-intro").innerHTML = `Le meilleur chrono [FR] sur chaque carte, en partie publique par équipes, quand le clan fait au moins la moitié de l'équipe gagnante. <strong>${int(S.rows.length)} records</strong>${fresh ? `, dont ${int(fresh)} battu${fresh > 1 ? "s" : ""} ces 7 derniers jours` : ""}.${tsRows.length ? ` Et <strong>${int(tsRows.length)} record${tsRows.length > 1 ? "s" : ""} du monde détenu${tsRows.length > 1 ? "s" : ""} par [FR]</strong>, sur les ${int(T.total)} de la ${esc(T.season)} relevés par TeamStats.` : ""}`;
+    if (T) {
+      $("sr-credit").href = T.page;
+      $("sr-credit").hidden = false;
+    }
+    $("sr-note").textContent = `Le chrono est la durée de la partie selon OpenFront, comme dans les messages de victoire du bot. Comme pour les points du bot, les victoires de moins de 2 minutes ne comptent pas : l'adversaire a sûrement quitté la partie.${tsRows.length ? ` Record du monde : la victoire la plus rapide de tous les clans${T.since ? ` depuis le ${day(T.since)}` : ""}, par carte, taille et format, selon les règles de TeamStats : un trio ou un quads complet du même clan, ou une équipe de 5 joueurs et plus dont plus de la moitié du même clan. Leur chrono part de la fin du placement, une vingtaine de secondes après le début de la partie. Sous nos autres chronos, le record du monde à battre, quand TeamStats en a un dans le même format : il est donné en durée de partie, comme nos chronos.` : ""} Relevé jusqu'au ${paris({ day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }).format(new Date(S.until))}.`;
+    render();
+    $("speedruns").hidden = false;
+  }
+}
 
 /* Pages */
 {

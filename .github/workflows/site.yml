@@ -30,7 +30,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    # Les fiches (complète) et le rattrapage des speedruns (premier relevé) prennent chacun jusqu'à 25 minutes.
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -77,6 +78,29 @@ jobs:
           restore-keys: discord-
       - name: Classement et parties
         run: node scripts/fetch-data.mjs
+      # Les speedruns du clan : chaque relevé reprend où le précédent s'est arrêté. Il garde les identifiants des
+      # joueurs, donc il reste dans le cache, pas dans le dépôt, avec les vignettes des cartes déjà téléchargées.
+      # Une panne ne bloque pas le site : le relevé précédent sert.
+      - name: Dernier relevé des speedruns
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            data/speedruns.json
+            data/maps
+          key: speedruns-${{ github.run_id }}
+          restore-keys: speedruns-
+      - name: Speedruns du clan
+        id: speedruns
+        continue-on-error: true
+        run: node scripts/fetch-speedruns.mjs
+      - name: Garder le relevé des speedruns
+        if: steps.speedruns.outcome == 'success'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            data/speedruns.json
+            data/maps
+          key: speedruns-${{ github.run_id }}
       - name: Construction du site
         run: |
           node scripts/build.mjs

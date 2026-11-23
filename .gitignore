@@ -9,3 +9,5 @@ data/discord.json
 
 # Anciennes versions, travail local
 archive/
+data/speedruns.json
+data/maps/

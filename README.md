@@ -60,6 +60,20 @@ Les insignes des rangs sont dessinés comme les images du bot : chevrons pour la
 
 `players` ne contient que les comptes liés avec `/lier` et non masqués ; `ranked` compte tous les membres classés, et `position` est la place dans ce classement complet. Le site garde le pseudo de l'effectif quand le joueur y est, et un membre anonyme dans l'effectif le reste. Avec `"profils": true` dans `client_payload`, la mise à jour retélécharge aussi les fiches des joueurs.
 
+## Speedruns du clan
+
+`scripts/fetch-speedruns.mjs` garde, pour chaque carte, taille de carte et format, la victoire [FR] la plus rapide. Elle compte quand le clan fait au moins la moitié de l'équipe gagnante, avec au moins 2 joueurs [FR], en partie publique par équipes d'au moins 2 minutes. Le chrono est la durée de la partie donnée par OpenFront, comme dans les messages de victoire du bot.
+
+Le relevé lit les victoires du clan jour par jour (`/clan/FR/sessions`), puis le détail de celles où les joueurs [FR] sont assez nombreux pour peser dans leur équipe (`/game/:id`) : au moins 2, et au moins le quart d'une équipe moyenne de la partie. Il reprend où le précédent s'est arrêté et s'arrête au bout de 25 minutes (`SPEEDRUN_MINUTES`) : le premier remonte jusqu'au 1er mai 2026 en quelques mises à jour.
+
+Face aux autres clans, le relevé lit les records de [TeamStats](https://teamstats.pro/), site partenaire, dans leur flux public `https://teamstats.pro/feed/team-speedruns.json` : une requête par mise à jour, pour une limite de 30 par minute. Ce flux donne un record par carte, taille et format (trio ou quads complet d'un clan, ou équipe de 5 joueurs et plus dont plus de la moitié d'un clan), depuis le début de leur saison. Le site affiche ceux de [FR] dans l'onglet « Records du monde détenus par [FR] », avec le chrono de TeamStats, qui part de la fin du placement, et met le badge « Record du monde » sur nos records de la même carte, taille et format. Sous nos autres records, il affiche le record du monde d'un autre clan à battre, son clan et l'écart.
+
+Le relevé ouvre une fois chaque partie record (`/game/:id`), puis seulement les nouvelles : environ 550 parties la première fois, en moins d'une minute. Il y lit le format exact, que TeamStats regroupe en « team » au-delà de 4 joueurs, et la durée de la partie, pour comparer le record avec nos chronos. Il ne garde les joueurs que des records [FR], et seulement s'ils ne sont pas déjà dans notre record. Si le flux ne répond pas, les records TeamStats précédents restent.
+
+Chaque record montre la vignette de sa carte, tirée des ressources d'OpenFront (`resources/maps/<carte>/thumbnail.webp`, une dizaine de Ko). Le relevé ne télécharge que les cartes qui lui manquent, et rafraîchit chaque vignette tous les 30 jours. Il les garde dans `data/maps`, dans le cache d'Actions avec le relevé, et la page ne charge que celles des lignes affichées.
+
+`data/speedruns.json` garde les identifiants OpenFront des joueurs : il reste dans le cache d'Actions, pas dans le dépôt, et le site n'en publie que les pseudos publics de l'effectif. Si le relevé échoue, le site se construit avec le précédent.
+
 ## Vie privée
 
 Les données brutes ne sont pas conservées dans ce dépôt. Le site ne publie ni pseudo ni identifiant pour les membres sans pseudo public. Pour les profils marqués comme masqués, il ne publie ni l'identifiant ni la carrière.
@@ -78,5 +92,6 @@ Le site est alors dans `public/index.html`.
 ## Licence
 
 - Le code du site est sous licence [GNU AGPL 3.0](LICENSE).
-- Les icônes du jeu et la carte du monde en points viennent d'OpenFront, sous licence [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) : voir [assets/icons/LICENCE.md](assets/icons/LICENCE.md).
+- Les icônes du jeu, les vignettes des cartes et la carte du monde en points viennent d'OpenFront, sous licence [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) : voir [assets/icons/LICENCE.md](assets/icons/LICENCE.md).
 - Les polices Anton et Inter sont sous licence [SIL OFL 1.1](https://openfontlicense.org/) : voir [assets/fonts/LICENCE.md](assets/fonts/LICENCE.md).
+- Le logo de TeamStats (`assets/partners/teamstats.png`) appartient à [TeamStats](https://teamstats.pro/), qui l'a fourni pour ce site. Il n'est pas sous la licence du dépôt.
