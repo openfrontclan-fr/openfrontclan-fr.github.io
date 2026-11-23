@@ -239,42 +239,102 @@ const speedruns = runs && runs.records && isoDate(runs.cursor)
     }
   : null;
 
-// ELO des membres sur TeamStats (scripts/fetch-elo.mjs), comme la carrière : seulement les fiches publiques. Il vient de
-// l'extérieur : chaque champ est vérifié. La page reçoit le résumé de chaque joueur ; ses courbes et son style de jeu
-// partent dans elo.json, que la fiche ne charge qu'à l'ouverture.
+// Les classements des fiches publiques, comme la carrière. La page reçoit le résumé de chaque joueur ; ses courbes et son
+// style de jeu partent dans elo.json, que la fiche ne charge qu'à l'ouverture.
+// - La cote en équipe, calculée par le site (scripts/cote.mjs) depuis toutes les parties publiques par équipes.
+// - Le FFA classé d'OpenFront et le profil de jeu de TeamStats (scripts/fetch-elo.mjs), qui viennent de l'extérieur :
+//   chaque champ est vérifié. La Team ELO de TeamStats n'est plus publiée : la cote la remplace.
 const eloStore = JSON.parse(await readFile("data/elo.json", "utf8").catch(() => "null"));
+const coteStore = JSON.parse(await readFile("data/cote.json", "utf8").catch(() => "null"));
+// Une cote n'est publiée que si son relevé est à jour : pendant le premier rattrapage, elle resterait figée au début du mois.
+const coteFresh = Number.isFinite(coteStore?.until) && Date.parse(snap.fetchedAt) - coteStore.until < 3 * 86_400_000;
 const TIERS = ["Grandmaster", "Master", "Diamond", "Platinum", "Gold", "Silver", "Bronze", "Iron"];
 const tierOf = (v) => (typeof v === "string" && /^[A-Za-z]+( I{1,3})?$/.test(v) && TIERS.includes(v.split(" ")[0]) ? v : null);
 const STYLES = ["attack", "territory", "support", "economy", "destruction", "building"];
 const num = (v) => (Number.isFinite(v) ? Math.round(v) : null);
 const rows = (list, width) => (Array.isArray(list) ? list : []).filter((r) => Array.isArray(r) && r.length === width && r.every(Number.isFinite));
 const eloPlayers = {};
+const cotePlayers = {};
 const eloFile = {};
 for (const m of members) {
+  if (!m.username || profileOf(m).hidden) continue;
   const e = eloStore?.players?.[m.publicId];
-  if (!e || !m.username || profileOf(m).hidden) continue;
-  const t = e.team && Number.isFinite(e.team.elo) ? e.team : null;
-  const f = e.ffa && Number.isFinite(e.ffa.rating) ? e.ffa : null;
-  if (!t && !f) continue;
-  // t : [Team ELO, officielle (1/0), rang mondial, palier, parties, style principal] ; f : [note, palier, rang mondial, pic, victoires, défaites].
-  eloPlayers[slug(m)] = {
-    t: t ? [num(t.elo), t.rated ? 1 : 0, num(t.rank), tierOf(t.tier), count(t.games), STYLES.includes(t.best) ? t.best : null] : null,
-    f: f ? [num(f.rating), tierOf(f.tier), num(f.rank), num(f.peak), count(f.wins), count(f.losses)] : null,
-  };
-  // s : [palier, % des meilleurs] pour chaque partie du style ; t : [minute, ELO, victoire, officielle] ; f : [minute, note].
+  const t = e?.team ?? null;
+  const f = e?.ffa && Number.isFinite(e.ffa.rating) ? e.ffa : null;
+  const c = coteFresh ? coteStore.players?.[m.publicId] : null;
   const style = Array.isArray(t?.style) && t.style.length === STYLES.length
     ? t.style.map((s) => [tierOf(s?.[0]), Number.isFinite(s?.[1]) ? Math.min(100, Math.max(0, Math.round(s[1]))) : null])
     : null;
-  eloFile[slug(m)] = { s: style, t: rows(e.hist?.team, 4), f: rows(e.hist?.ffa, 2) };
+  if (!f && !style && !c) continue;
+  // [cote, parties, victoires, rang mondial ou null avant MIN_GAMES parties]
+  if (c && Number.isFinite(c.cote)) cotePlayers[slug(m)] = [num(c.cote), count(c.games), count(c.wins), num(c.rank)];
+  // f : [note, palier, rang mondial, pic, victoires, défaites] ; best : la partie du style de jeu où il est le plus fort.
+  if (f || style) {
+    eloPlayers[slug(m)] = {
+      f: f ? [num(f.rating), tierOf(f.tier), num(f.rank), num(f.peak), count(f.wins), count(f.losses)] : null,
+      best: STYLES.includes(t?.best) ? t.best : null,
+    };
+  }
+  // s : [palier, % des meilleurs] pour chaque partie du style ; f : [minute, note] ; c : [jour depuis 1970, cote].
+  eloFile[slug(m)] = { s: style, f: rows(e?.hist?.ffa, 2), c: c ? rows(c.curve, 2) : [] };
 }
 const elo = Object.keys(eloPlayers).length
   ? {
-      season: text(eloStore.team?.season, 30).replace(/^season\b/i, "saison") || null,
-      since: isoDate(eloStore.team?.since),
       ffaSeason: Number.isFinite(eloStore.ffa?.season?.number) ? eloStore.ffa.season.number : null,
       ffaSince: isoDate(eloStore.ffa?.season?.startDate),
       players: eloPlayers,
     }
+  : null;
+// Le top mondial de la cote, pour sa page : [pseudo ou null, clan, cote, parties, victoires, fiche ou null]. Un membre du
+// clan y garde son pseudo public et sa fiche ; un membre anonyme ou masqué y reste anonyme, comme partout sur le site. Les
+// autres joueurs gardent le pseudo qu'OpenFront publie, sauf s'ils se sont masqués de sa recherche.
+const coteTop = (Array.isArray(coteStore?.top) ? coteStore.top : []).slice(0, 100).map((t) => {
+  const m = byId.get(t?.id);
+  const open = m && m.username && !profileOf(m).hidden;
+  const name = m ? (open ? m.username : null) : text(t?.name, 40) || null;
+  return [name, m && !open ? "FR" : text(t?.clan, 8), num(t?.cote), count(t?.games), count(t?.wins), open ? slug(m) : null];
+}).filter((t) => t[2] !== null);
+// Les paliers de l'ELO FR, calés sur sa répartition (environ 1 % de Grands maîtres, 3 % de Maîtres, 7 % de Diamants…).
+// Les mêmes pour la page et pour le bot du Discord (elo-fr.json).
+const COTE_TIERS = [["Grandmaster", 1350], ["Master", 1200], ["Diamond", 1100], ["Platinum", 1050], ["Gold", 1000], ["Silver", 975], ["Bronze", 950], ["Iron", null]];
+const TIER_NAMES = { Grandmaster: "Grand maître", Master: "Maître", Diamond: "Diamant", Platinum: "Platine", Gold: "Or", Silver: "Argent", Bronze: "Bronze", Iron: "Fer" };
+const cote = Object.keys(cotePlayers).length
+  ? {
+      since: isoDate(new Date(coteStore.from).toISOString()),
+      until: isoDate(new Date(coteStore.until).toISOString()),
+      games: count(coteStore.games),
+      ranked: count(coteStore.ranked),
+      minGames: count(coteStore.minGames),
+      tiers: COTE_TIERS,
+      players: cotePlayers,
+      top: coteTop,
+    }
+  : null;
+// L'ELO FR des fiches publiques pour le bot du Discord, rangé par fiche (les 8 premiers caractères du SHA-1 de l'identifiant
+// OpenFront, comme les liens #joueur-…) : le bot retrouve un compte lié sans que le fichier publie d'identifiant.
+const eloForBot = cote
+  ? (() => {
+      const order = Object.entries(cotePlayers).filter(([, p]) => p[3]).sort((a, b) => b[1][0] - a[1][0]).map(([s]) => s);
+      const tierOf = (v) => COTE_TIERS.find(([, min]) => min === null || v >= min)[0];
+      return {
+        site: SITE_URL,
+        updatedAt: cote.until,
+        since: cote.since,
+        formula: "1000 + 10 × (niveau − 3 × incertitude), OpenSkill (Plackett-Luce)",
+        ranked: cote.ranked,
+        minGames: cote.minGames,
+        tiers: COTE_TIERS.map(([t, min]) => ({ name: TIER_NAMES[t], min })),
+        players: Object.fromEntries(Object.entries(cotePlayers).map(([s, [elo, games, wins, rank]]) => [s, {
+          elo,
+          tier: rank ? TIER_NAMES[tierOf(elo)] : null,
+          worldRank: rank,
+          clanRank: rank ? order.indexOf(s) + 1 : null,
+          games,
+          wins,
+          page: `${SITE_URL}/#joueur-${s}`,
+        }])),
+      };
+    })()
   : null;
 
 // Place du clan jour par jour : l'historique du dépôt, plus le point du jour, que le workflow n'y ajoute qu'après la construction.
@@ -294,6 +354,7 @@ const data = {
   places,
   speedruns,
   elo,
+  cote,
   fetchedAt: snap.fetchedAt,
   period: { start: snap.leaderboard.start, end: snap.leaderboard.end },
   clans: snap.leaderboard.clans.map((c, i) => ({
@@ -329,6 +390,8 @@ await mkdir(`${out}/maps`, { recursive: true });
 for (const file of Object.values(thumbs)) await copyFile(`data/maps/${file}`, `${out}/maps/${file}`);
 // Courbes d'ELO et style de jeu des fiches publiques, chargés à l'ouverture d'une fiche.
 await writeFile(`${out}/elo.json`, JSON.stringify(eloFile));
+// L'ELO FR des fiches publiques, lu par le bot du Discord pour sa commande de profil.
+if (eloForBot) await writeFile(`${out}/elo-fr.json`, JSON.stringify(eloForBot));
 // Image d'aperçu des liens partagés (Discord, réseaux) ; sa source est assets/og-card.html.
 await copyFile("assets/og-card.png", `${out}/og.png`);
 // Carte du monde en points derrière l'accueil, tirée de la carte « World » d'OpenFront (scripts/world-map.mjs).

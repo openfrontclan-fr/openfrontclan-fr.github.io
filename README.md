@@ -74,17 +74,34 @@ Chaque record montre la vignette de sa carte, tirée des ressources d'OpenFront 
 
 `data/speedruns.json` garde les identifiants OpenFront des joueurs : il reste dans le cache d'Actions, pas dans le dépôt, et le site n'en publie que les pseudos publics de l'effectif. Si le relevé échoue, le site se construit avec le précédent.
 
-## ELO des membres
+## ELO FR
 
-`scripts/fetch-elo.mjs` lit l'ELO des membres sur [TeamStats](https://teamstats.pro/), site partenaire, dans ses flux publics (120 requêtes par minute au plus ; le relevé en fait au plus 100) :
+Le site calcule son propre classement des joueurs en équipe, l'**ELO FR** (appelé « cote » dans le code), d'après les victoires : avec qui et contre qui on gagne. Sur le site, un (i) à côté de son nom explique la méthode.
 
-- `feed/team-elo.json?clan=FR` : la Team ELO de chaque joueur qui porte le tag, avec son rang mondial, son palier, ses parties et son style de jeu ;
+1. `scripts/fetch-team-games.mjs` relève toutes les parties publiques par équipes d'OpenFront depuis le 1er novembre 2026 (`COTE_FROM`), un jour fini à la fois, 3 heures après sa fin. Il ouvre chaque partie une fois (`/game/:id`), environ 2 500 par jour, et n'en garde qu'un résumé : l'équipe gagnante, les perdants, leurs clans, le moment où chacun est mort, s'il a agi, le format, le nombre d'équipes et la durée. L'API ne dit pas dans quelle équipe était chaque perdant. Les résumés vont dans `data/parties/AAAA-MM-JJ.json.gz`, dans le cache d'Actions : ils gardent les identifiants de tous les joueurs. Le premier relevé remonte au 1er novembre en quelques mises à jour de 20 minutes (`COTE_MINUTES`).
+2. `scripts/cote.mjs` recalcule toute la cote depuis ces résumés à chaque mise à jour, en quelques secondes : changer la formule ne demande pas de tout retélécharger. Il écrit `data/cote.json`, avec seulement les membres actuels du clan, leur rang mondial et leur cote à la fin de chaque jour.
+
+La formule est OpenSkill (Weng-Lin, modèle de Plackett-Luce), de la famille de TrueSkill. Chaque joueur a un niveau et une incertitude ; après chaque partie, l'équipe gagnante bat chacune des autres équipes, et la force d'une équipe est la somme de ses joueurs. Chaque équipe perdante est estimée à la force moyenne des perdants. Un gagnant mort en cours de partie ne reçoit que la part de la victoire correspondant à son temps en vie ; un perdant perd tout. Ne comptent que les parties d'au moins 2 minutes, à 10 joueurs par équipe au plus, ni spéciales (modificateurs) ni Humains contre Nations. Un joueur qui n'a rien fait (ni attaque, ni construction, ni bateau, ni bombe) est ignoré, et ne compte pas dans la force de son équipe.
+
+La cote affichée est prudente : `1000 + 10 × (niveau − 3 × incertitude)`. Il faut 20 parties pour être classé. Les paliers, calés sur la répartition des joueurs classés, sont : Grand maître 1 350+, Maître 1 200+, Diamant 1 100+, Platine 1 050+, Or 1 000+, Argent 975+, Bronze 950+, Fer en dessous. Le site n'affiche la cote que des membres qui ont une fiche publique, et seulement quand le relevé est à jour (3 jours de retard au plus). La méthode est expliquée sur la page Membres.
+
+Le build publie aussi `elo-fr.json`, lu par le bot du Discord pour sa carte de profil : l'ELO FR des membres qui ont une fiche publique (ELO, palier, rang mondial, rang dans le clan, parties, victoires, lien de la fiche), rangé par fiche (les 8 premiers caractères du SHA-1 de l'identifiant OpenFront), sans aucun identifiant.
+
+La page `#monde` montre le top 100 mondial. Les pseudos viennent d'OpenFront (`/player/:id`), lus une fois par semaine et gardés dans `data/parties/noms.json`. Un joueur qui s'est masqué de la recherche d'OpenFront y reste sans pseudo, et un membre du clan sans fiche publique y reste anonyme.
+
+## Classements de TeamStats
+
+`scripts/fetch-elo.mjs` lit sur [TeamStats](https://teamstats.pro/), site partenaire, dans ses flux publics (120 requêtes par minute au plus ; le relevé en fait au plus 100) :
+
+- `feed/team-elo.json?clan=FR` : le profil de jeu de chaque joueur qui porte le tag (attaque, territoire, soutien, économie, destruction, construction), chaque partie notée face à tous les joueurs suivis ;
 - `feed/ffa-elo.json?clan=FR` : la note du FFA classé d'OpenFront ;
-- `feed/player/<publicId>.json` : l'historique des deux notes, pour les courbes.
+- `feed/player/<publicId>.json` : l'historique du FFA classé, pour la courbe.
+
+La Team ELO de TeamStats n'est pas publiée : la cote la remplace. Le profil de jeu est affiché sur les fiches « pour le fun », sans être présenté comme un classement.
 
 Les deux listes sont lues à chaque mise à jour. La fiche d'un joueur n'est relue que s'il a joué depuis la précédente : la première fois, environ 650 fiches en 7 minutes, ensuite quelques dizaines. Le relevé s'arrête au bout de 10 minutes (`ELO_MINUTES`) et reprend à la mise à jour suivante. `data/elo.json` garde les identifiants OpenFront : il reste dans le cache d'Actions, pas dans le dépôt. Si le relevé échoue, le site se construit avec le précédent.
 
-Le site ne publie l'ELO que des membres actuels qui ont une fiche publique, comme leur carrière. La page Membres affiche les classements du clan en Team ELO officielle (5 parties et plus) et en FFA classé. Chaque fiche affiche les deux notes, leurs courbes et le style de jeu ; les courbes sont dans `elo.json`, que la fiche ne charge qu'à son ouverture.
+La page Membres affiche les classements du clan en cote et en FFA classé. Chaque fiche affiche la cote, le FFA classé, leurs courbes et le profil de jeu ; les courbes sont dans `elo.json`, que la fiche ne charge qu'à son ouverture.
 
 ## Vie privée
 

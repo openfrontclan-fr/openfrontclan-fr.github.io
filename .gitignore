@@ -12,3 +12,5 @@ archive/
 data/speedruns.json
 data/maps/
 data/elo.json
+data/parties/
+data/cote.json

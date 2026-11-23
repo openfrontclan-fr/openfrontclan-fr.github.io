@@ -329,7 +329,8 @@ td a:hover { color: var(--blue); }
 .player-grid.solo { grid-template-columns: minmax(0, 1fr); }
 .player-grid > div { min-width: 0; }
 
-/* ELO sur TeamStats : deux cartes (Team ELO, FFA classé) avec leur courbe, puis le style de jeu. Chaque palier a sa couleur. */
+/* Classements d'une fiche : deux cartes (cote en équipe, FFA classé) avec leur courbe, puis le profil de jeu de TeamStats.
+   Chaque palier a sa couleur. */
 .tier { --tier: var(--muted); display: inline-flex; align-items: center; gap: 7px; font-size: .84rem; font-weight: 600; color: var(--cream); white-space: nowrap; }
 .tier::before { content: ""; width: 9px; height: 9px; border-radius: 3px; transform: rotate(45deg); background: var(--tier); box-shadow: 0 0 10px color-mix(in oklab, var(--tier) 60%, transparent); }
 .elo-block { margin-top: clamp(48px, 6vw, 72px); }
@@ -346,9 +347,13 @@ td a:hover { color: var(--blue); }
 .elo-card .plot { margin-top: 14px; min-height: 132px; }
 .elo-card .plot .curve { stroke-width: 2; }
 .elo-card .wait { color: var(--muted); font-size: .84rem; }
+.elo-card a.plain { color: inherit; text-decoration: none; }
+.elo-card a.plain:hover b { color: var(--blue); }
 .styles { margin-top: 28px; max-width: 760px; }
 .style-row { display: grid; grid-template-columns: 116px minmax(0, 1fr) 190px; gap: 16px; align-items: center; padding: 12px 0; border-top: 1px solid var(--line); font-variant-numeric: tabular-nums; }
 .style-row:last-child { border-bottom: 1px solid var(--line); }
+.styles .label { margin-bottom: 4px; }
+.styles-note { margin: 0 0 14px; }
 .style-row b { font-weight: 600; }
 .style-row.best b { color: var(--blue); }
 .style-row .mode-track i { background: linear-gradient(90deg, color-mix(in oklab, var(--tier) 45%, var(--deep)), var(--tier)); }
@@ -363,6 +368,43 @@ td a:hover { color: var(--blue); }
 .board a { color: var(--cream); font-weight: 600; text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .board a:hover { color: var(--blue); }
 .board b { font: 400 1.25rem/1 var(--display); letter-spacing: .03em; text-align: right; }
+.board .who { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.board .who small { color: var(--muted); font-size: .76rem; }
+.ts-mark { width: 16px; height: 16px; margin-left: 6px; border-radius: 4px; vertical-align: -3px; }
+.go-world { display: inline-flex; align-items: center; gap: 8px; margin: 18px 0 0 18px; font-weight: 600; font-size: .92rem; color: var(--cream); text-decoration: none; }
+.go-world::after { content: "→"; transition: transform .2s; }
+.go-world:hover::after { transform: translateX(4px); }
+/* Les paliers de la cote, en légende de la page du top mondial. */
+.tier-scale { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 22px 0 28px; color: var(--muted); font-size: .84rem; }
+.tier-scale span.tier { font-weight: 600; }
+.tier-scale small { margin-left: 4px; color: var(--muted); font-weight: 400; }
+.world-top .who a { color: var(--cream); text-decoration: none; font-weight: 600; }
+.world-top .who a:hover { color: var(--blue); }
+.world-top .who .tag { margin-left: 8px; color: var(--muted); font-size: .84rem; }
+.world-top .hidden-name { color: var(--muted); font-style: italic; }
+/* Le profil de jeu : une toile à six branches à côté des barres. */
+.styles-grid { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 28px; align-items: center; }
+.radar svg { display: block; width: 100%; height: auto; overflow: visible; }
+.radar .ring { fill: none; stroke: var(--line); }
+.radar .spoke { stroke: var(--line); }
+.radar .area { fill: color-mix(in oklab, var(--blue) 30%, transparent); stroke: var(--blue); stroke-width: 2; stroke-linejoin: round; }
+.radar .pt { fill: var(--cream); }
+.radar text { fill: var(--muted); font: 600 11px var(--body); }
+/* L'ELO FR : le logo du clan devant son nom, et un (i) qui ouvre l'explication de la méthode. */
+.fr-mark { width: 20px; height: 12px; margin-right: 7px; vertical-align: -1px; }
+.info { position: relative; display: inline-block; vertical-align: 1px; }
+.info-btn { width: 18px; height: 18px; margin-left: 7px; padding: 0; border: 1px solid color-mix(in oklab, var(--muted) 70%, transparent); border-radius: 50%; background: none; color: var(--muted); font: italic 700 11px/16px Georgia, serif; letter-spacing: 0; text-transform: none; cursor: pointer; }
+.info-btn:hover, .info-btn[aria-expanded="true"] { color: var(--cream); border-color: var(--cream); }
+.info-pop { position: absolute; z-index: 30; top: calc(100% + 10px); left: -60px; width: min(400px, calc(100vw - 40px)); padding: 16px 18px 6px; border: 1px solid var(--line); border-radius: 14px; background: #10172b; box-shadow: 0 18px 50px -12px rgba(0, 0, 0, .7); color: var(--muted); font: 400 .86rem/1.55 var(--body); letter-spacing: 0; text-transform: none; text-align: left; white-space: normal; }
+.info-pop b { font: 600 .86rem/1.55 var(--body); letter-spacing: 0; color: var(--cream); }
+.info-pop small { margin: 0 10px 0 4px; color: var(--muted); font-size: .8rem; }
+.info-pop .tier { font-size: .82rem; }
+.info-pop:not([hidden]) { display: block; }
+.info-pop .ip { display: block; margin: 0 0 10px; }
+.info-pop .il { position: relative; display: block; margin: 0 0 6px 16px; }
+.info-pop .il::before { content: "•"; position: absolute; left: -13px; color: var(--blue); }
+.info-pop .il:last-of-type { margin-bottom: 10px; }
+.info-pop .tier small { margin-left: 3px; }
 .mode-row { display: grid; grid-template-columns: 124px minmax(0, 1fr) 118px 66px; gap: 16px; align-items: center; padding: 14px 0; border-top: 1px solid var(--line); font-variant-numeric: tabular-nums; }
 .mode-row:last-child { border-bottom: 1px solid var(--line); }
 .mode-row b { font-weight: 600; }
@@ -579,7 +621,11 @@ footer p { margin: 0 0 4px; max-width: 70em; }
   .runs td { display: block; padding: 0; border: 0; }
   .runs td.opt { display: none; }
   .runs td.map { overflow-wrap: break-word; }
-  .elo-cards, .elo-boards { grid-template-columns: minmax(0, 1fr); }
+  .elo-cards, .elo-boards, .styles-grid { grid-template-columns: minmax(0, 1fr); }
+  .radar { max-width: 260px; margin: 0 auto; }
+  /* Sur téléphone, la bulle (i) s'ouvre en bas de l'écran, sur toute la largeur. */
+  .info-pop { position: fixed; top: auto; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); width: auto; max-height: 72vh; overflow-y: auto; }
+  .go-world { margin-left: 0; }
   .elo-card { padding: 18px 18px 12px; }
   .style-row { grid-template-columns: 96px minmax(0, 1fr); gap: 6px 14px; }
   .style-row .level { grid-column: 1 / -1; justify-content: flex-start; }
@@ -814,15 +860,15 @@ footer p { margin: 0 0 4px; max-width: 70em; }
     </section>
 
       <section id="elo" hidden>
-      <p class="kicker ico-classement">Classements TeamStats</p>
-      <h2>L'ELO du clan</h2>
+      <p class="kicker ico-classement">Classements du clan</p>
+      <h2>L'ELO FR</h2>
       <p class="text" id="elo-intro"></p>
-      <a class="sr-credit" href="https://teamstats.pro/global-elo.html" target="_blank" rel="noopener"><img src="teamstats.png" alt="" width="28" height="28"><span>Tous les classements sur <b>TeamStats.pro</b></span></a>
       <div class="elo-boards">
-        <div><p class="label">Team ELO</p><ol class="board" id="board-team"></ol></div>
-        <div><p class="label">FFA classé</p><ol class="board" id="board-ffa"></ol></div>
+        <div id="board-cote-box"><p class="label" id="board-cote-label"></p><ol class="board" id="board-cote"></ol></div>
+        <div id="board-ffa-box"><p class="label">FFA classé <img class="ts-mark" src="teamstats.png" alt="relevé par TeamStats" title="Relevé par TeamStats" width="16" height="16"></p><ol class="board" id="board-ffa"></ol></div>
       </div>
       <button class="more" id="elo-more" type="button" hidden></button>
+      <a class="go-world" id="go-world" href="#monde" hidden>Voir le top 100 mondial</a>
       <p class="note" id="elo-note"></p>
     </section>
 
@@ -1054,6 +1100,23 @@ footer p { margin: 0 0 4px; max-width: 70em; }
     </div>
   </div>
 
+  <div class="view" id="view-monde" hidden>
+    <div class="wrap">
+      <section>
+      <a class="back" href="#membres">Les classements du clan</a>
+      <p class="kicker ico-classement" id="monde-kicker">ELO FR</p>
+      <h1 class="title">Le top 100 mondial</h1>
+      <p class="text" id="monde-intro"></p>
+      <div class="tier-scale" id="monde-tiers"></div>
+      <table class="ladder world-top">
+        <thead><tr><th>Rang</th><th class="left">Joueur</th><th class="left opt">Palier</th><th>ELO</th><th class="opt">Parties</th><th class="opt">Victoires</th></tr></thead>
+        <tbody id="monde-list"></tbody>
+      </table>
+      <p class="note" id="monde-note"></p>
+    </section>
+    </div>
+  </div>
+
   <div class="view" id="view-mentions" hidden>
     <div class="wrap">
       <section>
@@ -1071,7 +1134,7 @@ footer p { margin: 0 0 4px; max-width: 70em; }
         <div>
           <h2>Confidentialité</h2>
           <p>Le site ne dépose aucun cookie et ne mesure pas son audience.</p>
-          <p>Il affiche les pseudos publics et les statistiques des membres du clan, tels que les publient l'API d'OpenFront et <a href="https://teamstats.pro/" target="_blank" rel="noopener">TeamStats</a> pour l'ELO. Les membres sans pseudo public restent anonymes.</p>
+          <p>Il affiche les pseudos publics et les statistiques des membres du clan, tels que les publient l'API d'OpenFront et <a href="https://teamstats.pro/" target="_blank" rel="noopener">TeamStats</a> pour le FFA classé et le profil de jeu. L'ELO FR est calculé par le site à partir des parties publiques d'OpenFront. La page du top mondial de l'ELO FR affiche les pseudos des 100 meilleurs joueurs tels qu'OpenFront les publie, sauf pour ceux qui se sont masqués de sa recherche. Les membres sans pseudo public restent anonymes.</p>
           <p>Pour faire retirer ton pseudo, demande-le sur le <a href="https://discord.gg/cQdxCSFnNV" target="_blank" rel="noopener">Discord du clan</a>.</p>
         </div>
       </div>
@@ -1525,8 +1588,10 @@ function rankCard({ rank, xp, games }) {
 }
 
 /* Page joueur */
-/* ELO sur TeamStats (scripts/fetch-elo.mjs) : le bloc des fiches et les classements de la page Membres */
+/* Classements des fiches et de la page Membres : la cote en équipe (scripts/cote.mjs), le FFA classé d'OpenFront et le
+   profil de jeu de TeamStats (scripts/fetch-elo.mjs) */
 const ELO = DATA.elo;
+const COTE = DATA.cote;
 const TIER_FR = { Grandmaster: "Grand maître", Master: "Maître", Diamond: "Diamant", Platinum: "Platine", Gold: "Or", Silver: "Argent", Bronze: "Bronze", Iron: "Fer" };
 const TIER_COLOR = { Grandmaster: "#ff6b8b", Master: "#c08bff", Diamond: "#6fd3ff", Platinum: "#7fe3c4", Gold: "#f2c94c", Silver: "#c9d1dc", Bronze: "#d39062", Iron: "#8b93a3" };
 const tierTag = (t) => {
@@ -1536,17 +1601,52 @@ const tierTag = (t) => {
 };
 const STYLE_FR = { attack: "Attaque", territory: "Territoire", support: "Soutien", economy: "Économie", destruction: "Destruction", building: "Construction" };
 const STYLE_KEYS = Object.keys(STYLE_FR);
-// Les classements du clan, parmi les fiches publiques : Team ELO officielle (5 parties et plus) et FFA classé.
-const ELO_TEAM = ELO ? Object.entries(ELO.players).filter(([s, p]) => p.t?.[1] && BY_SLUG.has(s)).sort((a, b) => b[1].t[0] - a[1].t[0]) : [];
+// Les classements du clan, parmi les fiches publiques : la cote des joueurs classés (assez de parties) et le FFA classé.
+const COTE_RANKED = COTE ? Object.entries(COTE.players).filter(([s, p]) => p[3] && BY_SLUG.has(s)).sort((a, b) => b[1][0] - a[1][0]) : [];
 const ELO_FFA = ELO ? Object.entries(ELO.players).filter(([s, p]) => p.f && BY_SLUG.has(s)).sort((a, b) => b[1].f[0] - a[1].f[0]) : [];
 const placeOf = (list, slug) => list.findIndex(([s]) => s === slug) + 1;
+// Les paliers de la cote, calés sur sa répartition : environ 1 % de Grands maîtres, 3 % de Maîtres, 7 % de Diamants…
+const COTE_TIERS = (COTE?.tiers ?? [["Grandmaster", 1350], ["Master", 1200], ["Diamond", 1100], ["Platinum", 1050], ["Gold", 1000], ["Silver", 975], ["Bronze", 950], ["Iron", null]]).map(([t, min]) => [t, min ?? -Infinity]);
+const coteTier = (v) => COTE_TIERS.find(([, min]) => v >= min)[0];
+const tierLegend = () => COTE_TIERS.map(([t, min], i) => `${tierTag(t)}<small>${min > 0 ? `${int(min)}+` : `moins de ${int(COTE_TIERS[i - 1][1])}`}</small>`).join(" ");
+// Le nom de l'ELO FR, avec le logo du clan et le (i) qui explique la méthode.
+// La bulle vit dans des étiquettes <p> : que des éléments en ligne, mis en blocs par le CSS.
+const eloInfo = () => `<span class="ip"><b>L'ELO FR est un classement créé par le clan [FR].</b> Le site le calcule lui-même, à partir de toutes les parties publiques par équipes d'OpenFront${COTE ? ` depuis le ${eloDay(COTE.since)}` : ""}, et le recalcule à chaque mise à jour.</span>
+  <span class="ip">Méthode&nbsp;: <b>OpenSkill</b>, un système libre de la famille de TrueSkill (Xbox), fait pour les parties en équipe. Après chaque partie, l'équipe gagnante bat chacune des autres équipes&nbsp;:</span>
+  <span class="il"><b>Contre qui tu gagnes</b>&nbsp;: battre des équipes fortes rapporte plus.</span>
+  <span class="il"><b>Avec qui tu gagnes</b>&nbsp;: gagner avec une équipe bien plus forte que l'adversaire rapporte peu.</span>
+  <span class="il"><b>Le nombre d'équipes</b>&nbsp;: gagner à 7 équipes vaut plus qu'à 2, et y perdre coûte moins.</span>
+  <span class="il"><b>Le temps en vie</b>&nbsp;: un gagnant mort en cours de partie ne reçoit qu'une part de la victoire&nbsp;; un perdant perd tout, même s'il quitte.</span>
+  <span class="ip">Comptent seulement les parties publiques par équipes d'<b>au moins 2 minutes</b>, avec <b>10 joueurs par équipe au plus</b>, sans les parties spéciales (modificateurs) ni Humains contre Nations. Un joueur parti sans rien faire (ni attaque, ni construction, ni bateau, ni bombe) est ignoré.</span>
+  <span class="ip">ELO affiché&nbsp;: <b>1&nbsp;000 + 10 × (niveau − 3 × incertitude)</b>. Un nouveau joueur part à 1&nbsp;000&nbsp;; il faut ${int(COTE?.minGames ?? 20)} parties pour être classé. Paliers&nbsp;: ${tierLegend()}.</span>`;
+let infoCount = 0;
+const eloName = (suffix = "") => {
+  const id = `elo-info-${++infoCount}`;
+  return `<svg class="fr-mark" aria-hidden="true"><use href="#logo"/></svg>ELO FR${suffix}<span class="info"><button type="button" class="info-btn" aria-expanded="false" aria-controls="${id}" aria-label="Comment marche l'ELO FR">i</button><span class="info-pop" id="${id}" role="note" hidden>${eloInfo()}</span></span>`;
+};
+// Un seul (i) ouvert à la fois ; un clic ailleurs ou Échap le referme.
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".info-btn");
+  for (const b of document.querySelectorAll('.info-btn[aria-expanded="true"]')) {
+    if (b !== btn && !e.target.closest(".info-pop")) { b.setAttribute("aria-expanded", "false"); $(b.getAttribute("aria-controls")).hidden = true; }
+  }
+  if (btn) {
+    const open = btn.getAttribute("aria-expanded") !== "true";
+    btn.setAttribute("aria-expanded", String(open));
+    $(btn.getAttribute("aria-controls")).hidden = !open;
+  }
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape") return;
+  for (const b of document.querySelectorAll('.info-btn[aria-expanded="true"]')) { b.setAttribute("aria-expanded", "false"); $(b.getAttribute("aria-controls")).hidden = true; }
+});
 const ord = (n) => (n === 1 ? "1er" : `${int(n)}e`);
 const eloDay = (iso) => fmt({ day: "numeric", month: "long" }).format(new Date(iso)).replace(/^1 /, "1er ");
 // Les courbes et le style de jeu, dans elo.json : chargés une fois, à l'ouverture de la première fiche.
 let eloFile = null;
 const loadElo = () => (eloFile ??= fetch("elo.json").then((r) => (r.ok ? r.json() : {})).catch(() => ({})));
 
-// Une courbe d'ELO : les valeurs dans l'ordre, l'échelle à droite (haut, milieu, bas), la dernière valeur pointée.
+// Une courbe de note : les valeurs dans l'ordre, l'échelle à droite (haut, milieu, bas), la dernière valeur pointée.
 function eloChart(el, values, label) {
   if (values.length < 2) {
     el.innerHTML = '<p class="wait">Pas encore assez de points pour une courbe.</p>';
@@ -1575,23 +1675,45 @@ function eloChart(el, values, label) {
   </svg>`;
 }
 
-// Le bloc TeamStats d'une fiche : deux cartes, leurs courbes et le style de jeu arrivent avec elo.json.
+// La toile du profil de jeu : six branches (attaque, territoire, soutien, économie, destruction, construction), chacune
+// d'autant plus longue que le joueur est haut face aux autres (100 = le meilleur).
+function radar(values) {
+  const S = 250, C = S / 2, R = 82;
+  const at = (i, r) => [C + r * Math.sin((Math.PI * 2 * i) / 6), C - r * Math.cos((Math.PI * 2 * i) / 6)];
+  const ring = (f) => Array.from({ length: 6 }, (_, i) => at(i, R * f).map((n) => n.toFixed(1)).join(",")).join(" ");
+  const pts = values.map((v, i) => at(i, R * Math.max(0.04, v / 100)));
+  const labels = STYLE_KEYS.map((k, i) => {
+    const [x, y] = at(i, R + 22);
+    return `<text x="${x.toFixed(1)}" y="${(y + 4).toFixed(1)}" text-anchor="${Math.abs(x - C) < 5 ? "middle" : x > C ? "start" : "end"}">${STYLE_FR[k]}</text>`;
+  }).join("");
+  return `<svg viewBox="-30 0 ${S + 60} ${S}" role="img" aria-label="Profil de jeu : ${STYLE_KEYS.map((k, i) => `${STYLE_FR[k]} ${int(values[i])}`).join(", ")}">
+    ${[0.25, 0.5, 0.75, 1].map((f) => `<polygon class="ring" points="${ring(f)}"/>`).join("")}
+    ${Array.from({ length: 6 }, (_, i) => { const [x, y] = at(i, R); return `<line class="spoke" x1="${C}" y1="${C}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}"/>`; }).join("")}
+    <polygon class="area" points="${pts.map((p) => p.map((n) => n.toFixed(1)).join(",")).join(" ")}"/>
+    ${pts.map(([x, y]) => `<circle class="pt" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3"/>`).join("")}
+    ${labels}
+  </svg>`;
+}
+
+// Le bloc des classements d'une fiche : la cote en équipe et le FFA classé, leurs courbes et le profil de jeu arrivent avec
+// elo.json.
 function eloBlock(slug) {
-  const p = ELO?.players[slug];
-  if (!p) return "";
+  const c = COTE?.players[slug];
+  const p = ELO?.players[slug] ?? {};
+  if (!c && !p.f && !p.best) return "";
   const id = R.profiles[slug]?.id;
-  const link = id ? `<a class="ext" href="https://teamstats.pro/player.html?all=1&amp;publicId=${encodeURIComponent(id)}" target="_blank" rel="noopener">Voir sa fiche TeamStats ↗</a>` : "";
+  const link = id && (p.f || p.best) ? `<a class="ext" href="https://teamstats.pro/player.html?all=1&amp;publicId=${encodeURIComponent(id)}" target="_blank" rel="noopener">Voir sa fiche TeamStats ↗</a>` : "";
   const wait = '<p class="wait">Chargement de la courbe…</p>';
   let team = "";
-  if (p.t) {
-    const [elo, rated, rank, tier, games, best] = p.t;
-    const where = rated
-      ? `${rank ? `<b>${ord(rank)}</b> mondial · ` : ""}<b>${ord(placeOf(ELO_TEAM, slug))}</b> du clan · ${int(games)} parties`
-      : `En placement : ${int(games)} partie${games > 1 ? "s" : ""} sur 5`;
+  if (c) {
+    const [value, games, wins, rank] = c;
+    const where = rank
+      ? `<a href="#monde" class="plain"><b>${ord(rank)}</b> mondial</a> sur ${int(COTE.ranked)} · <b>${ord(placeOf(COTE_RANKED, slug))}</b> du clan`
+      : `Pas encore classé : ${int(games)} partie${games > 1 ? "s" : ""} sur ${int(COTE.minGames)}`;
     team = `<div class="elo-card">
-      <p class="label">Team ELO${ELO.season ? `, ${esc(ELO.season)}` : ""}</p>
-      <div class="big"><strong>${int(elo)}</strong>${rated ? tierTag(tier) : ""}</div>
-      <p class="sub">${where}${best ? ` · fort en <b>${STYLE_FR[best].toLowerCase()}</b>` : ""}</p>
+      <p class="label">${eloName(", en équipe")}</p>
+      <div class="big"><strong>${int(value)}</strong>${rank ? tierTag(coteTier(value)) : ""}</div>
+      <p class="sub">${where} · ${int(wins)} victoire${wins > 1 ? "s" : ""} sur ${int(games)} partie${games > 1 ? "s" : ""}</p>
       <div class="plot" id="elo-team">${wait}</div>
     </div>`;
   }
@@ -1599,33 +1721,36 @@ function eloBlock(slug) {
   if (p.f) {
     const [rating, tier, rank, peak, wins, losses] = p.f;
     ffa = `<div class="elo-card">
-      <p class="label">FFA classé${ELO.ffaSeason ? `, saison ${int(ELO.ffaSeason)}` : ""}</p>
+      <p class="label">FFA classé${ELO.ffaSeason ? `, saison ${int(ELO.ffaSeason)}` : ""} <img class="ts-mark" src="teamstats.png" alt="relevé par TeamStats" title="Relevé par TeamStats" width="16" height="16"></p>
       <div class="big"><strong>${int(rating)}</strong>${tierTag(tier)}</div>
       <p class="sub">${rank ? `<b>${ord(rank)}</b> mondial · ` : ""}<b>${ord(placeOf(ELO_FFA, slug))}</b> du clan${peak > rating ? ` · pic à ${int(peak)}` : ""} · ${int(wins)} victoire${wins > 1 ? "s" : ""} sur ${int(wins + losses)}</p>
       <div class="plot" id="elo-ffa">${wait}</div>
     </div>`;
   }
   return `<div class="elo-block">
-    <div class="elo-head"><p class="label">Sur TeamStats</p>${link}</div>
+    <div class="elo-head"><p class="label">Classements</p>${link}</div>
     <div class="elo-cards">${team}${ffa}</div>
     <div class="styles" id="elo-styles"></div>
   </div>`;
 }
 
 async function fillElo(slug) {
-  const p = ELO?.players[slug];
-  if (!p) return;
+  const c = COTE?.players[slug];
+  const p = ELO?.players[slug] ?? {};
+  if (!c && !p.f && !p.best) return;
   const h = (await loadElo())[slug] ?? {};
   if (location.hash !== `#joueur-${slug}`) return;
-  if ($("elo-team")) eloChart($("elo-team"), (h.t ?? []).map((g) => g[1]), "Team ELO partie par partie");
+  if ($("elo-team")) eloChart($("elo-team"), (h.c ?? []).map((g) => g[1]), "ELO FR jour par jour");
   if ($("elo-ffa")) eloChart($("elo-ffa"), (h.f ?? []).map((g) => g[1]), "Note du FFA classé jour par jour");
   if (Array.isArray(h.s)) {
-    const best = p.t?.[5];
-    $("elo-styles").innerHTML = `<p class="label">Style de jeu, face à tous les joueurs classés</p>${h.s.map(([grade, top], i) => `<div class="style-row${STYLE_KEYS[i] === best ? " best" : ""}" style="--tier:${TIER_COLOR[grade?.split(" ")[0]] ?? "var(--muted)"}">
+    const best = p.best;
+    const rows = h.s.map(([grade, top], i) => `<div class="style-row${STYLE_KEYS[i] === best ? " best" : ""}" style="--tier:${TIER_COLOR[grade?.split(" ")[0]] ?? "var(--muted)"}">
       <b>${STYLE_FR[STYLE_KEYS[i]]}</b>
       <div class="mode-track"><i style="width:${top == null ? 0 : 100 - top}%"></i></div>
       <span class="level">${tierTag(grade)}${top == null ? "" : `<span>top ${int(top)}&nbsp;%</span>`}</span>
-    </div>`).join("")}`;
+    </div>`).join("");
+    $("elo-styles").innerHTML = `<p class="label">Profil de jeu, pour le fun <img class="ts-mark" src="teamstats.png" alt="d'après TeamStats" title="D'après TeamStats" width="16" height="16"></p><p class="note styles-note">D'après TeamStats : chaque partie de son jeu comparée à tous les joueurs qu'ils suivent. Ce n'est pas un classement.</p>
+      <div class="styles-grid"><div class="radar">${radar(h.s.map(([, top]) => (top == null ? 0 : 100 - top)))}</div><div>${rows}</div></div>`;
   }
 }
 
@@ -1686,24 +1811,55 @@ function renderPlayer(slug) {
   fillElo(slug);
 }
 
-/* Page Membres : l'ELO du clan, Team ELO et FFA classé, dix par dix */
+/* Page Membres : la cote en équipe et le FFA classé du clan, dix par dix */
 {
-  if (ELO_TEAM.length || ELO_FFA.length) {
+  if (COTE_RANKED.length || ELO_FFA.length) {
     const LIMIT = 10;
     let all = false;
-    const item = ([slug], i, value, tier) => `<li><span class="pos">${int(i + 1)}</span><a href="#joueur-${slug}">${esc(shortName(BY_SLUG.get(slug).name))}</a>${tierTag(tier)}<b>${int(value)}</b></li>`;
+    const name = (slug) => esc(shortName(BY_SLUG.get(slug).name));
+    const coteItem = ([slug, [value, , , rank]], i) => `<li><span class="pos">${int(i + 1)}</span><span class="who"><a href="#joueur-${slug}">${name(slug)}</a><small>${ord(rank)} mondial</small></span>${tierTag(coteTier(value))}<b>${int(value)}</b></li>`;
+    const ffaItem = ([slug, p], i) => `<li><span class="pos">${int(i + 1)}</span><a href="#joueur-${slug}">${name(slug)}</a>${tierTag(p.f[1])}<b>${int(p.f[0])}</b></li>`;
     const draw = () => {
-      $("board-team").innerHTML = (all ? ELO_TEAM : ELO_TEAM.slice(0, LIMIT)).map((e, i) => item(e, i, e[1].t[0], e[1].t[3])).join("");
-      $("board-ffa").innerHTML = (all ? ELO_FFA : ELO_FFA.slice(0, LIMIT)).map((e, i) => item(e, i, e[1].f[0], e[1].f[1])).join("");
-      const most = Math.max(ELO_TEAM.length, ELO_FFA.length);
+      $("board-cote").innerHTML = (all ? COTE_RANKED : COTE_RANKED.slice(0, LIMIT)).map(coteItem).join("");
+      $("board-ffa").innerHTML = (all ? ELO_FFA : ELO_FFA.slice(0, LIMIT)).map(ffaItem).join("");
+      const most = Math.max(COTE_RANKED.length, ELO_FFA.length);
       $("elo-more").hidden = most <= LIMIT;
       $("elo-more").textContent = all ? "Voir moins" : `Voir les ${int(most)} joueurs`;
     };
     $("elo-more").addEventListener("click", () => { all = !all; draw(); });
     draw();
-    $("elo-intro").innerHTML = `<strong>${int(ELO_TEAM.length)} membres</strong> classés en Team ELO${ELO.season ? ` sur la ${esc(ELO.season)}` : ""}, et <strong>${int(ELO_FFA.length)}</strong> en FFA classé, d'après TeamStats. Clique sur un pseudo pour voir sa courbe et son style de jeu.`;
-    $("elo-note").textContent = `La Team ELO compte les parties en équipe de clan${ELO.since ? ` depuis le ${eloDay(ELO.since)}` : ""}, et devient officielle à partir de 5 parties. Le FFA classé est la note des parties classées d'OpenFront. Seuls les membres qui ont une fiche publique apparaissent.`;
+    $("board-cote-box").hidden = !COTE_RANKED.length;
+    $("board-ffa-box").hidden = !ELO_FFA.length;
+    $("elo-intro").innerHTML = COTE
+      ? `L'ELO FR, créé par le clan, classe tous les joueurs des parties publiques par équipes, d'après <strong>avec qui</strong> et <strong>contre qui</strong> ils gagnent. Depuis le ${eloDay(COTE.since)}, <strong>${int(COTE.ranked)} joueurs</strong> sont classés dans le monde, dont <strong>${int(COTE_RANKED.length)} membres</strong> avec une fiche publique. Clique sur le (i) pour voir comment il se calcule, et sur un pseudo pour voir sa courbe.`
+      : `<strong>${int(ELO_FFA.length)} membres</strong> classés en FFA classé. Clique sur un pseudo pour voir sa courbe.`;
+    if (COTE) {
+      $("board-cote-label").innerHTML = eloName();
+      $("go-world").hidden = !COTE.top?.length;
+    }
+    $("elo-note").textContent = `${COTE ? `ELO FR relevé jusqu'au ${eloDay(COTE.until)}. ` : ""}${ELO_FFA.length ? "Le FFA classé est la note des parties classées d'OpenFront, relevée par TeamStats. " : ""}Seuls les membres qui ont une fiche publique apparaissent.`;
     $("elo").hidden = false;
+  }
+}
+
+/* Page du top 100 mondial de la cote */
+{
+  if (COTE?.top?.length) {
+    $("monde-intro").innerHTML = `Les 100 meilleurs joueurs des parties publiques par équipes depuis le ${eloDay(COTE.since)}, tous clans confondus, sur ${int(COTE.ranked)} joueurs classés. Les membres [FR] sont en surbrillance.`;
+    $("monde-tiers").innerHTML = tierLegend();
+    $("monde-kicker").innerHTML = eloName();
+    $("monde-list").innerHTML = COTE.top.map(([name, clan, value, games, wins, slug], i) => {
+      const who = name ? (slug ? `<a href="#joueur-${slug}">${esc(shortName(name))}</a>` : esc(name)) : `<span class="hidden-name">${clan === "FR" ? "Membre anonyme" : "Joueur masqué"}</span>`;
+      return `<tr${clan === "FR" ? ' class="us"' : ""}>
+        <td class="rank">${int(i + 1)}</td>
+        <td class="left who">${who}${clan ? `<span class="tag">[${esc(clan)}]</span>` : ""}</td>
+        <td class="left opt">${tierTag(coteTier(value))}</td>
+        <td class="pts">${int(value)}</td>
+        <td class="opt dim">${int(games)}</td>
+        <td class="opt dim">${games ? `${Math.round((100 * wins) / games)}&nbsp;%` : "–"}</td>
+      </tr>`;
+    }).join("");
+    $("monde-note").textContent = `ELO FR relevé jusqu'au ${eloDay(COTE.until)}. Les pseudos sont ceux qu'OpenFront publie ; un joueur qui s'est masqué de la recherche d'OpenFront apparaît comme « Joueur masqué », et un membre [FR] sans fiche publique reste anonyme. Le clan est le tag porté dans la dernière partie.`;
   }
 }
 
@@ -2090,7 +2246,7 @@ $("source").textContent = `Données : API publique d'OpenFront, mises à jour le
 
 /* Pages */
 {
-  const PAGES = { accueil: "FR - OpenFront", classement: "Classement · FR - OpenFront", membres: "Membres · FR - OpenFront", jouer: "Créneaux · FR - OpenFront", debuter: "Guide · FR - OpenFront", mentions: "Mentions légales · FR - OpenFront" };
+  const PAGES = { accueil: "FR - OpenFront", classement: "Classement · FR - OpenFront", membres: "Membres · FR - OpenFront", jouer: "Créneaux · FR - OpenFront", debuter: "Guide · FR - OpenFront", mentions: "Mentions légales · FR - OpenFront", monde: "Top mondial · FR - OpenFront" };
   const menu = $("menu");
   const panel = $("nav-links");
   const links = [...panel.querySelectorAll("a")];
@@ -2104,7 +2260,7 @@ $("source").textContent = `Données : API publique d'OpenFront, mises à jour le
     [...Object.keys(PAGES), "joueur"].forEach((p) => { $(`view-${p}`).hidden = p !== view; });
     $("rejoindre").classList.toggle("compact", view !== "accueil" && view !== "debuter");
     links.forEach((a) => {
-      if (a.getAttribute("href") === `#${player ? "membres" : id}`) a.setAttribute("aria-current", "true");
+      if (a.getAttribute("href") === `#${player || id === "monde" ? "membres" : id}`) a.setAttribute("aria-current", "true");
       else a.removeAttribute("aria-current");
     });
     document.title = player ? `${BY_SLUG.get(id.slice(7)).name} · FR - OpenFront` : PAGES[id];

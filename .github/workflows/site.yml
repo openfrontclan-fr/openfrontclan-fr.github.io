@@ -30,8 +30,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # Les fiches (complète) et le rattrapage des speedruns (premier relevé) prennent chacun jusqu'à 25 minutes.
-    timeout-minutes: 75
+    # Les fiches (complète), le rattrapage des speedruns et celui des parties par équipes prennent chacun jusqu'à 20 ou
+    # 25 minutes, l'ELO jusqu'à 10.
+    timeout-minutes: 100
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -119,6 +120,30 @@ jobs:
         with:
           path: data/elo.json
           key: elo-${{ github.run_id }}
+      # La cote en équipe : toutes les parties publiques par équipes, un fichier par jour fini, gardé dans le cache (il
+      # contient les identifiants de tous les joueurs). Le premier relevé remonte au 1er novembre en quelques mises à jour ;
+      # tant qu'il n'est pas à jour, le site n'affiche pas la cote. La cote se recalcule ensuite en quelques secondes.
+      - name: Dernières parties par équipes relevées
+        uses: actions/cache/restore@v4
+        with:
+          path: data/parties
+          key: parties-${{ github.run_id }}
+          restore-keys: parties-
+      - name: Parties par équipes
+        id: parties
+        continue-on-error: true
+        env:
+          COTE_MINUTES: 20
+        run: node scripts/fetch-team-games.mjs
+      - name: Garder les parties par équipes
+        if: steps.parties.outcome == 'success'
+        uses: actions/cache/save@v4
+        with:
+          path: data/parties
+          key: parties-${{ github.run_id }}
+      - name: Cote en équipe
+        continue-on-error: true
+        run: node scripts/cote.mjs
       - name: Construction du site
         run: |
           node scripts/build.mjs
