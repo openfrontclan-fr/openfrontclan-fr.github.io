@@ -266,8 +266,8 @@ for (const m of members) {
     ? t.style.map((s) => [tierOf(s?.[0]), Number.isFinite(s?.[1]) ? Math.min(100, Math.max(0, Math.round(s[1]))) : null])
     : null;
   if (!f && !style && !c) continue;
-  // [cote, parties, victoires, rang mondial ou null avant MIN_GAMES parties]
-  if (c && Number.isFinite(c.cote)) cotePlayers[slug(m)] = [num(c.cote), count(c.games), count(c.wins), num(c.rank)];
+  // [cote, parties, victoires, rang mondial ou null avant MIN_GAMES parties, gain ou perte à la dernière mise à jour]
+  if (c && Number.isFinite(c.cote)) cotePlayers[slug(m)] = [num(c.cote), count(c.games), count(c.wins), num(c.rank), num(c.change) ?? 0];
   // f : [note, palier, rang mondial, pic, victoires, défaites] ; best : la partie du style de jeu où il est le plus fort.
   if (f || style) {
     eloPlayers[slug(m)] = {
@@ -285,14 +285,15 @@ const elo = Object.keys(eloPlayers).length
       players: eloPlayers,
     }
   : null;
-// Le top mondial de la cote, pour sa page : [pseudo ou null, clan, cote, parties, victoires, fiche ou null]. Un membre du
+// Le top mondial de la cote, pour sa page : [pseudo ou null, clan, cote, parties, victoires, fiche ou null, gain ou perte à
+// la dernière mise à jour]. Un membre du
 // clan y garde son pseudo public et sa fiche ; un membre anonyme ou masqué y reste anonyme, comme partout sur le site. Les
 // autres joueurs gardent le pseudo qu'OpenFront publie, sauf s'ils se sont masqués de sa recherche.
 const coteTop = (Array.isArray(coteStore?.top) ? coteStore.top : []).slice(0, 100).map((t) => {
   const m = byId.get(t?.id);
   const open = m && m.username && !profileOf(m).hidden;
   const name = m ? (open ? m.username : null) : text(t?.name, 40) || null;
-  return [name, m && !open ? "FR" : text(t?.clan, 8), num(t?.cote), count(t?.games), count(t?.wins), open ? slug(m) : null];
+  return [name, m && !open ? "FR" : text(t?.clan, 8), num(t?.cote), count(t?.games), count(t?.wins), open ? slug(m) : null, num(t?.change) ?? 0];
 }).filter((t) => t[2] !== null);
 // Les paliers de l'ELO FR, calés sur sa répartition (environ 1 % de Grands maîtres, 3 % de Maîtres, 7 % de Diamants…).
 // Les mêmes pour la page et pour le bot du Discord (elo-fr.json).
@@ -324,8 +325,9 @@ const eloForBot = cote
         ranked: cote.ranked,
         minGames: cote.minGames,
         tiers: COTE_TIERS.map(([t, min]) => ({ name: TIER_NAMES[t], min })),
-        players: Object.fromEntries(Object.entries(cotePlayers).map(([s, [elo, games, wins, rank]]) => [s, {
+        players: Object.fromEntries(Object.entries(cotePlayers).map(([s, [elo, games, wins, rank, change]]) => [s, {
           elo,
+          change,
           tier: rank ? TIER_NAMES[tierOf(elo)] : null,
           worldRank: rank,
           clanRank: rank ? order.indexOf(s) + 1 : null,

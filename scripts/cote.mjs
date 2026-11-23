@@ -106,16 +106,21 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   const ratings = new Map();
   const curves = new Map();
   const lastClan = new Map();
+  // La cote de chacun au début du dernier jour où il a joué : [jour, cote], pour ce qu'il a gagné ou perdu ce jour-là.
+  const dayStart = new Map();
   let used = 0;
   let first = null;
   let last = null;
   for await (const game of allGames()) {
     if (!counts(game)) continue;
+    const day = Math.floor(game[0] / 86_400_000);
+    for (const [id, , , on] of [...game[6], ...game[7]]) {
+      if (on === 1 && dayStart.get(id)?.[0] !== day) dayStart.set(id, [day, ratings.has(id) ? cote(ratings.get(id)) : cote([MU, SIGMA])]);
+    }
     rate(ratings, game);
     used += 1;
     first ??= game[0];
     last = game[0];
-    const day = Math.floor(game[0] / 86_400_000);
     for (const [id, clan, , on] of [...game[6], ...game[7]]) {
       if (on !== 1) continue;
       lastClan.set(id, clan);
@@ -127,6 +132,9 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   // Le rang mondial parmi les joueurs classés (MIN_GAMES parties ou plus).
   const ranked = [...ratings].filter(([, r]) => r[2] >= MIN_GAMES).sort((a, b) => ordinal(b[1]) - ordinal(a[1]));
   const rankOf = new Map(ranked.map(([id], i) => [id, i + 1]));
+  // Ce que chacun a gagné ou perdu au dernier jour relevé, celui que la dernière mise à jour a ajouté (0 s'il n'a pas joué).
+  const lastDay = last === null ? null : Math.floor(last / 86_400_000);
+  const change = (id) => (dayStart.get(id)?.[0] === lastDay ? cote(ratings.get(id)) - dayStart.get(id)[1] : 0);
   const players = {};
   for (const id of inClan) {
     const r = ratings.get(id);
@@ -136,6 +144,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
       games: r[2],
       wins: r[3],
       rank: rankOf.get(id) ?? null,
+      change: change(id),
       // [jour depuis 1970, cote à la fin du jour]
       curve: [...(curves.get(id) ?? [])],
     };
@@ -156,7 +165,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
         // Le pseudo manquera jusqu'à la prochaine mise à jour.
       }
     }
-    top.push({ id, name: names[id]?.name ?? null, clan: lastClan.get(id) ?? "", cote: cote(r), games: r[2], wins: r[3] });
+    top.push({ id, name: names[id]?.name ?? null, clan: lastClan.get(id) ?? "", cote: cote(r), change: change(id), games: r[2], wins: r[3] });
   }
   await writeFile(NAMES, JSON.stringify(Object.fromEntries(Object.entries(names).filter(([, n]) => Date.now() - Date.parse(n.at) < 30 * 86_400_000))));
   await writeFile(OUT, JSON.stringify({ from: first, until: last, games: used, rated: ratings.size, ranked: ranked.length, minGames: MIN_GAMES, players, top }));
