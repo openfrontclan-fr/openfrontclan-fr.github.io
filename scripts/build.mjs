@@ -239,6 +239,44 @@ const speedruns = runs && runs.records && isoDate(runs.cursor)
     }
   : null;
 
+// ELO des membres sur TeamStats (scripts/fetch-elo.mjs), comme la carrière : seulement les fiches publiques. Il vient de
+// l'extérieur : chaque champ est vérifié. La page reçoit le résumé de chaque joueur ; ses courbes et son style de jeu
+// partent dans elo.json, que la fiche ne charge qu'à l'ouverture.
+const eloStore = JSON.parse(await readFile("data/elo.json", "utf8").catch(() => "null"));
+const TIERS = ["Grandmaster", "Master", "Diamond", "Platinum", "Gold", "Silver", "Bronze", "Iron"];
+const tierOf = (v) => (typeof v === "string" && /^[A-Za-z]+( I{1,3})?$/.test(v) && TIERS.includes(v.split(" ")[0]) ? v : null);
+const STYLES = ["attack", "territory", "support", "economy", "destruction", "building"];
+const num = (v) => (Number.isFinite(v) ? Math.round(v) : null);
+const rows = (list, width) => (Array.isArray(list) ? list : []).filter((r) => Array.isArray(r) && r.length === width && r.every(Number.isFinite));
+const eloPlayers = {};
+const eloFile = {};
+for (const m of members) {
+  const e = eloStore?.players?.[m.publicId];
+  if (!e || !m.username || profileOf(m).hidden) continue;
+  const t = e.team && Number.isFinite(e.team.elo) ? e.team : null;
+  const f = e.ffa && Number.isFinite(e.ffa.rating) ? e.ffa : null;
+  if (!t && !f) continue;
+  // t : [Team ELO, officielle (1/0), rang mondial, palier, parties, style principal] ; f : [note, palier, rang mondial, pic, victoires, défaites].
+  eloPlayers[slug(m)] = {
+    t: t ? [num(t.elo), t.rated ? 1 : 0, num(t.rank), tierOf(t.tier), count(t.games), STYLES.includes(t.best) ? t.best : null] : null,
+    f: f ? [num(f.rating), tierOf(f.tier), num(f.rank), num(f.peak), count(f.wins), count(f.losses)] : null,
+  };
+  // s : [palier, % des meilleurs] pour chaque partie du style ; t : [minute, ELO, victoire, officielle] ; f : [minute, note].
+  const style = Array.isArray(t?.style) && t.style.length === STYLES.length
+    ? t.style.map((s) => [tierOf(s?.[0]), Number.isFinite(s?.[1]) ? Math.min(100, Math.max(0, Math.round(s[1]))) : null])
+    : null;
+  eloFile[slug(m)] = { s: style, t: rows(e.hist?.team, 4), f: rows(e.hist?.ffa, 2) };
+}
+const elo = Object.keys(eloPlayers).length
+  ? {
+      season: text(eloStore.team?.season, 30).replace(/^season\b/i, "saison") || null,
+      since: isoDate(eloStore.team?.since),
+      ffaSeason: Number.isFinite(eloStore.ffa?.season?.number) ? eloStore.ffa.season.number : null,
+      ffaSince: isoDate(eloStore.ffa?.season?.startDate),
+      players: eloPlayers,
+    }
+  : null;
+
 // Place du clan jour par jour : l'historique du dépôt, plus le point du jour, que le workflow n'y ajoute qu'après la construction.
 const history = JSON.parse(await readFile("data/history.json", "utf8").catch(() => "[]"));
 const todayPoint = { date: snap.fetchedAt.slice(0, 10), rank: snap.leaderboard.clans.findIndex((c) => c.clanTag === snap.tag) + 1 };
@@ -255,6 +293,7 @@ const data = {
   events,
   places,
   speedruns,
+  elo,
   fetchedAt: snap.fetchedAt,
   period: { start: snap.leaderboard.start, end: snap.leaderboard.end },
   clans: snap.leaderboard.clans.map((c, i) => ({
@@ -288,6 +327,8 @@ await copyFile("assets/partners/teamstats.png", `${out}/teamstats.png`);
 // Vignettes des cartes des speedruns, chargées seulement quand leur ligne s'affiche.
 await mkdir(`${out}/maps`, { recursive: true });
 for (const file of Object.values(thumbs)) await copyFile(`data/maps/${file}`, `${out}/maps/${file}`);
+// Courbes d'ELO et style de jeu des fiches publiques, chargés à l'ouverture d'une fiche.
+await writeFile(`${out}/elo.json`, JSON.stringify(eloFile));
 // Image d'aperçu des liens partagés (Discord, réseaux) ; sa source est assets/og-card.html.
 await copyFile("assets/og-card.png", `${out}/og.png`);
 // Carte du monde en points derrière l'accueil, tirée de la carte « World » d'OpenFront (scripts/world-map.mjs).

@@ -74,6 +74,18 @@ Chaque record montre la vignette de sa carte, tirée des ressources d'OpenFront 
 
 `data/speedruns.json` garde les identifiants OpenFront des joueurs : il reste dans le cache d'Actions, pas dans le dépôt, et le site n'en publie que les pseudos publics de l'effectif. Si le relevé échoue, le site se construit avec le précédent.
 
+## ELO des membres
+
+`scripts/fetch-elo.mjs` lit l'ELO des membres sur [TeamStats](https://teamstats.pro/), site partenaire, dans ses flux publics (120 requêtes par minute au plus ; le relevé en fait au plus 100) :
+
+- `feed/team-elo.json?clan=FR` : la Team ELO de chaque joueur qui porte le tag, avec son rang mondial, son palier, ses parties et son style de jeu ;
+- `feed/ffa-elo.json?clan=FR` : la note du FFA classé d'OpenFront ;
+- `feed/player/<publicId>.json` : l'historique des deux notes, pour les courbes.
+
+Les deux listes sont lues à chaque mise à jour. La fiche d'un joueur n'est relue que s'il a joué depuis la précédente : la première fois, environ 650 fiches en 7 minutes, ensuite quelques dizaines. Le relevé s'arrête au bout de 10 minutes (`ELO_MINUTES`) et reprend à la mise à jour suivante. `data/elo.json` garde les identifiants OpenFront : il reste dans le cache d'Actions, pas dans le dépôt. Si le relevé échoue, le site se construit avec le précédent.
+
+Le site ne publie l'ELO que des membres actuels qui ont une fiche publique, comme leur carrière. La page Membres affiche les classements du clan en Team ELO officielle (5 parties et plus) et en FFA classé. Chaque fiche affiche les deux notes, leurs courbes et le style de jeu ; les courbes sont dans `elo.json`, que la fiche ne charge qu'à son ouverture.
+
 ## Vie privée
 
 Les données brutes ne sont pas conservées dans ce dépôt. Le site ne publie ni pseudo ni identifiant pour les membres sans pseudo public. Pour les profils marqués comme masqués, il ne publie ni l'identifiant ni la carrière.

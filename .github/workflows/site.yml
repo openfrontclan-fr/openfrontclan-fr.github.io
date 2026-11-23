@@ -101,6 +101,24 @@ jobs:
             data/speedruns.json
             data/maps
           key: speedruns-${{ github.run_id }}
+      # L'ELO des membres sur TeamStats : seules les fiches des joueurs qui ont joué depuis la dernière fois sont relues.
+      # Il garde les identifiants des joueurs, donc il reste dans le cache. Une panne ne bloque pas le site.
+      - name: Dernier relevé de l'ELO
+        uses: actions/cache/restore@v4
+        with:
+          path: data/elo.json
+          key: elo-${{ github.run_id }}
+          restore-keys: elo-
+      - name: ELO des membres sur TeamStats
+        id: elo
+        continue-on-error: true
+        run: node scripts/fetch-elo.mjs
+      - name: Garder le relevé de l'ELO
+        if: steps.elo.outcome == 'success'
+        uses: actions/cache/save@v4
+        with:
+          path: data/elo.json
+          key: elo-${{ github.run_id }}
       - name: Construction du site
         run: |
           node scripts/build.mjs
