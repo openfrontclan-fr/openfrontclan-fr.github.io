@@ -22,7 +22,7 @@ import { pathToFileURL } from "node:url";
 
 const DIR = "data/parties";
 // Le relevé le plus ancien possible ; le même que dans scripts/fetch-team-games.mjs.
-const FROM = process.env.COTE_FROM ?? "2026-10-01";
+const FROM = process.env.COTE_FROM ?? "2026-09-01";
 const DAY_MS = 86_400_000;
 const OUT = "data/cote.json";
 // Les pseudos du top mondial, gardés avec les parties dans le cache d'Actions.

@@ -15,8 +15,8 @@ import { gzipSync } from "node:zlib";
 
 const API = "https://api.openfront.io/public";
 const DIR = "data/parties";
-// Début du relevé : le 1er octobre 2026 (le relevé a commencé au 1er novembre, puis a été remonté d'un mois).
-const FROM = process.env.COTE_FROM ?? "2026-10-01";
+// Début du relevé : le 1er septembre 2026 (le relevé a commencé au 1er novembre, puis a été remonté de deux mois).
+const FROM = process.env.COTE_FROM ?? "2026-09-01";
 const BUDGET_MS = Number(process.env.COTE_MINUTES ?? 25) * 60_000;
 // Une partie finie depuis peu n'est pas toujours archivée : un jour n'est relevé que 3 heures après sa fin.
 const SETTLE_MS = 3 * 3_600_000;

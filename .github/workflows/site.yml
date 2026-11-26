@@ -125,7 +125,7 @@ jobs:
           path: data/elo.json
           key: elo-${{ github.run_id }}
       # La cote en équipe : toutes les parties publiques par équipes, un fichier par jour fini, gardé dans le cache (il
-      # contient les identifiants de tous les joueurs). Le relevé remonte au 1er octobre, du plus récent au plus ancien, en
+      # contient les identifiants de tous les joueurs). Le relevé remonte au 1er septembre, du plus récent au plus ancien, en
       # quelques mises à jour ; la cote n'utilise un mois que quand il est complet. Elle se recalcule en quelques secondes.
       - name: Dernières parties par équipes relevées
         uses: actions/cache/restore@v4
