@@ -28,8 +28,9 @@ const OUT = "data/cote.json";
 // Les pseudos du top mondial, gardés avec les parties dans le cache d'Actions.
 const NAMES = `${DIR}/noms.json`;
 const TOP = 100;
-// Le minimum de parties pour être classé (20 au début, monté à 40 avec le relevé d'octobre).
-export const MIN_GAMES = 40;
+// Le minimum de parties pour être classé : 20 au début, puis 40, puis 60. Pour un joueur ordinaire, la cote après
+// 40 parties annonce à peine mieux la suite qu'après 20, et nettement mieux après 60. À remonter avec plus de mois.
+export const MIN_GAMES = 60;
 const MU = 25;
 const SIGMA = MU / 3;
 const BETA_SQ = (SIGMA / 2) ** 2;
