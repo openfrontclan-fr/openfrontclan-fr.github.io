@@ -382,5 +382,21 @@
    "tag": "NU",
    "score": 1137.97
   }
+ },
+ {
+  "date": "2026-11-26",
+  "rank": 6,
+  "score": 1377.25,
+  "games": 41980,
+  "wins": 10109,
+  "members": 4956,
+  "above": {
+   "tag": "EU",
+   "score": 1635.63
+  },
+  "below": {
+   "tag": "NU",
+   "score": 1139.26
+  }
  }
 ]
