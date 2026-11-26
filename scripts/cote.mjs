@@ -190,5 +190,9 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   }
   await writeFile(NAMES, JSON.stringify(Object.fromEntries(Object.entries(names).filter(([, n]) => Date.now() - Date.parse(n.at) < 30 * 86_400_000))));
   await writeFile(OUT, JSON.stringify({ from: first, until: last, games: used, rated: ratings.size, ranked: ranked.length, minGames: MIN_GAMES, players, top }));
+  // La répartition des classés, pour caler les paliers (scripts/build.mjs) : l'ELO à partir duquel on est dans les 1 %,
+  // 4 %, 11 %… meilleurs, les parts visées au départ (environ 1 % de Grands maîtres, 3 % de Maîtres, 7 % de Diamants…).
+  const at = (share) => cote(ranked[Math.max(0, Math.ceil(share * ranked.length) - 1)][1]);
+  if (ranked.length) console.log(`répartition des classés : ${[1, 4, 11, 23, 54, 75, 90].map((p) => `${p} % à ${at(p / 100)}+`).join(", ")}`);
   console.log(`cote depuis le ${start} : ${used} parties, ${ratings.size} joueurs, ${ranked.length} classés (${MIN_GAMES} parties et plus), ${Object.keys(players).length} membres, top ${top.length} (${looked} pseudos lus)`);
 }
