@@ -386,17 +386,17 @@
  {
   "date": "2026-11-26",
   "rank": 6,
-  "score": 1370.67,
-  "games": 42085,
-  "wins": 10137,
-  "members": 4963,
+  "score": 1373.11,
+  "games": 42128,
+  "wins": 10149,
+  "members": 4967,
   "above": {
    "tag": "EU",
-   "score": 1620.18
+   "score": 1625.67
   },
   "below": {
    "tag": "NU",
-   "score": 1136.58
+   "score": 1138.49
   }
  }
 ]
