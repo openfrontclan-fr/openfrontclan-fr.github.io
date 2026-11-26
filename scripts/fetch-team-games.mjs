@@ -6,15 +6,17 @@
 // L'API ne dit pas dans quelle équipe était chaque perdant (le serveur les répartit en tenant compte des amis de chacun,
 // qui ne sont pas publics). On garde donc les gagnants à part, et les perdants ensemble.
 //
-// Un fichier par jour (UTC), data/parties/AAAA-MM-JJ.json.gz, écrit une fois le jour fini. Les fichiers gardent les
+// Un fichier par jour (UTC), data/parties/AAAA-MM-JJ.json.gz, écrit une fois le jour fini. Les jours manquants se relèvent
+// du plus récent au plus ancien : le jour qui vient de finir passe d'abord, puis le relevé remonte le passé avec le temps
+// qui reste. scripts/cote.mjs n'utilise un mois que quand tous ses jours sont là. Les fichiers gardent les
 // identifiants OpenFront de tous les joueurs : ils restent dans le cache d'Actions, pas dans le dépôt.
 import { readFile, writeFile, mkdir, readdir } from "node:fs/promises";
 import { gzipSync } from "node:zlib";
 
 const API = "https://api.openfront.io/public";
 const DIR = "data/parties";
-// Début du relevé : le 1er novembre 2026, début de la saison 2 de TeamStats.
-const FROM = process.env.COTE_FROM ?? "2026-11-01";
+// Début du relevé : le 1er octobre 2026 (le relevé a commencé au 1er novembre, puis a été remonté d'un mois).
+const FROM = process.env.COTE_FROM ?? "2026-10-01";
 const BUDGET_MS = Number(process.env.COTE_MINUTES ?? 25) * 60_000;
 // Une partie finie depuis peu n'est pas toujours archivée : un jour n'est relevé que 3 heures après sa fin.
 const SETTLE_MS = 3 * 3_600_000;
@@ -95,9 +97,12 @@ const done = new Set((await readdir(DIR)).filter((f) => f.endsWith(".json.gz")).
 const started = Date.now();
 let days = 0;
 let opened = 0;
+const todo = [];
 for (let day = new Date(`${FROM}T00:00:00.000Z`); day.getTime() + DAY_MS < Date.now() - SETTLE_MS; day = new Date(day.getTime() + DAY_MS)) {
+  if (!done.has(day.toISOString().slice(0, 10))) todo.push(day);
+}
+for (const day of todo.reverse()) {
   const key = day.toISOString().slice(0, 10);
-  if (done.has(key)) continue;
   if (Date.now() - started > BUDGET_MS) break;
   const ids = [...new Set((await gamesOfDay(day)).filter((g) => g.playerTeams !== "Humans Vs Nations").map((g) => g.game))];
   const games = [];

@@ -13,16 +13,23 @@
 //
 // Comptent : les parties publiques par équipes, ni spéciales (modificateurs) ni Humains contre Nations, d'au moins
 // 2 minutes, à 10 joueurs par équipe au plus. Le classement montre la cote prudente, mu - 3 sigma, après MIN_GAMES parties.
+//
+// Le calcul part du 1er du mois le plus ancien dont tous les jours sont relevés jusqu'au dernier : pendant que le relevé
+// remonte un mois, le site garde la cote du mois d'après.
 import { readFile, writeFile, readdir } from "node:fs/promises";
 import { gunzipSync } from "node:zlib";
 import { pathToFileURL } from "node:url";
 
 const DIR = "data/parties";
+// Le relevé le plus ancien possible ; le même que dans scripts/fetch-team-games.mjs.
+const FROM = process.env.COTE_FROM ?? "2026-10-01";
+const DAY_MS = 86_400_000;
 const OUT = "data/cote.json";
 // Les pseudos du top mondial, gardés avec les parties dans le cache d'Actions.
 const NAMES = `${DIR}/noms.json`;
 const TOP = 100;
-export const MIN_GAMES = 20;
+// Le minimum de parties pour être classé (20 au début, monté à 40 avec le relevé d'octobre).
+export const MIN_GAMES = 40;
 const MU = 25;
 const SIGMA = MU / 3;
 const BETA_SQ = (SIGMA / 2) ** 2;
@@ -93,10 +100,23 @@ export const ordinal = ([mu, sigma]) => mu - 3 * sigma;
 export const cote = (r) => Math.round(1000 + 10 * ordinal(r));
 
 // Toutes les parties relevées, dans l'ordre.
-export async function* allGames(dir = DIR) {
-  for (const file of (await readdir(dir).catch(() => [])).filter((f) => f.endsWith(".json.gz")).sort()) {
+export async function* allGames(dir = DIR, from = "") {
+  for (const file of (await readdir(dir).catch(() => [])).filter((f) => f.endsWith(".json.gz") && f.slice(0, 10) >= from).sort()) {
     yield* JSON.parse(gunzipSync(await readFile(`${dir}/${file}`))).games;
   }
+}
+
+// Le premier jour du calcul : le 1er du mois le plus ancien à partir duquel tous les jours sont relevés jusqu'au dernier.
+export async function startDay(dir = DIR) {
+  const days = new Set((await readdir(dir).catch(() => [])).filter((f) => f.endsWith(".json.gz")).map((f) => f.slice(0, 10)).filter((d) => d >= FROM));
+  if (!days.size) return null;
+  const iso = (ms) => new Date(ms).toISOString().slice(0, 10);
+  let first = [...days].sort().at(-1);
+  while (days.has(iso(Date.parse(first) - DAY_MS))) first = iso(Date.parse(first) - DAY_MS);
+  if (first.endsWith("-01")) return first;
+  const month = new Date(Date.parse(first));
+  const next = iso(Date.UTC(month.getUTCFullYear(), month.getUTCMonth() + 1, 1));
+  return days.has(next) ? next : first;
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
@@ -111,7 +131,8 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   let used = 0;
   let first = null;
   let last = null;
-  for await (const game of allGames()) {
+  const start = await startDay();
+  for await (const game of allGames(DIR, start ?? "")) {
     if (!counts(game)) continue;
     const day = Math.floor(game[0] / 86_400_000);
     for (const [id, , , on] of [...game[6], ...game[7]]) {
@@ -169,5 +190,5 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   }
   await writeFile(NAMES, JSON.stringify(Object.fromEntries(Object.entries(names).filter(([, n]) => Date.now() - Date.parse(n.at) < 30 * 86_400_000))));
   await writeFile(OUT, JSON.stringify({ from: first, until: last, games: used, rated: ratings.size, ranked: ranked.length, minGames: MIN_GAMES, players, top }));
-  console.log(`cote : ${used} parties, ${ratings.size} joueurs, ${ranked.length} classés (${MIN_GAMES} parties et plus), ${Object.keys(players).length} membres, top ${top.length} (${looked} pseudos lus)`);
+  console.log(`cote depuis le ${start} : ${used} parties, ${ratings.size} joueurs, ${ranked.length} classés (${MIN_GAMES} parties et plus), ${Object.keys(players).length} membres, top ${top.length} (${looked} pseudos lus)`);
 }
