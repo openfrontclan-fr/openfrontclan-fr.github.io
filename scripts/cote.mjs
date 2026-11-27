@@ -16,7 +16,7 @@
 //
 // Le calcul part du 1er du mois le plus ancien dont tous les jours sont relevés jusqu'au dernier : pendant que le relevé
 // remonte un mois, le site garde la cote du mois d'après.
-import { readFile, writeFile, readdir } from "node:fs/promises";
+import { readFile, writeFile, readdir, mkdir } from "node:fs/promises";
 import { gunzipSync } from "node:zlib";
 import { pathToFileURL } from "node:url";
 
@@ -25,8 +25,15 @@ const DIR = "data/parties";
 const FROM = process.env.COTE_FROM ?? "2026-09-01";
 const DAY_MS = 86_400_000;
 const OUT = "data/cote.json";
-// Les pseudos du top mondial, gardés avec les parties dans le cache d'Actions.
-const NAMES = `${DIR}/noms.json`;
+// Les pseudos des joueurs classés, gardés dans leur propre cache d'Actions (sauvé après ce calcul, voir site.yml). Avant le
+// 27 novembre 2026, ils étaient rangés avec les parties, dont le cache est sauvé avant ce calcul : ils se perdaient.
+const NAMES_DIR = "data/noms";
+const NAMES = `${NAMES_DIR}/noms.json`;
+const OLD_NAMES = `${DIR}/noms.json`;
+// Le temps de lecture des pseudos à chaque mise à jour, et la pause entre deux lectures, pour ménager l'API d'OpenFront.
+const NAME_MS = Number(process.env.COTE_NAME_MINUTES ?? 12) * 60_000;
+const NAME_PAUSE_MS = 200;
+const NAME_WORKERS = 4;
 const TOP = 100;
 // Le minimum de parties pour être classé : 20 au début, puis 40, puis 60. Pour un joueur ordinaire, la cote après
 // 40 parties annonce à peine mieux la suite qu'après 20, et nettement mieux après 60. À remonter avec plus de mois.
@@ -168,9 +175,49 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
       curve.set(day, cote(ratings.get(id)));
     }
   }
-  // Le rang mondial parmi les joueurs classés (MIN_GAMES parties ou plus).
+  // Tous les joueurs qui ont MIN_GAMES parties ou plus, du meilleur au moins bon : ils servent aux paliers (répartition).
   const ranked = [...ratings].filter(([, r]) => r[2] >= MIN_GAMES).sort((a, b) => ordinal(b[1]) - ordinal(a[1]));
-  const rankOf = new Map(ranked.map(([id], i) => [id, i + 1]));
+  // Le classement ne garde que les joueurs qui ont un pseudo public : un joueur masqué de la recherche d'OpenFront
+  // (hidden) ou dont le compte n'a pas de pseudo n'y prend pas de rang. Il reste dans le calcul de la cote : sa force
+  // compte pour ses coéquipiers et ses adversaires. Les pseudos viennent d'OpenFront, lus du meilleur au moins bon pendant
+  // NAME_MINUTES à chaque mise à jour, et relus au bout d'une semaine dans le haut du classement, d'un mois ailleurs. Un
+  // joueur pas encore lu compte comme classé jusqu'à ce qu'il le soit.
+  const names = JSON.parse(await readFile(NAMES, "utf8").catch(() => readFile(OLD_NAMES, "utf8")).catch(() => "{}"));
+  const fresh = (n, i) => n && !(n.name === null && n.hidden === undefined) && Date.now() - Date.parse(n.at) < (i < 3 * TOP ? 7 : 30) * DAY_MS;
+  // NAME_WORKERS lectures à la fois (l'API répond en une seconde environ) ; si OpenFront demande de ralentir (429), les
+  // lectures s'arrêtent jusqu'à la mise à jour suivante.
+  const until = Date.now() + NAME_MS;
+  const queue = ranked.map(([id], i) => [id, i]).filter(([id, i]) => !fresh(names[id], i));
+  let looked = 0;
+  let slowDown = false;
+  const reader = async () => {
+    while (!slowDown && queue.length && Date.now() < until) {
+      const [id] = queue.shift();
+      try {
+        const res = await fetch(`https://api.openfront.io/public/player/${encodeURIComponent(id)}`, { signal: AbortSignal.timeout(15_000) });
+        const at = new Date().toISOString();
+        if (res.status === 429) slowDown = true;
+        else if (res.ok) {
+          const p = await res.json();
+          names[id] = { name: p.searchHidden ? null : typeof p.username === "string" ? p.username : null, hidden: p.searchHidden === true, at };
+          looked += 1;
+        } else if (res.status === 404) {
+          names[id] = { name: null, hidden: false, at };
+          looked += 1;
+        }
+      } catch {
+        // Ce pseudo sera relu à la mise à jour suivante.
+      }
+      await new Promise((r) => setTimeout(r, NAME_PAUSE_MS));
+    }
+  };
+  await Promise.all(Array.from({ length: NAME_WORKERS }, reader));
+  if (slowDown) console.log("pseudos : OpenFront demande de ralentir (429), la lecture reprendra à la mise à jour suivante");
+  await mkdir(NAMES_DIR, { recursive: true });
+  await writeFile(NAMES, JSON.stringify(Object.fromEntries(Object.entries(names).filter(([, n]) => Date.now() - Date.parse(n.at) < 45 * DAY_MS))));
+  const board = ranked.filter(([id]) => names[id]?.name !== null);
+  const unread = board.filter(([id]) => !names[id]).length;
+  const rankOf = new Map(board.map(([id], i) => [id, i + 1]));
   // Ce que chacun a gagné ou perdu au dernier jour relevé, celui que la dernière mise à jour a ajouté (0 s'il n'a pas joué).
   const lastDay = last === null ? null : Math.floor(last / 86_400_000);
   const change = (id) => (dayStart.get(id)?.[0] === lastDay ? cote(ratings.get(id)) - dayStart.get(id)[1] : 0);
@@ -189,31 +236,13 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
       curve: [...(curves.get(id) ?? [])],
     };
   }
-  // Le top mondial, pour sa page : le pseudo de chacun vient d'OpenFront, gardé une semaine dans le cache. Un joueur qui
-  // s'est masqué de la recherche sur OpenFront reste sans pseudo (hidden), comme un compte qui n'a pas de pseudo.
-  const names = JSON.parse(await readFile(NAMES, "utf8").catch(() => "{}"));
-  const top = [];
-  let looked = 0;
-  for (const [id, r] of ranked.slice(0, TOP)) {
-    // Un pseudo manquant relevé avant que le cache ne note pourquoi (hidden) est relu tout de suite.
-    const stale = names[id]?.name === null && names[id]?.hidden === undefined;
-    if (stale || !(Date.now() - Date.parse(names[id]?.at ?? 0) < 7 * 86_400_000)) {
-      try {
-        const res = await fetch(`https://api.openfront.io/public/player/${encodeURIComponent(id)}`, { signal: AbortSignal.timeout(15_000) });
-        const p = res.ok ? await res.json() : null;
-        if (p) names[id] = { name: p.searchHidden ? null : typeof p.username === "string" ? p.username : null, hidden: p.searchHidden === true, at: new Date().toISOString() };
-        looked += 1;
-      } catch {
-        // Le pseudo manquera jusqu'à la prochaine mise à jour.
-      }
-    }
-    top.push({ id, name: names[id]?.name ?? null, hidden: names[id]?.hidden === true, clan: lastClan.get(id) ?? "", cote: cote(r), change: change(id), games: r[2], wins: r[3] });
-  }
-  await writeFile(NAMES, JSON.stringify(Object.fromEntries(Object.entries(names).filter(([, n]) => Date.now() - Date.parse(n.at) < 30 * 86_400_000))));
-  await writeFile(OUT, JSON.stringify({ from: first, until: last, games: used, rated: ratings.size, ranked: ranked.length, minGames: MIN_GAMES, players, top }));
+  // Le top mondial, pour sa page : les 100 premiers du classement, avec leur pseudo d'OpenFront. Un membre du clan y
+  // paraît sous son pseudo ou anonyme selon sa fiche (scripts/build.mjs).
+  const top = board.slice(0, TOP).map(([id, r], i) => ({ id, rank: i + 1, name: names[id]?.name ?? null, clan: lastClan.get(id) ?? "", cote: cote(r), change: change(id), games: r[2], wins: r[3] }));
+  await writeFile(OUT, JSON.stringify({ from: first, until: last, games: used, rated: ratings.size, ranked: board.length, minGames: MIN_GAMES, players, top }));
   // La répartition des classés, pour caler les paliers (scripts/build.mjs) : l'ELO à partir duquel on est dans les 1 %,
   // 4 %, 11 %… meilleurs, les parts visées au départ (environ 1 % de Grands maîtres, 3 % de Maîtres, 7 % de Diamants…).
   const at = (share) => cote(ranked[Math.max(0, Math.ceil(share * ranked.length) - 1)][1]);
   if (ranked.length) console.log(`répartition des classés : ${[1, 4, 11, 23, 54, 75, 90].map((p) => `${p} % à ${at(p / 100)}+`).join(", ")}`);
-  console.log(`cote depuis le ${start} : ${used} parties, ${ratings.size} joueurs, ${ranked.length} classés (${MIN_GAMES} parties et plus), ${Object.keys(players).length} membres, top ${top.length} (${looked} pseudos lus)`);
+  console.log(`cote depuis le ${start} : ${used} parties, ${ratings.size} joueurs, ${ranked.length} avec ${MIN_GAMES} parties et plus, dont ${board.length} classés avec un pseudo public (${unread} pas encore lus ; ${looked} pseudos lus cette fois), ${Object.keys(players).length} membres, top ${top.length}`);
 }

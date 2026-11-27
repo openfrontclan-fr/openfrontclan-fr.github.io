@@ -287,16 +287,18 @@ const elo = Object.keys(eloPlayers).length
     }
   : null;
 // Le top mondial de la cote, pour sa page : [pseudo ou null, clan, cote, parties, victoires, fiche ou null, gain ou perte à
-// la dernière mise à jour, masqué (1 s'il s'est masqué de la recherche d'OpenFront, 0 sinon)]. Un membre du
-// clan y garde son pseudo public et sa fiche ; un membre anonyme ou masqué y reste anonyme, comme partout sur le site. Les
-// autres joueurs gardent le pseudo qu'OpenFront publie, sauf s'ils se sont masqués de sa recherche ; un compte sans
-// pseudo reste sans pseudo.
-const coteTop = (Array.isArray(coteStore?.top) ? coteStore.top : []).slice(0, 100).map((t) => {
+// la dernière mise à jour, rang mondial]. Le classement mondial (scripts/cote.mjs) ne compte que les joueurs qui ont un
+// pseudo public : les joueurs masqués de la recherche d'OpenFront et les comptes sans pseudo n'y prennent pas de rang. Le
+// rang est le même que sur les fiches et dans /rang. Un membre du clan y garde son pseudo public et sa fiche ; un membre
+// sans fiche publique y reste anonyme, comme partout sur le site.
+const coteTop = (Array.isArray(coteStore?.top) ? coteStore.top : []).slice(0, 100).map((t, i) => {
   const m = byId.get(t?.id);
   const open = m && m.username && !profileOf(m).hidden;
   const name = m ? (open ? m.username : null) : text(t?.name, 40) || null;
-  return [name, m && !open ? "FR" : text(t?.clan, 8), num(t?.cote), count(t?.games), count(t?.wins), open ? slug(m) : null, num(t?.change) ?? 0, !m && t?.hidden === true ? 1 : 0];
-}).filter((t) => t[2] !== null);
+  if (!name && !m) return null;
+  const rank = Number.isInteger(t?.rank) && t.rank > 0 ? t.rank : i + 1;
+  return [name, m && !open ? "FR" : text(t?.clan, 8), num(t?.cote), count(t?.games), count(t?.wins), open ? slug(m) : null, num(t?.change) ?? 0, rank];
+}).filter((t) => t && t[2] !== null);
 // Les paliers de l'ELO FR, calés sur sa répartition (environ 1 % de Grands maîtres, 3 % de Maîtres, 7 % de Diamants…),
 // recalés le 27 novembre 2026 sur trois mois de parties (journal : « répartition des classés »), puis le même jour après
 // la correction des perdants et le bonus de survie.

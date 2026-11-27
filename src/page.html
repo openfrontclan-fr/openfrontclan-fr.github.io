@@ -1654,7 +1654,7 @@ const eloInfo = () => `<span class="ip"><b>L'ELO FR en équipe est un classement
   <span class="il"><b>Le nombre d'équipes</b>&nbsp;: gagner à 7 équipes vaut plus qu'à 2, et y perdre coûte moins. Mais plus tu es fort, plus une défaite te coûte, même dans une grande partie.</span>
   <span class="il"><b>Le temps en vie</b>&nbsp;: un gagnant mort en cours de partie ne reçoit qu'une part de la victoire&nbsp;; un perdant encore en vie à la fin perd moins qu'un perdant éliminé tôt.</span>
   <span class="ip">Comptent seulement les parties publiques par équipes d'<b>au moins 2 minutes</b>, avec <b>10 joueurs par équipe au plus</b>, sans les parties spéciales (modificateurs) ni Humains contre Nations. Un joueur parti sans rien faire (ni attaque, ni construction, ni bateau, ni bombe) est ignoré.</span>
-  <span class="ip">ELO affiché&nbsp;: <b>1&nbsp;000 + 10 × (niveau − 3 × incertitude)</b>. Un nouveau joueur part à 1&nbsp;000&nbsp;; il faut ${int(COTE?.minGames ?? 20)} parties pour être classé. Paliers&nbsp;: ${tierLegend()}.</span>
+  <span class="ip">ELO affiché&nbsp;: <b>1&nbsp;000 + 10 × (niveau − 3 × incertitude)</b>. Un nouveau joueur part à 1&nbsp;000&nbsp;; il faut ${int(COTE?.minGames ?? 20)} parties pour être classé, et un pseudo public&nbsp;: un joueur masqué de la recherche d'OpenFront ou sans pseudo n'est pas classé, mais ses parties comptent pour les autres. Paliers&nbsp;: ${tierLegend()}.</span>
   <span class="ip">Le classement du clan ne garde que les membres qui jouent <b>au moins ${int(100 * FR_SHARE)}&nbsp;% de leurs parties</b> par équipes sous le tag [FR]. Les autres gardent leur ELO et leur rang mondial.</span>`;
 let infoCount = 0;
 const eloName = (suffix = " en équipe") => {
@@ -1895,15 +1895,12 @@ function renderPlayer(slug) {
     $("monde-intro").innerHTML = `Les 100 meilleurs joueurs des parties publiques par équipes depuis le ${eloDay(COTE.since)}, tous clans confondus, sur ${int(COTE.ranked)} joueurs classés. Les membres [FR] sont en surbrillance.`;
     $("monde-tiers").innerHTML = tierLegend();
     $("monde-kicker").innerHTML = eloName();
-    // Sans pseudo affiché : un membre [FR] sans fiche publique, un joueur masqué de la recherche d'OpenFront, ou un compte
-    // OpenFront qui n'a pas de pseudo.
-    const nameless = (clan, masked) => clan === "FR" ? ["Membre anonyme", "Membre du clan sans fiche publique"]
-      : masked ? ["Joueur masqué", "Il s'est masqué de la recherche d'OpenFront"] : ["Sans pseudo", "Son compte OpenFront n'a pas de pseudo"];
-    $("monde-list").innerHTML = COTE.top.map(([name, clan, value, games, wins, slug, change, masked], i) => {
-      const [label, why] = nameless(clan, masked);
-      const who = name ? (slug ? `<a href="#joueur-${slug}">${esc(shortName(name))}</a>` : esc(name)) : `<span class="hidden-name" title="${why}">${label}</span>`;
+    // Le rang mondial vient du relevé (le même que sur les fiches) : seuls les joueurs qui ont un pseudo public y prennent
+    // un rang. Un membre [FR] sans fiche publique y reste, anonyme.
+    $("monde-list").innerHTML = COTE.top.map(([name, clan, value, games, wins, slug, change, rank], i) => {
+      const who = name ? (slug ? `<a href="#joueur-${slug}">${esc(shortName(name))}</a>` : esc(name)) : `<span class="hidden-name" title="Membre du clan sans fiche publique">Membre anonyme</span>`;
       return `<tr${clan === "FR" ? ' class="us"' : ""}>
-        <td class="rank">${int(i + 1)}</td>
+        <td class="rank">${int(rank ?? i + 1)}</td>
         <td class="left who">${who}${clan ? `<span class="tag">[${esc(clan)}]</span>` : ""}</td>
         <td class="left opt">${tierTag(coteTier(value))}</td>
         <td class="pts">${int(value)}${delta(change)}</td>
@@ -1911,7 +1908,7 @@ function renderPlayer(slug) {
         <td class="opt dim">${games ? `${Math.round((100 * wins) / games)}&nbsp;%` : "–"}</td>
       </tr>`;
     }).join("");
-    $("monde-note").textContent = `ELO FR en équipe relevé jusqu'au ${eloDay(COTE.until)}. À côté de chaque ELO, ce qu'il a gagné ou perdu à la dernière mise à jour, qui a ajouté les parties de ce jour-là. Les pseudos sont ceux qu'OpenFront publie ; un joueur qui s'est masqué de la recherche d'OpenFront apparaît comme « Joueur masqué », un compte OpenFront qui n'a pas de pseudo comme « Sans pseudo », et un membre [FR] sans fiche publique reste anonyme. Le clan est le tag porté dans la dernière partie.`;
+    $("monde-note").textContent = `ELO FR en équipe relevé jusqu'au ${eloDay(COTE.until)}. À côté de chaque ELO, ce qu'il a gagné ou perdu à la dernière mise à jour, qui a ajouté les parties de ce jour-là. Les pseudos sont ceux qu'OpenFront publie. Les joueurs qui se sont masqués de la recherche d'OpenFront et les comptes sans pseudo ne sont pas classés, mais leurs parties comptent : leur force compte pour leurs coéquipiers et leurs adversaires. Un membre [FR] sans fiche publique reste classé, anonyme. Le clan est le tag porté dans la dernière partie.`;
   }
 }
 
