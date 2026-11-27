@@ -266,8 +266,9 @@ for (const m of members) {
     ? t.style.map((s) => [tierOf(s?.[0]), Number.isFinite(s?.[1]) ? Math.min(100, Math.max(0, Math.round(s[1]))) : null])
     : null;
   if (!f && !style && !c) continue;
-  // [cote, parties, victoires, rang mondial ou null avant MIN_GAMES parties, gain ou perte à la dernière mise à jour]
-  if (c && Number.isFinite(c.cote)) cotePlayers[slug(m)] = [num(c.cote), count(c.games), count(c.wins), num(c.rank), num(c.change) ?? 0];
+  // [cote, parties, victoires, rang mondial ou null avant MIN_GAMES parties, gain ou perte à la dernière mise à jour,
+  // parties sous le tag [FR] (null si le relevé ne le dit pas)]
+  if (c && Number.isFinite(c.cote)) cotePlayers[slug(m)] = [num(c.cote), count(c.games), count(c.wins), num(c.rank), num(c.change) ?? 0, Number.isFinite(c.fr) ? count(c.fr) : null];
   // f : [note, palier, rang mondial, pic, victoires, défaites] ; best : la partie du style de jeu où il est le plus fort.
   if (f || style) {
     eloPlayers[slug(m)] = {
@@ -300,6 +301,10 @@ const coteTop = (Array.isArray(coteStore?.top) ? coteStore.top : []).slice(0, 10
 // Les mêmes pour la page et pour le bot du Discord (elo-fr.json).
 const COTE_TIERS = [["Grandmaster", 1550], ["Master", 1350], ["Diamond", 1225], ["Platinum", 1125], ["Gold", 1025], ["Silver", 975], ["Bronze", 925], ["Iron", null]];
 const TIER_NAMES = { Grandmaster: "Grand maître", Master: "Maître", Diamond: "Diamant", Platinum: "Platine", Gold: "Or", Silver: "Argent", Bronze: "Bronze", Iron: "Fer" };
+// Le classement du clan ne garde que les membres classés qui jouent au moins la moitié de leurs parties par équipes sous le
+// tag [FR]. Les autres gardent leur ELO et leur rang mondial.
+const FR_SHARE = 0.5;
+const inClanBoard = ([, games, , rank, , fr]) => Boolean(rank) && (fr === null || fr >= games * FR_SHARE);
 const cote = Object.keys(cotePlayers).length
   ? {
       since: isoDate(new Date(coteStore.from).toISOString()),
@@ -307,6 +312,7 @@ const cote = Object.keys(cotePlayers).length
       games: count(coteStore.games),
       ranked: count(coteStore.ranked),
       minGames: count(coteStore.minGames),
+      frShare: FR_SHARE,
       tiers: COTE_TIERS,
       players: cotePlayers,
       top: coteTop,
@@ -316,7 +322,7 @@ const cote = Object.keys(cotePlayers).length
 // OpenFront, comme les liens #joueur-…) : le bot retrouve un compte lié sans que le fichier publie d'identifiant.
 const eloForBot = cote
   ? (() => {
-      const order = Object.entries(cotePlayers).filter(([, p]) => p[3]).sort((a, b) => b[1][0] - a[1][0]).map(([s]) => s);
+      const order = Object.entries(cotePlayers).filter(([, p]) => inClanBoard(p)).sort((a, b) => b[1][0] - a[1][0]).map(([s]) => s);
       const tierOf = (v) => COTE_TIERS.find(([, min]) => min === null || v >= min)[0];
       return {
         site: SITE_URL,
@@ -325,15 +331,18 @@ const eloForBot = cote
         formula: "1000 + 10 × (niveau − 3 × incertitude), OpenSkill (Plackett-Luce)",
         ranked: cote.ranked,
         minGames: cote.minGames,
+        frShare: FR_SHARE,
         tiers: COTE_TIERS.map(([t, min]) => ({ name: TIER_NAMES[t], min })),
-        players: Object.fromEntries(Object.entries(cotePlayers).map(([s, [elo, games, wins, rank, change]]) => [s, {
+        players: Object.fromEntries(Object.entries(cotePlayers).map(([s, [elo, games, wins, rank, change, fr]]) => [s, {
           elo,
           change,
           tier: rank ? TIER_NAMES[tierOf(elo)] : null,
           worldRank: rank,
-          clanRank: rank ? order.indexOf(s) + 1 : null,
+          // null aussi pour un membre classé qui joue moins de la moitié de ses parties sous le tag [FR].
+          clanRank: order.includes(s) ? order.indexOf(s) + 1 : null,
           games,
           wins,
+          frGames: fr,
           page: `${SITE_URL}/#joueur-${s}`,
         }])),
       };

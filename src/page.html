@@ -1613,8 +1613,11 @@ const tierTag = (t) => {
 };
 const STYLE_FR = { attack: "Attaque", territory: "Territoire", support: "Soutien", economy: "Économie", destruction: "Destruction", building: "Construction" };
 const STYLE_KEYS = Object.keys(STYLE_FR);
-// Les classements du clan, parmi les fiches publiques : la cote des joueurs classés (assez de parties) et le FFA classé.
-const COTE_RANKED = COTE ? Object.entries(COTE.players).filter(([s, p]) => p[3] && BY_SLUG.has(s)).sort((a, b) => b[1][0] - a[1][0]) : [];
+// Les classements du clan, parmi les fiches publiques : la cote des joueurs classés (assez de parties, et au moins la
+// moitié sous le tag [FR]) et le FFA classé.
+const FR_SHARE = COTE?.frShare ?? 0.5;
+const playsForFr = (p) => p[5] == null || p[5] >= p[1] * FR_SHARE;
+const COTE_RANKED = COTE ? Object.entries(COTE.players).filter(([s, p]) => p[3] && playsForFr(p) && BY_SLUG.has(s)).sort((a, b) => b[1][0] - a[1][0]) : [];
 const ELO_FFA = ELO ? Object.entries(ELO.players).filter(([s, p]) => p.f && BY_SLUG.has(s)).sort((a, b) => b[1].f[0] - a[1].f[0]) : [];
 const placeOf = (list, slug) => list.findIndex(([s]) => s === slug) + 1;
 // Les paliers de la cote, calés sur sa répartition : environ 1 % de Grands maîtres, 3 % de Maîtres, 7 % de Diamants…
@@ -1635,7 +1638,8 @@ const eloInfo = () => `<span class="ip"><b>L'ELO FR en équipe est un classement
   <span class="il"><b>Le nombre d'équipes</b>&nbsp;: gagner à 7 équipes vaut plus qu'à 2, et y perdre coûte moins.</span>
   <span class="il"><b>Le temps en vie</b>&nbsp;: un gagnant mort en cours de partie ne reçoit qu'une part de la victoire&nbsp;; un perdant perd tout, même s'il quitte.</span>
   <span class="ip">Comptent seulement les parties publiques par équipes d'<b>au moins 2 minutes</b>, avec <b>10 joueurs par équipe au plus</b>, sans les parties spéciales (modificateurs) ni Humains contre Nations. Un joueur parti sans rien faire (ni attaque, ni construction, ni bateau, ni bombe) est ignoré.</span>
-  <span class="ip">ELO affiché&nbsp;: <b>1&nbsp;000 + 10 × (niveau − 3 × incertitude)</b>. Un nouveau joueur part à 1&nbsp;000&nbsp;; il faut ${int(COTE?.minGames ?? 20)} parties pour être classé. Paliers&nbsp;: ${tierLegend()}.</span>`;
+  <span class="ip">ELO affiché&nbsp;: <b>1&nbsp;000 + 10 × (niveau − 3 × incertitude)</b>. Un nouveau joueur part à 1&nbsp;000&nbsp;; il faut ${int(COTE?.minGames ?? 20)} parties pour être classé. Paliers&nbsp;: ${tierLegend()}.</span>
+  <span class="ip">Le classement du clan ne garde que les membres qui jouent <b>au moins ${int(100 * FR_SHARE)}&nbsp;% de leurs parties</b> par équipes sous le tag [FR]. Les autres gardent leur ELO et leur rang mondial.</span>`;
 let infoCount = 0;
 const eloName = (suffix = " en équipe") => {
   const id = `elo-info-${++infoCount}`;
@@ -1723,9 +1727,12 @@ function eloBlock(slug) {
   const wait = '<p class="wait">Chargement de la courbe…</p>';
   let team = "";
   if (c) {
-    const [value, games, wins, rank, change] = c;
+    const [value, games, wins, rank, change, fr] = c;
+    const clanPlace = placeOf(COTE_RANKED, slug);
     const where = rank
-      ? `<a href="#monde" class="plain"><b>${ord(rank)}</b> mondial</a> sur ${int(COTE.ranked)} · <b>${ord(placeOf(COTE_RANKED, slug))}</b> du clan`
+      ? `<a href="#monde" class="plain"><b>${ord(rank)}</b> mondial</a> sur ${int(COTE.ranked)} · ${clanPlace
+        ? `<b>${ord(clanPlace)}</b> du clan`
+        : `hors classement du clan : ${int(Math.floor((100 * fr) / games))}&nbsp;% de ses parties sous le tag [FR], il en faut ${int(100 * FR_SHARE)}&nbsp;%`}`
       : `Pas encore classé : ${int(games)} partie${games > 1 ? "s" : ""} sur ${int(COTE.minGames)}`;
     team = `<div class="elo-card">
       <p class="label">${eloName()}</p>
@@ -1848,7 +1855,7 @@ function renderPlayer(slug) {
     $("board-cote-box").hidden = !COTE_RANKED.length;
     $("board-ffa-box").hidden = !ELO_FFA.length;
     $("elo-intro").innerHTML = COTE
-      ? `L'ELO FR en équipe, créé par le clan, classe tous les joueurs des parties publiques par équipes, d'après <strong>avec qui</strong> et <strong>contre qui</strong> ils gagnent. Depuis le ${eloDay(COTE.since)}, <strong>${int(COTE.ranked)} joueurs</strong> sont classés dans le monde, dont <strong>${int(COTE_RANKED.length)} membres</strong> avec une fiche publique. Sous chaque ELO, ce qu'il a gagné <span class="delta up">+</span> ou perdu <span class="delta down">−</span> à la dernière mise à jour (<span class="delta same">=</span> s'il n'a pas bougé). Clique sur le (i) pour voir comment il se calcule, et sur un pseudo pour voir sa courbe.`
+      ? `L'ELO FR en équipe, créé par le clan, classe tous les joueurs des parties publiques par équipes, d'après <strong>avec qui</strong> et <strong>contre qui</strong> ils gagnent. Depuis le ${eloDay(COTE.since)}, <strong>${int(COTE.ranked)} joueurs</strong> sont classés dans le monde, dont <strong>${int(COTE_RANKED.length)} membres</strong> avec une fiche publique qui jouent au moins ${int(100 * FR_SHARE)}&nbsp;% de leurs parties sous le tag [FR]. Sous chaque ELO, ce qu'il a gagné <span class="delta up">+</span> ou perdu <span class="delta down">−</span> à la dernière mise à jour (<span class="delta same">=</span> s'il n'a pas bougé). Clique sur le (i) pour voir comment il se calcule, et sur un pseudo pour voir sa courbe.`
       : `<strong>${int(ELO_FFA.length)} membres</strong> classés en FFA classé. Clique sur un pseudo pour voir sa courbe.`;
     if (COTE) {
       $("board-cote-label").innerHTML = eloName();

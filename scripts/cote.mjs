@@ -127,6 +127,9 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   const ratings = new Map();
   const curves = new Map();
   const lastClan = new Map();
+  // Les parties de chaque membre jouées sous le tag [FR] : le classement du clan ne garde que ceux qui en jouent au moins
+  // la moitié sous ce tag (scripts/build.mjs).
+  const frGames = new Map();
   // La cote de chacun au début du dernier jour où il a joué : [jour, cote], pour ce qu'il a gagné ou perdu ce jour-là.
   const dayStart = new Map();
   let used = 0;
@@ -147,6 +150,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
       if (on !== 1) continue;
       lastClan.set(id, clan);
       if (!inClan.has(id)) continue;
+      if (clan === "FR") frGames.set(id, (frGames.get(id) ?? 0) + 1);
       const curve = curves.get(id) ?? curves.set(id, new Map()).get(id);
       curve.set(day, cote(ratings.get(id)));
     }
@@ -165,6 +169,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
       cote: cote(r),
       games: r[2],
       wins: r[3],
+      fr: frGames.get(id) ?? 0,
       rank: rankOf.get(id) ?? null,
       change: change(id),
       // [jour depuis 1970, cote à la fin du jour]
