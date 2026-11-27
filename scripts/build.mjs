@@ -298,9 +298,10 @@ const coteTop = (Array.isArray(coteStore?.top) ? coteStore.top : []).slice(0, 10
   return [name, m && !open ? "FR" : text(t?.clan, 8), num(t?.cote), count(t?.games), count(t?.wins), open ? slug(m) : null, num(t?.change) ?? 0, !m && t?.hidden === true ? 1 : 0];
 }).filter((t) => t[2] !== null);
 // Les paliers de l'ELO FR, calés sur sa répartition (environ 1 % de Grands maîtres, 3 % de Maîtres, 7 % de Diamants…),
-// recalés le 27 novembre 2026 sur trois mois de parties (journal : « répartition des classés »).
+// recalés le 27 novembre 2026 sur trois mois de parties (journal : « répartition des classés »), puis le même jour après
+// la correction des perdants et le bonus de survie.
 // Les mêmes pour la page et pour le bot du Discord (elo-fr.json).
-const COTE_TIERS = [["Grandmaster", 1550], ["Master", 1350], ["Diamond", 1225], ["Platinum", 1125], ["Gold", 1025], ["Silver", 975], ["Bronze", 925], ["Iron", null]];
+const COTE_TIERS = [["Grandmaster", 1525], ["Master", 1350], ["Diamond", 1225], ["Platinum", 1150], ["Gold", 1050], ["Silver", 975], ["Bronze", 925], ["Iron", null]];
 const TIER_NAMES = { Grandmaster: "Grand maître", Master: "Maître", Diamond: "Diamant", Platinum: "Platine", Gold: "Or", Silver: "Argent", Bronze: "Bronze", Iron: "Fer" };
 // Le classement du clan ne garde que les membres classés qui jouent au moins la moitié de leurs parties par équipes sous le
 // tag [FR]. Les autres gardent leur ELO et leur rang mondial.

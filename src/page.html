@@ -1637,7 +1637,7 @@ const COTE_RANKED = COTE ? Object.entries(COTE.players).filter(([s, p]) => p[3] 
 const ELO_FFA = ELO ? Object.entries(ELO.players).filter(([s, p]) => p.f && BY_SLUG.has(s)).sort((a, b) => b[1].f[0] - a[1].f[0]) : [];
 const placeOf = (list, slug) => list.findIndex(([s]) => s === slug) + 1;
 // Les paliers de la cote, calés sur sa répartition : environ 1 % de Grands maîtres, 3 % de Maîtres, 7 % de Diamants…
-const COTE_TIERS = (COTE?.tiers ?? [["Grandmaster", 1550], ["Master", 1350], ["Diamond", 1225], ["Platinum", 1125], ["Gold", 1025], ["Silver", 975], ["Bronze", 925], ["Iron", null]]).map(([t, min]) => [t, min ?? -Infinity]);
+const COTE_TIERS = (COTE?.tiers ?? [["Grandmaster", 1525], ["Master", 1350], ["Diamond", 1225], ["Platinum", 1150], ["Gold", 1050], ["Silver", 975], ["Bronze", 925], ["Iron", null]]).map(([t, min]) => [t, min ?? -Infinity]);
 const coteTier = (v) => COTE_TIERS.find(([, min]) => v >= min)[0];
 // Ce que l'ELO a gagné (vert) ou perdu (rouge) à la dernière mise à jour, gris s'il n'a pas bougé.
 const SINCE = "depuis la dernière mise à jour";
