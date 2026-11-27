@@ -31,9 +31,10 @@ const NAMES_DIR = "data/noms";
 const NAMES = `${NAMES_DIR}/noms.json`;
 const OLD_NAMES = `${DIR}/noms.json`;
 // Le temps de lecture des pseudos à chaque mise à jour, et la pause entre deux lectures, pour ménager l'API d'OpenFront.
-const NAME_MS = Number(process.env.COTE_NAME_MINUTES ?? 12) * 60_000;
-const NAME_PAUSE_MS = 200;
-const NAME_WORKERS = 4;
+const NAME_MS = Number(process.env.COTE_NAME_MINUTES ?? 15) * 60_000;
+const NAME_PAUSE_MS = 400;
+const NAME_WORKERS = 2;
+const NAME_MAX_429 = 5;
 const TOP = 100;
 // Le minimum de parties pour être classé : 20 au début, puis 40, puis 60. Pour un joueur ordinaire, la cote après
 // 40 parties annonce à peine mieux la suite qu'après 20, et nettement mieux après 60. À remonter avec plus de mois.
@@ -184,20 +185,31 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   // joueur pas encore lu compte comme classé jusqu'à ce qu'il le soit.
   const names = JSON.parse(await readFile(NAMES, "utf8").catch(() => readFile(OLD_NAMES, "utf8")).catch(() => "{}"));
   const fresh = (n, i) => n && !(n.name === null && n.hidden === undefined) && Date.now() - Date.parse(n.at) < (i < 3 * TOP ? 7 : 30) * DAY_MS;
-  // NAME_WORKERS lectures à la fois (l'API répond en une seconde environ) ; si OpenFront demande de ralentir (429), les
-  // lectures s'arrêtent jusqu'à la mise à jour suivante.
+  // NAME_WORKERS lectures à la fois (l'API répond en une seconde environ). Si OpenFront demande de ralentir (429), toutes
+  // les lectures attendent une minute ; au bout de NAME_MAX_429 refus, elles reprennent à la mise à jour suivante. (Le
+  // 27 novembre 2026, quatre lectures à la fois ont reçu un 429 après 246 pseudos, juste après le relevé des parties.)
   const until = Date.now() + NAME_MS;
   const queue = ranked.map(([id], i) => [id, i]).filter(([id, i]) => !fresh(names[id], i));
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   let looked = 0;
-  let slowDown = false;
+  let refused = 0;
+  let resumeAt = 0;
   const reader = async () => {
-    while (!slowDown && queue.length && Date.now() < until) {
-      const [id] = queue.shift();
+    while (refused < NAME_MAX_429 && queue.length && Date.now() < until) {
+      if (Date.now() < resumeAt) {
+        await sleep(resumeAt - Date.now());
+        continue;
+      }
+      const next = queue.shift();
+      const [id] = next;
       try {
         const res = await fetch(`https://api.openfront.io/public/player/${encodeURIComponent(id)}`, { signal: AbortSignal.timeout(15_000) });
         const at = new Date().toISOString();
-        if (res.status === 429) slowDown = true;
-        else if (res.ok) {
+        if (res.status === 429) {
+          refused += 1;
+          resumeAt = Date.now() + 60_000;
+          queue.unshift(next);
+        } else if (res.ok) {
           const p = await res.json();
           names[id] = { name: p.searchHidden ? null : typeof p.username === "string" ? p.username : null, hidden: p.searchHidden === true, at };
           looked += 1;
@@ -208,11 +220,11 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
       } catch {
         // Ce pseudo sera relu à la mise à jour suivante.
       }
-      await new Promise((r) => setTimeout(r, NAME_PAUSE_MS));
+      await sleep(NAME_PAUSE_MS);
     }
   };
   await Promise.all(Array.from({ length: NAME_WORKERS }, reader));
-  if (slowDown) console.log("pseudos : OpenFront demande de ralentir (429), la lecture reprendra à la mise à jour suivante");
+  if (refused) console.log(`pseudos : OpenFront a demandé ${refused} fois de ralentir (429)${refused >= NAME_MAX_429 ? ", la lecture reprendra à la mise à jour suivante" : ""}`);
   await mkdir(NAMES_DIR, { recursive: true });
   await writeFile(NAMES, JSON.stringify(Object.fromEntries(Object.entries(names).filter(([, n]) => Date.now() - Date.parse(n.at) < 45 * DAY_MS))));
   const board = ranked.filter(([id]) => names[id]?.name !== null);

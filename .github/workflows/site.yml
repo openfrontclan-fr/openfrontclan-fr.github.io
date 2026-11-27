@@ -35,7 +35,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     # Les fiches (complète), le rattrapage des speedruns et celui des parties par équipes prennent chacun jusqu'à 20 ou
-    # 25 minutes, l'ELO jusqu'à 10, les pseudos des joueurs classés jusqu'à 12.
+    # 25 minutes, l'ELO jusqu'à 10, les pseudos des joueurs classés jusqu'à 15.
     timeout-minutes: 115
     steps:
       - uses: actions/checkout@v4
