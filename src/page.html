@@ -383,9 +383,21 @@ td a:hover { color: var(--blue); }
 .elo-card .move small { color: var(--muted); font-size: .8rem; }
 .world-top .pts .delta { display: inline-block; min-width: 2.6em; margin-left: 8px; text-align: left; }
 .ts-mark { width: 16px; height: 16px; margin-left: 6px; border-radius: 4px; vertical-align: -3px; }
-.go-world { display: inline-flex; align-items: center; gap: 8px; margin: 18px 0 0 18px; font-weight: 600; font-size: .92rem; color: var(--cream); text-decoration: none; }
-.go-world::after { content: "→"; transition: transform .2s; }
-.go-world:hover::after { transform: translateX(4px); }
+/* En tête de chaque colonne : son nom, et à droite le lien vers le classement complet. */
+.board-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px 16px; margin: 0 0 14px; }
+.board-head .label { margin: 0; }
+.board-link { display: inline-flex; align-items: center; gap: 7px; font-weight: 600; font-size: .86rem; color: var(--cream); text-decoration: none; white-space: nowrap; }
+.board-link::after { content: "→"; transition: transform .2s; }
+.board-link.out::after { content: "↗"; }
+.board-link:hover { color: var(--blue); }
+.board-link:hover::after { transform: translateX(3px); }
+.board-link.out:hover::after { transform: translate(2px, -2px); }
+.elo-help { margin-top: 14px; }
+.elo-help summary { width: fit-content; }
+.elo-help summary:hover { color: var(--cream); }
+.elo-help .text { max-width: 36em; margin: 12px 0 0; padding: 0; list-style: none; font-size: .92rem; }
+.elo-help li { position: relative; margin: 0 0 6px 16px; }
+.elo-help li::before { content: "•"; position: absolute; left: -14px; color: var(--blue); }
 /* Les paliers de la cote, en légende de la page du top mondial. */
 .tier-scale { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 22px 0 28px; color: var(--muted); font-size: .84rem; }
 .tier-scale span.tier { font-weight: 600; }
@@ -637,7 +649,6 @@ footer p { margin: 0 0 4px; max-width: 70em; }
   .radar { max-width: 260px; margin: 0 auto; }
   /* Sur téléphone, la bulle (i) s'ouvre en bas de l'écran, sur toute la largeur. */
   .info-pop { position: fixed; top: auto; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); width: auto; max-height: 72vh; overflow-y: auto; }
-  .go-world { margin-left: 0; }
   .elo-card { padding: 18px 18px 12px; }
   .style-row { grid-template-columns: 96px minmax(0, 1fr); gap: 6px 14px; }
   .style-row .level { grid-column: 1 / -1; justify-content: flex-start; }
@@ -875,13 +886,18 @@ footer p { margin: 0 0 4px; max-width: 70em; }
       <p class="kicker ico-classement">Classements du clan</p>
       <h2>L'ELO en équipe et en FFA</h2>
       <p class="text" id="elo-intro"></p>
+      <details class="elo-help"><summary>Comment lire ce classement</summary><ul class="text" id="elo-help"></ul></details>
       <div class="elo-boards">
-        <div id="board-cote-box"><p class="label" id="board-cote-label"></p><ol class="board" id="board-cote"></ol></div>
-        <div id="board-ffa-box"><p class="label">FFA classé <img class="ts-mark" src="teamstats.png" alt="relevé par TeamStats" title="Relevé par TeamStats" width="16" height="16"></p><ol class="board" id="board-ffa"></ol></div>
+        <div id="board-cote-box">
+          <div class="board-head"><p class="label" id="board-cote-label"></p><a class="board-link" id="go-world" href="#monde" hidden>Top 100 mondial</a></div>
+          <ol class="board" id="board-cote"></ol>
+        </div>
+        <div id="board-ffa-box">
+          <div class="board-head"><p class="label">FFA classé <img class="ts-mark" src="teamstats.png" alt="relevé par TeamStats" title="Relevé par TeamStats" width="16" height="16"></p><a class="board-link out" href="https://teamstats.pro/ffa-leaderboard.html?clan=FR" target="_blank" rel="noopener">Voir sur TeamStats</a></div>
+          <ol class="board" id="board-ffa"></ol>
+        </div>
       </div>
       <button class="more" id="elo-more" type="button" hidden></button>
-      <a class="go-world" id="go-world" href="#monde" hidden>Voir le top 100 mondial</a>
-      <p class="note" id="elo-note"></p>
     </section>
 
       <section id="rangs" hidden>
@@ -1854,14 +1870,21 @@ function renderPlayer(slug) {
     draw();
     $("board-cote-box").hidden = !COTE_RANKED.length;
     $("board-ffa-box").hidden = !ELO_FFA.length;
+    // Une ligne pour les chiffres ; le mode d'emploi reste plié dans « Comment lire ce classement ».
     $("elo-intro").innerHTML = COTE
-      ? `L'ELO FR en équipe, créé par le clan, classe tous les joueurs des parties publiques par équipes, d'après <strong>avec qui</strong> et <strong>contre qui</strong> ils gagnent. Depuis le ${eloDay(COTE.since)}, <strong>${int(COTE.ranked)} joueurs</strong> sont classés dans le monde, dont <strong>${int(COTE_RANKED.length)} membres</strong> avec une fiche publique qui jouent au moins ${int(100 * FR_SHARE)}&nbsp;% de leurs parties sous le tag [FR]. Sous chaque ELO, ce qu'il a gagné <span class="delta up">+</span> ou perdu <span class="delta down">−</span> à la dernière mise à jour (<span class="delta same">=</span> s'il n'a pas bougé). Clique sur le (i) pour voir comment il se calcule, et sur un pseudo pour voir sa courbe.`
+      ? `<strong>${int(COTE_RANKED.length)} membres</strong> au classement du clan, parmi <strong>${int(COTE.ranked)} joueurs</strong> classés dans le monde depuis le ${eloDay(COTE.since)}. Clique sur un pseudo pour voir sa courbe.`
       : `<strong>${int(ELO_FFA.length)} membres</strong> classés en FFA classé. Clique sur un pseudo pour voir sa courbe.`;
+    $("elo-help").innerHTML = [
+      COTE && `L'ELO FR en équipe, créé par le clan, classe tous les joueurs des parties publiques par équipes, d'après <strong>avec qui</strong> et <strong>contre qui</strong> ils gagnent. Le (i) à côté de son nom explique le calcul et les paliers.`,
+      COTE && `Le classement du clan ne garde que les membres qui jouent au moins ${int(100 * FR_SHARE)}&nbsp;% de leurs parties par équipes sous le tag [FR]. Les autres gardent leur ELO et leur rang mondial sur leur fiche.`,
+      COTE && `Sous chaque ELO, ce qu'il a gagné <span class="delta up">+</span> ou perdu <span class="delta down">−</span> à la dernière mise à jour (<span class="delta same">=</span> s'il n'a pas bougé). Parties relevées jusqu'au ${eloDay(COTE.until)}.`,
+      ELO_FFA.length && "Le FFA classé est la note des parties classées d'OpenFront, relevée par TeamStats.",
+      "Seuls les membres qui ont une fiche publique apparaissent.",
+    ].filter(Boolean).map((line) => `<li>${line}</li>`).join("");
     if (COTE) {
       $("board-cote-label").innerHTML = eloName();
       $("go-world").hidden = !COTE.top?.length;
     }
-    $("elo-note").textContent = `${COTE ? `ELO FR en équipe relevé jusqu'au ${eloDay(COTE.until)} : la dernière mise à jour a ajouté les parties de ce jour-là. ` : ""}${ELO_FFA.length ? "Le FFA classé est la note des parties classées d'OpenFront, relevée par TeamStats. " : ""}Seuls les membres qui ont une fiche publique apparaissent.`;
     $("elo").hidden = false;
   }
 }
