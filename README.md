@@ -87,7 +87,7 @@ La cote affichée est prudente : `1000 + 10 × (niveau − 3 × incertitude)`. I
 
 Le build publie aussi `elo-fr.json`, lu par le bot du Discord pour sa carte de profil : l'ELO FR des membres qui ont une fiche publique (ELO, gain ou perte à la dernière mise à jour `change`, palier, rang mondial, rang dans le clan, parties, parties sous le tag [FR] `frGames`, victoires, lien de la fiche), rangé par fiche (les 8 premiers caractères du SHA-1 de l'identifiant OpenFront), sans aucun identifiant.
 
-La page `#monde` montre le top 100 mondial. Les pseudos viennent d'OpenFront (`/player/:id`), lus une fois par semaine et gardés dans `data/parties/noms.json`. Un joueur qui s'est masqué de la recherche d'OpenFront y reste sans pseudo, et un membre du clan sans fiche publique y reste anonyme.
+La page `#monde` montre le top 100 mondial. Les pseudos viennent d'OpenFront (`/player/:id`), lus une fois par semaine et gardés dans `data/parties/noms.json`. Un joueur qui s'est masqué de la recherche d'OpenFront y apparaît comme « Joueur masqué » (`hidden` dans le cache), un compte OpenFront qui n'a pas de pseudo comme « Sans pseudo », et un membre du clan sans fiche publique y reste anonyme.
 
 ## Classements de TeamStats
 

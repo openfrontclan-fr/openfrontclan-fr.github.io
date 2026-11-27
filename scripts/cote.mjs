@@ -177,22 +177,24 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     };
   }
   // Le top mondial, pour sa page : le pseudo de chacun vient d'OpenFront, gardé une semaine dans le cache. Un joueur qui
-  // s'est masqué de la recherche sur OpenFront reste sans pseudo.
+  // s'est masqué de la recherche sur OpenFront reste sans pseudo (hidden), comme un compte qui n'a pas de pseudo.
   const names = JSON.parse(await readFile(NAMES, "utf8").catch(() => "{}"));
   const top = [];
   let looked = 0;
   for (const [id, r] of ranked.slice(0, TOP)) {
-    if (!(Date.now() - Date.parse(names[id]?.at ?? 0) < 7 * 86_400_000)) {
+    // Un pseudo manquant relevé avant que le cache ne note pourquoi (hidden) est relu tout de suite.
+    const stale = names[id]?.name === null && names[id]?.hidden === undefined;
+    if (stale || !(Date.now() - Date.parse(names[id]?.at ?? 0) < 7 * 86_400_000)) {
       try {
         const res = await fetch(`https://api.openfront.io/public/player/${encodeURIComponent(id)}`, { signal: AbortSignal.timeout(15_000) });
         const p = res.ok ? await res.json() : null;
-        if (p) names[id] = { name: p.searchHidden ? null : typeof p.username === "string" ? p.username : null, at: new Date().toISOString() };
+        if (p) names[id] = { name: p.searchHidden ? null : typeof p.username === "string" ? p.username : null, hidden: p.searchHidden === true, at: new Date().toISOString() };
         looked += 1;
       } catch {
         // Le pseudo manquera jusqu'à la prochaine mise à jour.
       }
     }
-    top.push({ id, name: names[id]?.name ?? null, clan: lastClan.get(id) ?? "", cote: cote(r), change: change(id), games: r[2], wins: r[3] });
+    top.push({ id, name: names[id]?.name ?? null, hidden: names[id]?.hidden === true, clan: lastClan.get(id) ?? "", cote: cote(r), change: change(id), games: r[2], wins: r[3] });
   }
   await writeFile(NAMES, JSON.stringify(Object.fromEntries(Object.entries(names).filter(([, n]) => Date.now() - Date.parse(n.at) < 30 * 86_400_000))));
   await writeFile(OUT, JSON.stringify({ from: first, until: last, games: used, rated: ratings.size, ranked: ranked.length, minGames: MIN_GAMES, players, top }));

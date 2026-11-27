@@ -287,14 +287,15 @@ const elo = Object.keys(eloPlayers).length
     }
   : null;
 // Le top mondial de la cote, pour sa page : [pseudo ou null, clan, cote, parties, victoires, fiche ou null, gain ou perte à
-// la dernière mise à jour]. Un membre du
+// la dernière mise à jour, masqué (1 s'il s'est masqué de la recherche d'OpenFront, 0 sinon)]. Un membre du
 // clan y garde son pseudo public et sa fiche ; un membre anonyme ou masqué y reste anonyme, comme partout sur le site. Les
-// autres joueurs gardent le pseudo qu'OpenFront publie, sauf s'ils se sont masqués de sa recherche.
+// autres joueurs gardent le pseudo qu'OpenFront publie, sauf s'ils se sont masqués de sa recherche ; un compte sans
+// pseudo reste sans pseudo.
 const coteTop = (Array.isArray(coteStore?.top) ? coteStore.top : []).slice(0, 100).map((t) => {
   const m = byId.get(t?.id);
   const open = m && m.username && !profileOf(m).hidden;
   const name = m ? (open ? m.username : null) : text(t?.name, 40) || null;
-  return [name, m && !open ? "FR" : text(t?.clan, 8), num(t?.cote), count(t?.games), count(t?.wins), open ? slug(m) : null, num(t?.change) ?? 0];
+  return [name, m && !open ? "FR" : text(t?.clan, 8), num(t?.cote), count(t?.games), count(t?.wins), open ? slug(m) : null, num(t?.change) ?? 0, !m && t?.hidden === true ? 1 : 0];
 }).filter((t) => t[2] !== null);
 // Les paliers de l'ELO FR, calés sur sa répartition (environ 1 % de Grands maîtres, 3 % de Maîtres, 7 % de Diamants…),
 // recalés le 27 novembre 2026 sur trois mois de parties (journal : « répartition des classés »).
