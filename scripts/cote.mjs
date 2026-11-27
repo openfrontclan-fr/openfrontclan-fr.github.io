@@ -38,6 +38,10 @@ const TAU_SQ = (MU / 300) ** 2;
 const KAPPA = 0.0001;
 const MIN_SECONDS = 120;
 const MAX_TEAM_SIZE = 10;
+// Bonus de survie entre perdants : un perdant encore en vie à la fin perd moins qu'un perdant éliminé tôt. Choisi le
+// 27 novembre 2026 sur les parties de novembre, prévues avant de les jouer : 0,4 annonce le mieux si un joueur va gagner
+// (+9 % sur l'ancienne formule) ; plus fort, il ferait monter des joueurs qui survivent beaucoup sans gagner.
+const SURVIVAL = 0.4;
 
 // Un joueur parti sans rien faire (ni attaque, ni construction, ni bateau, ni bombe) est ignoré : sa cote ne bouge pas,
 // et il ne compte pas dans la force de son équipe.
@@ -59,26 +63,32 @@ export function rate(ratings, [start, , teams, , , turns, allWinners, allLosers]
     r[1] = Math.sqrt(r[1] ** 2 + TAU_SQ);
     return r;
   };
-  const W = winners.map(([id, , dead]) => [get(id), dead < 0 || !(turns > 0) ? 1 : Math.min(1, Math.max(0, dead / turns))]);
-  const L = losers.map(([id]) => get(id));
+  // La part de la partie passée en vie : 1 pour un joueur encore là à la fin.
+  const alive = (dead) => (dead < 0 || !(turns > 0) ? 1 : Math.min(1, Math.max(0, dead / turns)));
+  const W = winners.map(([id, , dead]) => [get(id), alive(dead)]);
+  const L = losers.map(([id, , dead]) => [get(id), alive(dead)]);
   const others = teams - 1;
   const muW = W.reduce((s, [r]) => s + r[0], 0);
   const varW = W.reduce((s, [r]) => s + r[1] ** 2, 0);
-  const muL = L.reduce((s, r) => s + r[0], 0) / others;
-  const varL = L.reduce((s, r) => s + r[1] ** 2, 0) / others;
-  // L'équipe gagnante devant chacune des autres ; chaque équipe perdante derrière elle. Les perdants ne sont pas classés
-  // entre eux : on ne sait pas qui a tenu le plus longtemps.
+  const sumL = L.reduce((s, [r]) => s + r[0], 0);
+  const muL = sumL / others;
+  const varL = L.reduce((s, [r]) => s + r[1] ** 2, 0) / others;
+  // L'équipe gagnante devant chacune des autres ; chaque équipe perdante derrière elle.
   // (Le modèle Bradley-Terry, équipe contre équipe, a été essayé : une seule victoire dans une partie à 28 équipes y vaut
   // 27 victoires, et des joueurs à 19 % de victoires finissaient en tête. Plackett-Luce ne fait pas cette erreur.)
   const c = Math.sqrt(varW + others * varL + teams * BETA_SQ);
   const eW = Math.exp(muW / c);
   const eL = Math.exp(muL / c);
-  const pW = eW / (eW + others * eL);
-  const pL = eL / (eW + others * eL);
+  const den = eW + others * eL;
+  const pW = eW / den;
   const omegaW = (varW / c) * (1 - pW);
   const deltaW = (Math.sqrt(varW) / c) * (varW / c ** 2) * pW * (1 - pW);
-  const omegaL = (varL / c) * -pL;
-  const deltaL = (Math.sqrt(varL) / c) * (varL / c ** 2) * pL * (1 - pL);
+  // Chaque perdant est jugé avec la force de sa propre équipe : lui, plus des coéquipiers de la force moyenne des autres
+  // perdants (le relevé ne dit pas qui jouait avec qui ; à deux équipes, c'est exactement l'équipe perdante). Avant le
+  // 27 novembre 2026, tous les perdants comptaient comme une équipe moyenne : un joueur fort qui perdait dans une partie
+  // à 26 équipes ne perdait presque rien, et gardait sa cote en gagnant 4 % de ses parties, autant que le hasard.
+  const size = L.length / others;
+  const sBar = L.reduce((s, [, a]) => s + a, 0) / L.length;
   for (const [r, weight] of W) {
     const share = r[1] ** 2 / varW;
     r[0] += share * omegaW * weight;
@@ -87,10 +97,13 @@ export function rate(ratings, [start, , teams, , , turns, allWinners, allLosers]
     r[3] += 1;
     r[4] = start;
   }
-  for (const r of L) {
+  for (const [r, a] of L) {
+    const team = L.length > 1 ? r[0] + (size - 1) * ((sumL - r[0]) / (L.length - 1)) : r[0];
+    const p = Math.exp(team / c) / den;
     const share = r[1] ** 2 / varL;
-    r[0] += share * omegaL;
-    r[1] *= Math.sqrt(Math.max(1 - share * deltaL, KAPPA));
+    // La défaite, selon la force de son équipe, et le bonus de survie (nul en moyenne entre les perdants).
+    r[0] += (r[1] ** 2 / c) * (-p + SURVIVAL * (a - sBar));
+    r[1] *= Math.sqrt(Math.max(1 - share * (Math.sqrt(varL) / c) * (varL / c ** 2) * p * (1 - p), KAPPA));
     r[2] += 1;
     r[4] = start;
   }

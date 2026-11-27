@@ -1651,8 +1651,8 @@ const eloInfo = () => `<span class="ip"><b>L'ELO FR en équipe est un classement
   <span class="ip">Méthode&nbsp;: <b>OpenSkill</b>, un système libre de la famille de TrueSkill (Xbox), fait pour les parties en équipe. Après chaque partie, l'équipe gagnante bat chacune des autres équipes&nbsp;:</span>
   <span class="il"><b>Contre qui tu gagnes</b>&nbsp;: battre des équipes fortes rapporte plus.</span>
   <span class="il"><b>Avec qui tu gagnes</b>&nbsp;: gagner avec une équipe bien plus forte que l'adversaire rapporte peu.</span>
-  <span class="il"><b>Le nombre d'équipes</b>&nbsp;: gagner à 7 équipes vaut plus qu'à 2, et y perdre coûte moins.</span>
-  <span class="il"><b>Le temps en vie</b>&nbsp;: un gagnant mort en cours de partie ne reçoit qu'une part de la victoire&nbsp;; un perdant perd tout, même s'il quitte.</span>
+  <span class="il"><b>Le nombre d'équipes</b>&nbsp;: gagner à 7 équipes vaut plus qu'à 2, et y perdre coûte moins. Mais plus tu es fort, plus une défaite te coûte, même dans une grande partie.</span>
+  <span class="il"><b>Le temps en vie</b>&nbsp;: un gagnant mort en cours de partie ne reçoit qu'une part de la victoire&nbsp;; un perdant encore en vie à la fin perd moins qu'un perdant éliminé tôt.</span>
   <span class="ip">Comptent seulement les parties publiques par équipes d'<b>au moins 2 minutes</b>, avec <b>10 joueurs par équipe au plus</b>, sans les parties spéciales (modificateurs) ni Humains contre Nations. Un joueur parti sans rien faire (ni attaque, ni construction, ni bateau, ni bombe) est ignoré.</span>
   <span class="ip">ELO affiché&nbsp;: <b>1&nbsp;000 + 10 × (niveau − 3 × incertitude)</b>. Un nouveau joueur part à 1&nbsp;000&nbsp;; il faut ${int(COTE?.minGames ?? 20)} parties pour être classé. Paliers&nbsp;: ${tierLegend()}.</span>
   <span class="ip">Le classement du clan ne garde que les membres qui jouent <b>au moins ${int(100 * FR_SHARE)}&nbsp;% de leurs parties</b> par équipes sous le tag [FR]. Les autres gardent leur ELO et leur rang mondial.</span>`;
