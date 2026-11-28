@@ -418,17 +418,17 @@
  {
   "date": "2026-11-28",
   "rank": 6,
-  "score": 1377.53,
-  "games": 42503,
-  "wins": 10247,
+  "score": 1373.74,
+  "games": 42525,
+  "wins": 10250,
   "members": 5000,
   "above": {
    "tag": "EU",
-   "score": 1665.85
+   "score": 1660.51
   },
   "below": {
    "tag": "NU",
-   "score": 1169.34
+   "score": 1164.74
   }
  }
 ]
